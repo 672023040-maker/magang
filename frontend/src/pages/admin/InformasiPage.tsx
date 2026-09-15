@@ -140,8 +140,8 @@ export function InformasiPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Informasi</h1>
-          <p className="mt-1 text-sm text-slate-500">
+          <h1 className="font-display text-2xl font-medium text-stone-900">Informasi</h1>
+          <p className="mt-1 text-sm text-stone-500">
             Kelola berita, artikel, dan pengumuman.
           </p>
         </div>
@@ -156,13 +156,13 @@ export function InformasiPage() {
           <Spinner size="lg" />
         </div>
       ) : items.length === 0 ? (
-        <p className="py-10 text-center text-sm text-slate-500">
+        <p className="py-10 text-center text-sm text-stone-500">
           Belum ada informasi.
         </p>
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+        <div className="overflow-hidden rounded-xl border border-stone-200 bg-white">
           <table className="w-full text-left text-sm">
-            <thead className="border-b border-slate-200 bg-slate-50 text-xs uppercase text-slate-500">
+            <thead className="border-b border-stone-200 bg-stone-50 text-xs uppercase text-stone-500">
               <tr>
                 <th className="px-4 py-3">Judul</th>
                 <th className="px-4 py-3">Kategori</th>
@@ -170,10 +170,10 @@ export function InformasiPage() {
                 <th className="px-4 py-3 text-right">Aksi</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-stone-100">
               {items.map((item) => (
                 <tr key={item.id}>
-                  <td className="max-w-xs truncate px-4 py-3 font-medium text-slate-800">
+                  <td className="max-w-xs truncate px-4 py-3 font-medium text-stone-800">
                     {item.judul}
                   </td>
                   <td className="px-4 py-3">
@@ -181,7 +181,7 @@ export function InformasiPage() {
                       {item.kategori}
                     </Badge>
                   </td>
-                  <td className="px-4 py-3 text-slate-600">{item.tanggal}</td>
+                  <td className="px-4 py-3 text-stone-600">{item.tanggal}</td>
                   <td className="space-x-2 px-4 py-3 text-right">
                     <button
                       type="button"

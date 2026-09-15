@@ -1,70 +1,103 @@
 import type { Project } from '../../types'
-import { Badge } from '../ui/Badge'
 import { SectionContainer, SectionHeading } from './SectionHeading'
 
 interface ProjectSectionProps {
   project: Project[]
 }
 
-const statusMeta: Record<string, { label: string; variant: 'amber' | 'green' }> = {
-  berjalan: { label: 'Berjalan', variant: 'amber' },
-  selesai: { label: 'Selesai', variant: 'green' },
+const statusStyle: Record<string, { label: string; badge: string }> = {
+  berjalan: {
+    label: 'Berjalan',
+    badge: 'bg-amber-100 text-amber-800',
+  },
+  selesai: {
+    label: 'Selesai',
+    badge: 'bg-emerald-100 text-emerald-800',
+  },
 }
 
 export function ProjectSection({ project }: ProjectSectionProps) {
   return (
-    <SectionContainer id="project" className="bg-slate-50">
+    <SectionContainer id="project" className="bg-stone-50">
       <SectionHeading
-        eyebrow="Project"
-        title="Project Kami"
-        description="Kumpulan project yang sedang berjalan maupun telah diselesaikan."
+        index="04"
+        title="Project dan Dokumentasinya"
+        description="Project yang pernah dan sedang dikerjakan sepanjang perjalanan DIGFIN."
       />
 
       {project.length === 0 ? (
-        <p className="mt-12 text-center text-sm text-slate-500">
-          Belum ada project.
-        </p>
+        <p className="mt-12 text-sm text-stone-500">Belum ada project.</p>
       ) : (
-        <div className="mt-12 grid gap-8 md:grid-cols-2">
+        <div className="mt-12 space-y-6">
           {project.map((item) => {
-            const status = statusMeta[item.status] ?? statusMeta.selesai
+            const status = statusStyle[item.status] ?? statusStyle.selesai
 
             return (
               <article
                 key={item.id}
-                className="flex flex-col rounded-2xl border border-slate-100 bg-white p-6 shadow-sm"
+                className="rounded-xl border border-stone-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg md:p-8"
               >
-                <div className="flex items-start justify-between gap-4">
-                  <h3 className="font-semibold text-slate-900">{item.nama_project}</h3>
-                  <Badge variant={status.variant}>{status.label}</Badge>
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                  <h3 className="font-display text-xl font-medium text-stone-900">
+                    {item.nama_project}
+                  </h3>
+                  <span
+                    className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ${status.badge}`}
+                  >
+                    {status.label}
+                  </span>
                 </div>
 
-                <p className="mt-3 flex-1 text-sm leading-relaxed text-slate-500">
+                <p className="mt-3 max-w-3xl text-sm leading-relaxed text-stone-600">
                   {item.deskripsi}
                 </p>
 
-                <p className="mt-4 text-xs text-slate-400">
-                  {item.tgl_mulai ?? '-'} — {item.tgl_selesai ?? 'Saat ini'}
+                <p className="mt-4 text-xs text-stone-400">
+                  Periode: {item.tgl_mulai ?? '-'} — {item.tgl_selesai ?? 'saat ini'}
                 </p>
 
                 {item.dokumentasi.length > 0 && (
-                  <div className="mt-5 grid grid-cols-5 gap-3 border-t border-slate-100 pt-5">
-                    {item.dokumentasi.map((dok) => (
-                      <figure key={dok.id} className="text-center">
-                        {dok.file_gambar_url && (
-                          <img
-                            src={dok.file_gambar_url}
-                            alt={dok.keterangan ?? item.nama_project}
-                            className="h-16 w-full rounded-lg object-cover"
-                          />
-                        )}
-                        {dok.keterangan && (
-                          <figcaption className="mt-1 line-clamp-2 text-[10px] text-slate-400">
-                            {dok.keterangan}
-                          </figcaption>
-                        )}
-                      </figure>
-                    ))}
+                  <div className="mt-5 border-t border-stone-200 pt-5">
+                    {item.dokumentasi.length === 1 ? (
+                      (() => {
+                        const dok = item.dokumentasi[0]
+                        return (
+                          <figure className="max-w-sm">
+                            {dok.file_gambar_url && (
+                              <img
+                                src={dok.file_gambar_url}
+                                alt={dok.keterangan ?? item.nama_project}
+                                className="w-full rounded-lg object-cover"
+                              />
+                            )}
+                            {dok.keterangan && (
+                              <figcaption className="mt-2 text-xs text-stone-500">
+                                {dok.keterangan}
+                              </figcaption>
+                            )}
+                          </figure>
+                        )
+                      })()
+                    ) : (
+                      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-5">
+                        {item.dokumentasi.map((dok) => (
+                          <figure key={dok.id}>
+                            {dok.file_gambar_url && (
+                              <img
+                                src={dok.file_gambar_url}
+                                alt={dok.keterangan ?? item.nama_project}
+                                className="h-20 w-full rounded-lg object-cover"
+                              />
+                            )}
+                            {dok.keterangan && (
+                              <figcaption className="mt-1 line-clamp-2 text-[11px] text-stone-400">
+                                {dok.keterangan}
+                              </figcaption>
+                            )}
+                          </figure>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 )}
               </article>

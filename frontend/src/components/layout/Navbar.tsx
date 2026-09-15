@@ -2,21 +2,18 @@ import { useEffect, useState } from 'react'
 
 const links = [
   { href: '#hero', label: 'Beranda' },
-  { href: '#profil', label: 'Profil' },
-  { href: '#struktur', label: 'Struktur' },
-  { href: '#informasi', label: 'Informasi' },
+  { href: '#profil', label: 'Tentang' },
+  { href: '#struktur', label: 'Tim' },
   { href: '#project', label: 'Project' },
   { href: '#kontak', label: 'Kontak' },
 ]
 
 export function Navbar() {
   const [active, setActive] = useState('#hero')
-  const [scrolled, setScrolled] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
 
   useEffect(() => {
     const onScroll = () => {
-      setScrolled(window.scrollY > 24)
-
       const current = links
         .filter((link) => {
           const el = document.querySelector(link.href)
@@ -34,16 +31,18 @@ export function Navbar() {
   }, [])
 
   return (
-    <header
-      className={`fixed inset-x-0 top-0 z-40 transition ${
-        scrolled
-          ? 'bg-white/90 shadow-sm backdrop-blur'
-          : 'bg-transparent'
-      }`}
-    >
-      <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-        <a href="#hero" className="text-lg font-bold tracking-tight text-slate-900">
-          DIGIFIN<span className="text-brand-600">.</span>
+    <header className="fixed inset-x-0 top-0 z-40 bg-[#538932] shadow-sm">
+      <nav className="grid h-16 items-center pl-2.5 pr-4 md:grid-cols-[1fr_auto_1fr]">
+        <a
+          href="#hero"
+          className="justify-self-start flex items-center gap-2.5 font-display text-xl font-semibold text-white"
+        >
+          <img
+            src="/uksw.png"
+            alt="Logo UKSW"
+            className="h-8 w-auto object-contain"
+          />
+          <img src="/did.png" alt="DIGFIN" className="h-7 w-auto object-contain" />
         </a>
 
         <ul className="hidden items-center gap-6 md:flex">
@@ -53,8 +52,8 @@ export function Navbar() {
                 href={link.href}
                 className={`text-sm font-medium transition ${
                   active === link.href
-                    ? 'text-brand-600'
-                    : 'text-slate-600 hover:text-slate-900'
+                    ? 'text-white'
+                    : 'text-white/80 hover:text-white'
                 }`}
               >
                 {link.label}
@@ -63,13 +62,62 @@ export function Navbar() {
           ))}
         </ul>
 
-        <a
-          href="#kontak"
-          className="hidden rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-brand-700 md:inline-flex"
-        >
-          Hubungi Kami
-        </a>
+        <div className="justify-self-end md:justify-self-auto">
+          <button
+            type="button"
+            onClick={() => setMenuOpen((open) => !open)}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-white transition hover:bg-white/10 md:hidden"
+            aria-label={menuOpen ? 'Tutup menu' : 'Buka menu'}
+            aria-expanded={menuOpen}
+          >
+            {menuOpen ? (
+              <svg
+                className="h-5 w-5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+              >
+                <path d="M6 6l12 12M18 6L6 18" />
+              </svg>
+            ) : (
+              <svg
+                className="h-5 w-5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+              >
+                <path d="M4 7h16M4 12h16M4 17h16" />
+              </svg>
+            )}
+          </button>
+        </div>
       </nav>
+
+      {menuOpen && (
+        <div className="border-t border-white/20 bg-[#538932] px-4 pb-6 pt-2 md:hidden">
+          <ul className="space-y-1">
+            {links.map((link) => (
+              <li key={link.href}>
+                <a
+                  href={link.href}
+                  onClick={() => setMenuOpen(false)}
+                  className={`block rounded-lg px-3 py-2 text-sm font-medium transition ${
+                    active === link.href
+                      ? 'bg-white/10 text-white'
+                      : 'text-white/80 hover:bg-white/10 hover:text-white'
+                  }`}
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </header>
   )
 }

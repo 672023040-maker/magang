@@ -1,145 +1,40 @@
-import { useState, type FormEvent } from 'react'
-import { pesanKontak } from '../../api'
-import type { Kontak } from '../../types'
-import { Button } from '../ui/Button'
-import { Input } from '../ui/Input'
-import { Textarea } from '../ui/Textarea'
-import { Alert } from '../ui/Alert'
-import { SectionContainer, SectionHeading } from './SectionHeading'
+import { SectionContainer } from './SectionHeading'
 
-interface KontakSectionProps {
-  kontak: Kontak | null
-}
-
-const initialForm = {
-  nama_pengirim: '',
-  email: '',
-  subjek: '',
-  pesan: '',
-}
-
-export function KontakSection({ kontak }: KontakSectionProps) {
-  const [form, setForm] = useState(initialForm)
-  const [submitting, setSubmitting] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState<string | null>(null)
-
-  const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const { name, value } = event.target
-    setForm((prev) => ({ ...prev, [name]: value }))
-  }
-
-  const handleSubmit = async (event: FormEvent) => {
-    event.preventDefault()
-    setError(null)
-    setSuccess(null)
-
-    try {
-      setSubmitting(true)
-      await pesanKontak.kirim(form)
-      setSuccess('Pesan Anda berhasil dikirim. Terima kasih!')
-      setForm(initialForm)
-    } catch {
-      setError('Gagal mengirim pesan. Silakan coba lagi.')
-    } finally {
-      setSubmitting(false)
-    }
-  }
-
+export function KontakSection() {
   return (
     <SectionContainer id="kontak" className="bg-white">
-      <SectionHeading
-        eyebrow="Kontak"
-        title="Hubungi Kami"
-        description="Punya pertanyaan? Kirimkan pesan melalui formulir di bawah ini."
-      />
+      <div className="mx-auto max-w-xl text-center">
+        <p className="font-display text-sm font-medium italic text-accent-600">
+          05 — Kontak
+        </p>
+        <h2 className="mt-3 font-display text-3xl font-medium leading-snug tracking-tight text-stone-900 md:text-4xl">
+          Bicara dengan kami
+        </h2>
+        <p className="mt-3 text-[15px] leading-relaxed text-stone-600">
+          Ada yang ingin ditanyakan soal DIGFIN? Kirim email ke alamat di bawah
+          ini, kami akan membalas sebisanya.
+        </p>
 
-      <div className="mt-12 grid gap-10 md:grid-cols-2">
-        <div>
-          <h3 className="text-lg font-semibold text-slate-900">Informasi Kontak</h3>
-
-          <dl className="mt-5 space-y-4 text-sm">
-            <div>
-              <dt className="font-medium text-slate-500">Email</dt>
-              <dd className="mt-0.5 text-slate-800">{kontak?.email ?? '-'}</dd>
-            </div>
-            <div>
-              <dt className="font-medium text-slate-500">Telepon</dt>
-              <dd className="mt-0.5 text-slate-800">{kontak?.phone ?? '-'}</dd>
-            </div>
-            <div>
-              <dt className="font-medium text-slate-500">Alamat</dt>
-              <dd className="mt-0.5 text-slate-800">{kontak?.alamat ?? '-'}</dd>
-            </div>
-          </dl>
-
-          {kontak && kontak.sosial_media.length > 0 && (
-            <ul className="mt-6 flex flex-wrap gap-3">
-              {kontak.sosial_media.map((sosmed) => (
-                <li key={sosmed.id}>
-                  <a
-                    href={sosmed.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-600 transition hover:border-brand-300 hover:text-brand-600"
-                  >
-                    {sosmed.platform}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid gap-4 sm:grid-cols-2">
-            <Input
-              id="nama"
-              label="Nama"
-              name="nama_pengirim"
-              value={form.nama_pengirim}
-              onChange={handleChange}
-              required
-            />
-            <Input
-              id="email"
-              label="Email"
-              type="email"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <Input
-            id="subjek"
-            label="Subjek"
-            name="subjek"
-            value={form.subjek}
-            onChange={handleChange}
-            required
-          />
-
-          <Textarea
-            id="pesan"
-            label="Pesan"
-            name="pesan"
-            rows={5}
-            value={form.pesan}
-            onChange={handleChange}
-            required
-          />
-
-          <Alert variant="success" message={success} />
-          <Alert variant="error" message={error} />
-
-          <Button type="submit" loading={submitting}>
-            Kirim Pesan
-          </Button>
-        </form>
+        <a
+          href="mailto:did@uksw.edu"
+          className="mt-8 inline-flex items-center gap-3 rounded-xl border border-stone-200 bg-stone-50 px-6 py-4 text-sm font-medium text-stone-800 transition hover:border-brand-300 hover:bg-brand-50"
+        >
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-600 text-white">
+            <svg
+              className="h-4 w-4"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M4 4h16a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2z" />
+              <path d="M22 6l-10 7L2 6" />
+            </svg>
+          </span>
+          did@uksw.edu
+        </a>
       </div>
     </SectionContainer>
   )

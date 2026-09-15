@@ -6,9 +6,21 @@
   --color-brand-500: #10b981;
   --color-brand-600: #059669;
   --color-brand-700: #047857;
-  --color-ink-900: #0f172a;
-  --color-ink-600: #475569;
-  --font-sans: 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
+
+  --color-accent-50: #fff7ed;
+  --color-accent-100: #ffedd5;
+  --color-accent-200: #fed7aa;
+  --color-accent-300: #fdba74;
+  --color-accent-400: #fb923c;
+  --color-accent-500: #f97316;
+  --color-accent-600: #ea580c;
+  --color-accent-700: #c2410c;
+
+  --color-ink-900: #1c1917;
+  --color-ink-600: #57534e;
+
+  --font-sans: 'Roboto', system-ui, 'Segoe UI', Arial, sans-serif;
+  --font-display: 'Montserrat', system-ui, 'Segoe UI', Arial, sans-serif;
 
   --animate-fade-up: fade-up 0.6s ease-out both;
 
@@ -29,10 +41,11 @@ html {
 }
 
 body {
-  @apply bg-slate-50 text-slate-700 antialiased;
+  @apply bg-stone-50 text-stone-700 antialiased;
   font-family: var(--font-sans);
 }
 
 section {
   scroll-margin-top: 72px;
 }
+

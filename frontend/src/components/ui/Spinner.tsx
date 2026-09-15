@@ -13,7 +13,7 @@ export function Spinner({ size = 'md', className = '' }: SpinnerProps) {
   return (
     <span
       aria-label="Memuat"
-      className={`inline-block animate-spin rounded-full border-slate-300 border-t-brand-600 ${sizes[size]} ${className}`}
+      className={`inline-block animate-spin rounded-full border-stone-300 border-t-brand-600 ${sizes[size]} ${className}`}
     />
   )
 }

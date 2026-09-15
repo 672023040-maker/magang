@@ -161,8 +161,8 @@ export function StrukturPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Struktur Organisasi</h1>
-          <p className="mt-1 text-sm text-slate-500">
+          <h1 className="font-display text-2xl font-medium text-stone-900">Struktur Organisasi</h1>
+          <p className="mt-1 text-sm text-stone-500">
             Kelola pimpinan dan divisi organisasi.
           </p>
         </div>
@@ -177,30 +177,30 @@ export function StrukturPage() {
           <Spinner size="lg" />
         </div>
       ) : items.length === 0 ? (
-        <p className="py-10 text-center text-sm text-slate-500">
-          Belum ada data struktur.
-        </p>
-      ) : (
-        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
-          <table className="w-full text-left text-sm">
-            <thead className="border-b border-slate-200 bg-slate-50 text-xs uppercase text-slate-500">
-              <tr>
-                <th className="px-4 py-3">Nama</th>
-                <th className="px-4 py-3">Jabatan</th>
-                <th className="px-4 py-3">Divisi</th>
-                <th className="px-4 py-3 text-right">Aksi</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {items.map((item) => (
-                <tr key={item.id}>
-                  <td className="px-4 py-3 font-medium text-slate-800">
-                    {item.nama}
-                  </td>
-                  <td className="px-4 py-3 text-slate-600">{item.jabatan}</td>
-                  <td className="px-4 py-3 text-slate-600">
-                    {item.divisi.length} divisi
-                  </td>
+<p className="py-10 text-center text-sm text-stone-500">
+            Belum ada data struktur.
+          </p>
+        ) : (
+          <div className="overflow-hidden rounded-xl border border-stone-200 bg-white">
+            <table className="w-full text-left text-sm">
+              <thead className="border-b border-stone-200 bg-stone-50 text-xs uppercase text-stone-500">
+                <tr>
+                  <th className="px-4 py-3">Nama</th>
+                  <th className="px-4 py-3">Jabatan</th>
+                  <th className="px-4 py-3">Divisi</th>
+                  <th className="px-4 py-3 text-right">Aksi</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-stone-100">
+                {items.map((item) => (
+                  <tr key={item.id}>
+                    <td className="px-4 py-3 font-medium text-stone-800">
+                      {item.nama}
+                    </td>
+                    <td className="px-4 py-3 text-stone-600">{item.jabatan}</td>
+                    <td className="px-4 py-3 text-stone-600">
+                      {item.divisi.length} divisi
+                    </td>
                   <td className="space-x-2 px-4 py-3 text-right">
                     <button
                       type="button"
@@ -254,7 +254,7 @@ export function StrukturPage() {
 
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <p className="text-sm font-medium text-slate-700">Divisi</p>
+              <p className="text-sm font-medium text-stone-700">Divisi</p>
               <button
                 type="button"
                 onClick={addDivisi}
@@ -265,7 +265,7 @@ export function StrukturPage() {
             </div>
 
             {form.divisi.map((divisi, index) => (
-              <div key={index} className="rounded-lg border border-slate-200 p-3">
+              <div key={index} className="rounded-lg border border-stone-200 p-3">
                 <Input
                   id={`divisi-nama-${index}`}
                   label="Nama Divisi"

@@ -51,19 +51,9 @@ export interface Project {
   dokumentasi: Dokumentasi[]
 }
 
-export interface SosialMedia {
-  id: number
-  kontak_id: number
-  platform: string
-  url: string
-}
-
 export interface Kontak {
   id: number
   email: string
-  phone: string
-  alamat: string
-  sosial_media: SosialMedia[]
 }
 
 export interface PesanKontak {

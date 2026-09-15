@@ -42,45 +42,47 @@ export function DashboardPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Dashboard</h1>
-        <p className="mt-1 text-sm text-slate-500">
-          Ringkasan konten website DIGIFIN.
+        <h1 className="font-display text-2xl font-medium text-stone-900">Dashboard</h1>
+        <p className="mt-1 text-sm text-stone-500">
+          Ringkasan konten website DIGFIN yang sudah masuk.
         </p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">
-        <div className="rounded-2xl border border-slate-200 bg-white p-5">
-          <p className="text-sm font-medium text-slate-500">Struktur Organisasi</p>
-          <p className="mt-1 text-3xl font-bold text-slate-900">
+        <div className="rounded-xl border border-stone-200 border-t-4 border-t-brand-500 bg-white p-5">
+          <p className="text-sm font-medium text-stone-500">Struktur Organisasi</p>
+          <p className="mt-1 text-3xl font-bold text-stone-900">
             {stats.struktur}
           </p>
         </div>
-        <div className="rounded-2xl border border-slate-200 bg-white p-5">
-          <p className="text-sm font-medium text-slate-500">Project</p>
-          <p className="mt-1 text-3xl font-bold text-slate-900">{stats.project}</p>
+        <div className="rounded-xl border border-stone-200 border-t-4 border-t-accent-500 bg-white p-5">
+          <p className="text-sm font-medium text-stone-500">Project</p>
+          <p className="mt-1 text-3xl font-bold text-stone-900">{stats.project}</p>
         </div>
-        <div className="rounded-2xl border border-slate-200 bg-white p-5">
-          <p className="text-sm font-medium text-slate-500">Pesan Masuk</p>
-          <p className="mt-1 text-3xl font-bold text-slate-900">
+        <div className="rounded-xl border border-stone-200 border-t-4 border-t-blue-500 bg-white p-5">
+          <p className="text-sm font-medium text-stone-500">Pesan Masuk</p>
+          <p className="mt-1 text-3xl font-bold text-stone-900">
             {stats.pesanBaru}
           </p>
         </div>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <div className="rounded-2xl border border-slate-200 bg-white p-6">
-          <h2 className="font-semibold text-slate-900">Project Terbaru</h2>
+        <div className="rounded-xl border border-stone-200 bg-white p-6">
+          <h2 className="font-display text-lg font-medium text-stone-900">
+            Project Terbaru
+          </h2>
           {strukturLoading ? (
             <div className="mt-4 flex justify-center">
               <Spinner />
             </div>
           ) : projectTerbaru.length === 0 ? (
-            <p className="mt-4 text-sm text-slate-500">Belum ada project.</p>
+            <p className="mt-4 text-sm text-stone-500">Belum ada project.</p>
           ) : (
             <ul className="mt-4 space-y-3">
               {projectTerbaru.map((item) => (
                 <li key={item.id} className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-slate-700">
+                  <span className="text-sm font-medium text-stone-700">
                     {item.nama_project}
                   </span>
                   <Badge
@@ -94,12 +96,14 @@ export function DashboardPage() {
           )}
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-6">
+        <div className="rounded-xl border border-stone-200 bg-white p-6">
           <div className="flex items-center justify-between">
-            <h2 className="font-semibold text-slate-900">Pesan Terbaru</h2>
+            <h2 className="font-display text-lg font-medium text-stone-900">
+              Pesan Terbaru
+            </h2>
             <Link
               to="/admin/pesan"
-              className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 transition hover:bg-slate-50"
+              className="rounded-lg border border-stone-300 bg-white px-3 py-1.5 text-xs font-medium text-stone-600 transition hover:bg-stone-50"
             >
               Lihat Semua
             </Link>
@@ -110,15 +114,15 @@ export function DashboardPage() {
               <Spinner />
             </div>
           ) : pesanTerbaru.length === 0 ? (
-            <p className="mt-4 text-sm text-slate-500">Belum ada pesan.</p>
+            <p className="mt-4 text-sm text-stone-500">Belum ada pesan.</p>
           ) : (
             <ul className="mt-4 space-y-3">
               {pesanTerbaru.map((pesan) => (
                 <li key={pesan.id}>
-                  <p className="text-sm font-medium text-slate-800">
+                  <p className="text-sm font-medium text-stone-800">
                     {pesan.subjek}
                   </p>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-stone-500">
                     {pesan.nama_pengirim} — {pesan.tanggal}
                   </p>
                 </li>

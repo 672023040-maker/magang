@@ -74,16 +74,8 @@ export const project = {
     client.delete(`/admin/project/${id}`).then((res) => res.data),
 }
 
-export interface SosialMediaPayload {
-  platform: string
-  url: string
-}
-
 export interface KontakPayload {
   email: string
-  phone: string
-  alamat: string
-  sosial_media: SosialMediaPayload[]
 }
 
 export const kontak = {

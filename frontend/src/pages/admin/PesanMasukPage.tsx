@@ -44,8 +44,8 @@ export function PesanMasukPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Pesan Masuk</h1>
-        <p className="mt-1 text-sm text-slate-500">
+        <h1 className="font-display text-2xl font-medium text-stone-900">Pesan Masuk</h1>
+        <p className="mt-1 text-sm text-stone-500">
           Pesan dari pengunjung via formulir kontak.
         </p>
       </div>
@@ -58,13 +58,13 @@ export function PesanMasukPage() {
           <Spinner size="lg" />
         </div>
       ) : items.length === 0 ? (
-        <p className="py-10 text-center text-sm text-slate-500">
+        <p className="py-10 text-center text-sm text-stone-500">
           Belum ada pesan masuk.
         </p>
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+        <div className="overflow-hidden rounded-xl border border-stone-200 bg-white">
           <table className="w-full text-left text-sm">
-            <thead className="border-b border-slate-200 bg-slate-50 text-xs uppercase text-slate-500">
+            <thead className="border-b border-stone-200 bg-stone-50 text-xs uppercase text-stone-500">
               <tr>
                 <th className="px-4 py-3">Pengirim</th>
                 <th className="px-4 py-3">Subjek</th>
@@ -72,19 +72,19 @@ export function PesanMasukPage() {
                 <th className="px-4 py-3 text-right">Aksi</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-stone-100">
               {items.map((item) => (
                 <tr key={item.id}>
                   <td className="px-4 py-3">
-                    <p className="font-medium text-slate-800">
+                    <p className="font-medium text-stone-800">
                       {item.nama_pengirim}
                     </p>
-                    <p className="text-xs text-slate-400">{item.email}</p>
+                    <p className="text-xs text-stone-400">{item.email}</p>
                   </td>
-                  <td className="max-w-xs truncate px-4 py-3 text-slate-600">
+                  <td className="max-w-xs truncate px-4 py-3 text-stone-600">
                     {item.subjek}
                   </td>
-                  <td className="px-4 py-3 text-slate-600">{item.tanggal}</td>
+                  <td className="px-4 py-3 text-stone-600">{item.tanggal}</td>
                   <td className="space-x-2 px-4 py-3 text-right">
                     <button
                       type="button"
@@ -116,22 +116,22 @@ export function PesanMasukPage() {
         {selected && (
           <div className="space-y-4 text-sm">
             <div>
-              <p className="font-medium text-slate-500">Pengirim</p>
-              <p className="text-slate-800">
+              <p className="font-medium text-stone-500">Pengirim</p>
+              <p className="text-stone-800">
                 {selected.nama_pengirim} ({selected.email})
               </p>
             </div>
             <div>
-              <p className="font-medium text-slate-500">Subjek</p>
-              <p className="text-slate-800">{selected.subjek}</p>
+              <p className="font-medium text-stone-500">Subjek</p>
+              <p className="text-stone-800">{selected.subjek}</p>
             </div>
             <div>
-              <p className="font-medium text-slate-500">Tanggal</p>
-              <p className="text-slate-800">{selected.tanggal}</p>
+              <p className="font-medium text-stone-500">Tanggal</p>
+              <p className="text-stone-800">{selected.tanggal}</p>
             </div>
             <div>
-              <p className="font-medium text-slate-500">Pesan</p>
-              <p className="whitespace-pre-line text-slate-800">{selected.pesan}</p>
+              <p className="font-medium text-stone-500">Pesan</p>
+              <p className="whitespace-pre-line text-stone-800">{selected.pesan}</p>
             </div>
 
             <div className="flex justify-end gap-2 pt-2">

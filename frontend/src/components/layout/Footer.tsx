@@ -1,38 +1,36 @@
-import type { Kontak } from '../../types'
-
-interface FooterProps {
-  kontak: Kontak | null
-}
-
 const quickLinks = [
   { href: '#hero', label: 'Beranda' },
-  { href: '#profil', label: 'Profil' },
-  { href: '#struktur', label: 'Struktur' },
-  { href: '#informasi', label: 'Informasi' },
+  { href: '#profil', label: 'Tentang' },
+  { href: '#struktur', label: 'Tim' },
   { href: '#project', label: 'Project' },
   { href: '#kontak', label: 'Kontak' },
 ]
 
-export function Footer({ kontak }: FooterProps) {
+export function Footer() {
   return (
-    <footer className="bg-slate-900 text-slate-300">
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 md:grid-cols-3">
+    <footer className="bg-stone-900 text-stone-300">
+      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 md:grid-cols-[1.4fr_1fr_1fr]">
         <div>
-          <p className="text-lg font-bold text-white">
-            DIGIFIN<span className="text-brand-500">.</span>
+          <p className="font-display text-xl font-semibold text-white">
+            DIGFIN<span className="text-brand-500">.</span>
           </p>
-          <p className="mt-3 text-sm leading-relaxed">
-            Platform digital fintech yang menghadirkan layanan keuangan digital
-            yang inovatif, inklusif, dan terpercaya.
+          <p className="mt-3 max-w-sm text-sm leading-relaxed text-stone-400">
+            Digital Fintech UKSW — unit yang mengurus pengembangan semua aplikasi
+            di lingkungan Universitas Kristen Satya Wacana.
           </p>
         </div>
 
         <div>
-          <p className="font-semibold text-white">Quick Links</p>
+          <p className="text-sm font-semibold uppercase tracking-wide text-stone-500">
+            Navigasi
+          </p>
           <ul className="mt-3 space-y-2 text-sm">
             {quickLinks.map((link) => (
               <li key={link.href}>
-                <a href={link.href} className="transition hover:text-brand-400">
+                <a
+                  href={link.href}
+                  className="text-stone-400 transition hover:text-brand-400"
+                >
                   {link.label}
                 </a>
               </li>
@@ -41,34 +39,20 @@ export function Footer({ kontak }: FooterProps) {
         </div>
 
         <div>
-          <p className="font-semibold text-white">Hubungi Kami</p>
-          <ul className="mt-3 space-y-2 text-sm">
-            <li>{kontak?.email ?? '-'}</li>
-            <li>{kontak?.phone ?? '-'}</li>
-            <li>{kontak?.alamat ?? '-'}</li>
-          </ul>
-
-          {kontak && kontak.sosial_media.length > 0 && (
-            <ul className="mt-4 flex gap-4">
-              {kontak.sosial_media.map((sosmed) => (
-                <li key={sosmed.id}>
-                  <a
-                    href={sosmed.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-sm font-medium text-brand-400 transition hover:text-brand-300"
-                  >
-                    {sosmed.platform}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          )}
+          <p className="text-sm font-semibold uppercase tracking-wide text-stone-500">
+            Email
+          </p>
+          <a
+            href="mailto:did@uksw.edu"
+            className="mt-3 inline-block text-sm font-medium text-brand-400 underline decoration-brand-700 underline-offset-4 transition hover:text-brand-300"
+          >
+            did@uksw.edu
+          </a>
         </div>
       </div>
 
-      <div className="border-t border-slate-700 py-4 text-center text-xs text-slate-400">
-        © {new Date().getFullYear()} DIGIFIN. Hak cipta dilindungi.
+      <div className="border-t border-stone-800 py-5 text-center text-xs text-stone-500">
+        © {new Date().getFullYear()} DIGFIN. Dibuat dengan kerja keras tim.
       </div>
     </footer>
   )

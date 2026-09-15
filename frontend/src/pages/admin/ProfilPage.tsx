@@ -70,15 +70,15 @@ export function ProfilPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Halaman Profil</h1>
-        <p className="mt-1 text-sm text-slate-500">
+        <h1 className="font-display text-2xl font-medium text-stone-900">Halaman Profil</h1>
+        <p className="mt-1 text-sm text-stone-500">
           Kelola konten Tentang Kami, Visi, Misi, dan Nilai.
         </p>
       </div>
 
       <form
         onSubmit={handleSubmit}
-        className="space-y-4 rounded-2xl border border-slate-200 bg-white p-6"
+        className="space-y-4 rounded-xl border border-stone-200 bg-white p-6"
       >
         <Textarea
           id="tentang_kami"

@@ -15,12 +15,12 @@ export function Sidebar() {
   const { admin, logout } = useAuth()
 
   return (
-    <aside className="flex w-64 flex-col border-r border-slate-200 bg-white">
-      <div className="flex h-16 items-center border-b border-slate-200 px-5">
-        <span className="text-lg font-bold text-slate-900">
-          DIGIFIN<span className="text-brand-600">.</span>
+    <aside className="flex w-64 flex-col border-r border-stone-200 bg-white">
+      <div className="flex h-16 items-center border-b border-stone-200 px-5">
+        <span className="font-display text-lg font-semibold text-stone-900">
+          DIGFIN<span className="text-brand-600">.</span>
         </span>
-        <span className="ml-2 rounded bg-slate-100 px-1.5 py-0.5 text-xs text-slate-500">
+        <span className="ml-2 rounded bg-stone-100 px-1.5 py-0.5 text-xs text-stone-500">
           Admin
         </span>
       </div>
@@ -35,7 +35,7 @@ export function Sidebar() {
               `block rounded-lg px-3 py-2 text-sm font-medium transition ${
                 isActive
                   ? 'bg-brand-50 text-brand-700'
-                  : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                  : 'text-stone-600 hover:bg-stone-50 hover:text-stone-900'
               }`
             }
           >
@@ -44,15 +44,15 @@ export function Sidebar() {
         ))}
       </nav>
 
-      <div className="border-t border-slate-200 p-3">
-        <p className="truncate px-3 text-sm font-medium text-slate-800">
+      <div className="border-t border-stone-200 p-3">
+        <p className="truncate px-3 text-sm font-medium text-stone-800">
           {admin?.nama}
         </p>
-        <p className="px-3 text-xs text-slate-500">@{admin?.username}</p>
+        <p className="px-3 text-xs text-stone-500">@{admin?.username}</p>
         <button
           type="button"
           onClick={logout}
-          className="mt-3 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50"
+          className="mt-3 w-full rounded-lg border border-stone-200 px-3 py-2 text-sm font-medium text-stone-600 transition hover:bg-stone-50"
         >
           Keluar
         </button>

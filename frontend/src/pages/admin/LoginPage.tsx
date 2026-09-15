@@ -37,18 +37,20 @@ export function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-stone-50 px-4">
       <div className="w-full max-w-sm">
         <div className="mb-6 text-center">
-          <p className="text-2xl font-bold text-slate-900">
-            DIGIFIN<span className="text-brand-600">.</span>
+          <p className="font-display text-3xl font-semibold text-stone-900">
+            DIGFIN<span className="text-brand-600">.</span>
           </p>
-          <p className="mt-1 text-sm text-slate-500">Panel Admin</p>
+          <p className="mt-1 text-sm text-stone-500">
+            Masuk dulu, ya. Baru bisa kelola konten.
+          </p>
         </div>
 
         <form
           onSubmit={handleSubmit}
-          className="space-y-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
+          className="space-y-4 rounded-xl border border-stone-200 bg-white p-6 shadow-sm"
         >
           <Input
             id="username"

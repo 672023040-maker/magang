@@ -178,8 +178,8 @@ export function ProjectPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Project</h1>
-          <p className="mt-1 text-sm text-slate-500">
+          <h1 className="font-display text-2xl font-medium text-stone-900">Project</h1>
+          <p className="mt-1 text-sm text-stone-500">
             Kelola project beserta dokumentasinya.
           </p>
         </div>
@@ -194,13 +194,13 @@ export function ProjectPage() {
           <Spinner size="lg" />
         </div>
       ) : items.length === 0 ? (
-        <p className="py-10 text-center text-sm text-slate-500">
+        <p className="py-10 text-center text-sm text-stone-500">
           Belum ada project.
         </p>
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+        <div className="overflow-hidden rounded-xl border border-stone-200 bg-white">
           <table className="w-full text-left text-sm">
-            <thead className="border-b border-slate-200 bg-slate-50 text-xs uppercase text-slate-500">
+            <thead className="border-b border-stone-200 bg-stone-50 text-xs uppercase text-stone-500">
               <tr>
                 <th className="px-4 py-3">Nama Project</th>
                 <th className="px-4 py-3">Status</th>
@@ -208,10 +208,10 @@ export function ProjectPage() {
                 <th className="px-4 py-3 text-right">Aksi</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-stone-100">
               {items.map((item) => (
                 <tr key={item.id}>
-                  <td className="max-w-xs truncate px-4 py-3 font-medium text-slate-800">
+                  <td className="max-w-xs truncate px-4 py-3 font-medium text-stone-800">
                     {item.nama_project}
                   </td>
                   <td className="px-4 py-3">
@@ -219,7 +219,7 @@ export function ProjectPage() {
                       {item.status === 'selesai' ? 'Selesai' : 'Berjalan'}
                     </Badge>
                   </td>
-                  <td className="px-4 py-3 text-slate-600">
+                  <td className="px-4 py-3 text-stone-600">
                     {item.tgl_mulai ?? '-'} — {item.tgl_selesai ?? 'Saat ini'}
                   </td>
                   <td className="space-x-2 px-4 py-3 text-right">
@@ -295,7 +295,7 @@ export function ProjectPage() {
 
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <p className="text-sm font-medium text-slate-700">Dokumentasi</p>
+              <p className="text-sm font-medium text-stone-700">Dokumentasi</p>
               <button
                 type="button"
                 onClick={addDokumentasi}
@@ -306,7 +306,7 @@ export function ProjectPage() {
             </div>
 
             {form.dokumentasi.map((dok, index) => (
-              <div key={index} className="rounded-lg border border-slate-200 p-3">
+              <div key={index} className="rounded-lg border border-stone-200 p-3">
                 <Input
                   id={`dok-gambar-${index}`}
                   label="File Gambar"
