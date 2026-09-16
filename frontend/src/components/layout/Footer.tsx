@@ -17,7 +17,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="gap-8 md:flex md:gap-12 md:justify-self-center">
+        <div className="gap-8 md:flex md:gap-12 md:justify-self-center md:translate-x-[45px]">
           <div className="text-left">
             <div className="flex items-center gap-2">
               <img
