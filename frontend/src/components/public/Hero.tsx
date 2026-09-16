@@ -39,13 +39,13 @@ export function Hero() {
           <div className="mt-10 flex flex-col items-center gap-5 md:flex-row md:justify-center md:gap-x-28">
             <a
               href="#profil"
-              className="flex h-[58px] w-full max-w-[320px] items-center justify-center rounded-[18px] border-2 border-[#70B52A] text-sm font-bold uppercase tracking-wide text-white transition duration-300 hover:bg-[#70B52A]/20 md:w-[300px]"
+              className="flex h-[58px] w-full max-w-[320px] items-center justify-center rounded-[18px] border-2 border-[#70B52A] text-sm font-bold uppercase tracking-wide text-white transition duration-300 hover:-translate-y-1 hover:bg-[#70B52A] hover:shadow-[0_10px_24px_rgba(112,181,42,0.45)] md:w-[300px]"
             >
               Kenali Kami
             </a>
             <a
               href="#kontak"
-              className="flex h-[58px] w-full max-w-[320px] items-center justify-center rounded-[18px] border-2 border-[#70B52A] text-sm font-bold uppercase tracking-wide text-white transition duration-300 hover:bg-[#70B52A]/20 md:w-[300px]"
+              className="flex h-[58px] w-full max-w-[320px] items-center justify-center rounded-[18px] border-2 border-[#70B52A] text-sm font-bold uppercase tracking-wide text-white transition duration-300 hover:-translate-y-1 hover:bg-[#70B52A] hover:shadow-[0_10px_24px_rgba(112,181,42,0.45)] md:w-[300px]"
             >
               Hubungi Kami
             </a>

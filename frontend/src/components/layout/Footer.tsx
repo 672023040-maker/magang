@@ -1,16 +1,8 @@
-const quickLinks = [
-  { href: '#hero', label: 'Beranda' },
-  { href: '#profil', label: 'Tentang' },
-  { href: '#struktur', label: 'Tim' },
-  { href: '#project', label: 'Project' },
-  { href: '#kontak', label: 'Kontak' },
-]
-
 export function Footer() {
   return (
-    <footer className="bg-stone-900 text-stone-300">
+    <footer className="bg-[#538932] text-white/90">
       <div className="grid items-start gap-10 py-8 pl-5 pr-4 md:grid-cols-[1fr_auto_1fr]">
-        <div className="justify-self-start self-center">
+        <div className="justify-self-start">
           <div className="flex items-center gap-3">
             <img
               src="/uksw.png"
@@ -25,39 +17,55 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="text-center md:justify-self-center">
-          <p className="text-sm font-semibold uppercase tracking-wide text-stone-500">
-            Navigasi
-          </p>
-          <ul className="mt-3 grid grid-cols-3 justify-items-center gap-x-8 gap-y-2 text-sm">
-            {quickLinks.map((link) => (
-              <li key={link.href}>
-                <a
-                  href={link.href}
-                  className="text-stone-400 transition hover:text-brand-400"
-                >
-                  {link.label}
-                </a>
-              </li>
-            ))}
-          </ul>
+        <div className="gap-8 md:flex md:gap-12 md:justify-self-center">
+          <div className="text-left">
+            <div className="flex items-center gap-2">
+              <img
+                src="/jam.png"
+                alt="Jam"
+                className="h-5 w-auto object-contain"
+              />
+              <p className="text-sm font-semibold uppercase tracking-wide text-white/60">
+                Jam Pelayanan
+              </p>
+            </div>
+            <p className="mt-3 text-sm text-white/80">Senin - Jumat</p>
+            <p className="mt-1 text-sm text-white/80">07.30 - 16.00</p>
+          </div>
+
+          <div className="text-left">
+            <div className="flex items-center gap-2">
+              <img
+                src="/lokasi.png"
+                alt="Lokasi"
+                className="h-5 w-auto object-contain"
+              />
+              <p className="text-sm font-semibold uppercase tracking-wide text-white/60">
+                Lokasi
+              </p>
+            </div>
+            <p className="mt-3 max-w-[260px] text-sm leading-relaxed text-white/80">
+              Kampus Diponegoro Belakang Gedung F Jl. Diponegoro No. 52 - 60,
+              Salatiga, Indonesia
+            </p>
+          </div>
         </div>
 
         <div className="justify-self-end mr-[250px]">
-          <p className="text-sm font-semibold uppercase tracking-wide text-stone-500">
+          <p className="text-sm font-semibold uppercase tracking-wide text-white/60">
             Email
           </p>
           <a
             href="https://mail.google.com/mail/?view=cm&to=did@uksw.edu"
             target="_blank"
             rel="noreferrer"
-            className="mt-3 inline-block text-sm font-medium text-brand-400 underline decoration-brand-700 underline-offset-4 transition hover:text-brand-300"
+            className="mt-3 inline-block text-sm font-medium text-white underline decoration-white/40 underline-offset-4 transition hover:text-white"
           >
             did@uksw.edu
           </a>
 
           <div className="mt-6">
-            <p className="text-sm font-semibold uppercase tracking-wide text-stone-500">
+            <p className="text-sm font-semibold uppercase tracking-wide text-white/60">
               Sosial Media
             </p>
             <a
@@ -77,7 +85,7 @@ export function Footer() {
         </div>
       </div>
 
-      <div className="border-t border-stone-800 py-5 text-center text-xs text-stone-500">
+      <div className="border-t border-white/20 py-5 text-center text-xs text-white/70">
         DIGFIN ©2026 UKSW. Seluruh hak cipta.
       </div>
     </footer>
