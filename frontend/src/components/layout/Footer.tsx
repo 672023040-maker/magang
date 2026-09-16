@@ -45,8 +45,13 @@ export function Footer() {
               </p>
             </div>
             <p className="mt-3 max-w-[260px] text-sm leading-relaxed text-white/80">
-              Kampus Diponegoro Belakang Gedung F Jl. Diponegoro No. 52 - 60,
-              Salatiga, Indonesia
+              Kampus Diponegoro
+            </p>
+            <p className="max-w-[260px] text-sm leading-relaxed text-white/80">
+              Belakang Gedung F
+            </p>
+            <p className="max-w-[260px] text-sm leading-relaxed text-white/80">
+              Jl. Diponegoro No. 52 - 60, Salatiga, Indonesia
             </p>
           </div>
         </div>
