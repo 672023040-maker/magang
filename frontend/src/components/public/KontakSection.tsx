@@ -16,7 +16,9 @@ export function KontakSection() {
         </p>
 
         <a
-          href="mailto:did@uksw.edu"
+          href="https://mail.google.com/mail/?view=cm&to=did@uksw.edu"
+          target="_blank"
+          rel="noreferrer"
           className="mt-8 inline-flex items-center gap-3 rounded-xl border border-stone-200 bg-stone-50 px-6 py-4 text-sm font-medium text-stone-800 transition hover:border-brand-300 hover:bg-brand-50"
         >
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-600 text-white">
