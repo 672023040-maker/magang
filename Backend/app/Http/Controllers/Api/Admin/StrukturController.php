@@ -20,7 +20,7 @@ class StrukturController extends Controller
 
     public function store(StrukturRequest $request): JsonResponse
     {
-        $data = $request->only(['nama', 'jabatan']);
+        $data = $request->only(['nama', 'jabatan', 'instagram', 'email']);
 
         if ($request->hasFile('foto')) {
             $data['foto'] = $request->file('foto')->store('struktur', 'public');
@@ -42,7 +42,7 @@ class StrukturController extends Controller
     {
         $struktur = StrukturOrganisasi::findOrFail($id);
 
-        $data = $request->only(['nama', 'jabatan']);
+        $data = $request->only(['nama', 'jabatan', 'instagram', 'email']);
 
         if ($request->hasFile('foto')) {
             $data['foto'] = $request->file('foto')->store('struktur', 'public');

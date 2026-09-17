@@ -5,6 +5,9 @@ interface StrukturSectionProps {
   struktur: Struktur[]
 }
 
+const instagramUrl = (value: string) =>
+  /^https?:\/\//i.test(value) ? value : `https://www.instagram.com/${value}`
+
 export function StrukturSection({ struktur }: StrukturSectionProps) {
   const [activeId, setActiveId] = useState<number | null>(null)
 
@@ -75,10 +78,47 @@ export function StrukturSection({ struktur }: StrukturSectionProps) {
                   <div
                     className={`overflow-hidden transition-all duration-500 ease-in-out ${
                       isActive
-                        ? 'mt-5 max-h-[500px] translate-x-0 opacity-100'
+                        ? 'mt-5 max-h-[560px] translate-x-0 opacity-100'
                         : 'max-h-0 -translate-x-3 opacity-0'
                     }`}
                   >
+                    {(orang.instagram || orang.email) && (
+                      <div className="flex items-center justify-center gap-4 pb-5">
+                        {orang.instagram && (
+                          <a
+                            href={instagramUrl(orang.instagram)}
+                            target="_blank"
+                            rel="noreferrer"
+                            aria-label={`Instagram ${orang.nama}`}
+                            onClick={(e) => e.stopPropagation()}
+                            className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/20 transition hover:bg-white/20 hover:ring-brand-500/70"
+                          >
+                            <img
+                              src="/instagram.png"
+                              alt=""
+                              className="h-4 w-auto object-contain"
+                            />
+                          </a>
+                        )}
+                        {orang.email && (
+                          <a
+                            href={`https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(orang.email)}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            aria-label={`Email ${orang.nama}`}
+                            onClick={(e) => e.stopPropagation()}
+                            className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/20 transition hover:bg-white/20 hover:ring-brand-500/70"
+                          >
+                            <img
+                              src="/email white.png"
+                              alt=""
+                              className="h-4 w-auto object-contain"
+                            />
+                          </a>
+                        )}
+                      </div>
+                    )}
+
                     <div className="border-t border-white/20 pt-5">
                       {orang.divisi.length > 0 ? (
                         <ul className="space-y-4 text-left">

@@ -13,6 +13,8 @@ class StrukturOrganisasi extends Model
         'nama',
         'jabatan',
         'foto',
+        'instagram',
+        'email',
     ];
 
     public function divisi(): HasMany

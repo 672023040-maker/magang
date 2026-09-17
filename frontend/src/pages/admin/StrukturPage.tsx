@@ -16,6 +16,8 @@ interface DivisiForm {
 interface StrukturForm {
   nama: string
   jabatan: string
+  instagram: string
+  email: string
   foto: File | null
   divisi: DivisiForm[]
 }
@@ -25,6 +27,8 @@ const emptyDivisi: DivisiForm = { nama_divisi: '', deskripsi: '' }
 const emptyForm: StrukturForm = {
   nama: '',
   jabatan: '',
+  instagram: '',
+  email: '',
   foto: null,
   divisi: [],
 }
@@ -67,6 +71,8 @@ export function StrukturPage() {
     setForm({
       nama: item.nama,
       jabatan: item.jabatan,
+      instagram: item.instagram ?? '',
+      email: item.email ?? '',
       foto: null,
       divisi: item.divisi.map((d) => ({
         nama_divisi: d.nama_divisi,
@@ -118,6 +124,8 @@ export function StrukturPage() {
 
     data.append('nama', form.nama)
     data.append('jabatan', form.jabatan)
+    data.append('instagram', form.instagram)
+    data.append('email', form.email)
 
     if (form.foto) {
       data.append('foto', form.foto)
@@ -243,6 +251,21 @@ export function StrukturPage() {
             value={form.jabatan}
             onChange={(e) => updateField('jabatan', e.target.value)}
             required
+          />
+          <Input
+            id="instagram"
+            label="Instagram URL"
+            placeholder="https://www.instagram.com/username"
+            value={form.instagram}
+            onChange={(e) => updateField('instagram', e.target.value)}
+          />
+          <Input
+            id="email"
+            label="Email"
+            type="email"
+            placeholder="nama@uksw.edu"
+            value={form.email}
+            onChange={(e) => updateField('email', e.target.value)}
           />
           <Input
             id="foto"
