@@ -11,6 +11,7 @@ import { ProfilPage } from './pages/admin/ProfilPage'
 import { ProjectPage } from './pages/admin/ProjectPage'
 import { StrukturPage } from './pages/admin/StrukturPage'
 import { HomePage } from './pages/public/HomePage'
+import { NotFoundPage } from './pages/public/NotFoundPage'
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
             <Route path="kontak" element={<KontakPage />} />
             <Route path="pesan" element={<PesanMasukPage />} />
           </Route>
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>
