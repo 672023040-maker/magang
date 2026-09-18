@@ -10,29 +10,22 @@ import { Select } from '../../components/ui/Select'
 import { Spinner } from '../../components/ui/Spinner'
 import { Textarea } from '../../components/ui/Textarea'
 
-interface DokumentasiForm {
-  file_gambar: File | null
-  keterangan: string
-}
-
 interface ProjectForm {
   nama_project: string
   deskripsi: string
   status: StatusProject
-  tgl_mulai: string
-  tgl_selesai: string
-  dokumentasi: DokumentasiForm[]
+  tgl_dibuat: string
+  file_gambar: File | null
+  keterangan: string
 }
-
-const emptyDokumentasi: DokumentasiForm = { file_gambar: null, keterangan: '' }
 
 const emptyForm: ProjectForm = {
   nama_project: '',
   deskripsi: '',
   status: 'berjalan',
-  tgl_mulai: '',
-  tgl_selesai: '',
-  dokumentasi: [],
+  tgl_dibuat: '',
+  file_gambar: null,
+  keterangan: '',
 }
 
 export function ProjectPage() {
@@ -44,6 +37,8 @@ export function ProjectPage() {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
+  const [existingCover, setExistingCover] = useState<string | null>(null)
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
 
   const load = () => {
     project
@@ -60,9 +55,16 @@ export function ProjectPage() {
       .finally(() => setLoading(false))
   }, [])
 
+  const resetCover = () => {
+    if (previewUrl) URL.revokeObjectURL(previewUrl)
+    setPreviewUrl(null)
+    setExistingCover(null)
+  }
+
   const openCreate = () => {
     setEditing(null)
     setForm(emptyForm)
+    resetCover()
     setError(null)
     setSuccess(null)
     setModalOpen(true)
@@ -74,10 +76,12 @@ export function ProjectPage() {
       nama_project: item.nama_project,
       deskripsi: item.deskripsi,
       status: item.status,
-      tgl_mulai: item.tgl_mulai ?? '',
-      tgl_selesai: item.tgl_selesai ?? '',
-      dokumentasi: item.dokumentasi.map(() => ({ ...emptyDokumentasi })),
+      tgl_dibuat: item.tgl_dibuat ?? '',
+      file_gambar: null,
+      keterangan: item.dokumentasi[0]?.keterangan ?? '',
     })
+    resetCover()
+    setExistingCover(item.dokumentasi[0]?.file_gambar_url ?? null)
     setError(null)
     setSuccess(null)
     setModalOpen(true)
@@ -95,37 +99,14 @@ export function ProjectPage() {
     }
   }
 
-  const updateField = (
-    name: keyof Omit<ProjectForm, 'dokumentasi'>,
-    value: string,
-  ) => {
+  const updateField = (name: keyof ProjectForm, value: string | File | null) => {
     setForm((prev) => ({ ...prev, [name]: value }))
   }
 
-  const updateDokumentasi = (
-    index: number,
-    field: keyof DokumentasiForm,
-    value: File | string | null,
-  ) => {
-    setForm((prev) => {
-      const dokumentasi = [...prev.dokumentasi]
-      dokumentasi[index] = { ...dokumentasi[index], [field]: value }
-      return { ...prev, dokumentasi }
-    })
-  }
-
-  const addDokumentasi = () => {
-    setForm((prev) => ({
-      ...prev,
-      dokumentasi: [...prev.dokumentasi, { ...emptyDokumentasi }],
-    }))
-  }
-
-  const removeDokumentasi = (index: number) => {
-    setForm((prev) => ({
-      ...prev,
-      dokumentasi: prev.dokumentasi.filter((_, i) => i !== index),
-    }))
+  const handleCoverChange = (file: File | null) => {
+    if (previewUrl) URL.revokeObjectURL(previewUrl)
+    setPreviewUrl(file ? URL.createObjectURL(file) : null)
+    setForm((prev) => ({ ...prev, file_gambar: file }))
   }
 
   const buildFormData = (): FormData => {
@@ -135,15 +116,12 @@ export function ProjectPage() {
     data.append('deskripsi', form.deskripsi)
     data.append('status', form.status)
 
-    if (form.tgl_mulai) data.append('tgl_mulai', form.tgl_mulai)
-    if (form.tgl_selesai) data.append('tgl_selesai', form.tgl_selesai)
+    if (form.tgl_dibuat) data.append('tgl_dibuat', form.tgl_dibuat)
 
-    form.dokumentasi.forEach((dok, index) => {
-      if (dok.file_gambar) {
-        data.append(`dokumentasi[${index}][file_gambar]`, dok.file_gambar)
-      }
-      data.append(`dokumentasi[${index}][keterangan]`, dok.keterangan)
-    })
+    if (form.file_gambar) {
+      data.append('dokumentasi[0][file_gambar]', form.file_gambar)
+    }
+    data.append('dokumentasi[0][keterangan]', form.keterangan)
 
     return data
   }
@@ -166,6 +144,7 @@ export function ProjectPage() {
       }
 
       setModalOpen(false)
+      resetCover()
       load()
     } catch {
       setError('Gagal menyimpan project.')
@@ -174,13 +153,15 @@ export function ProjectPage() {
     }
   }
 
+  const coverSrc = previewUrl ?? existingCover
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-display text-2xl font-medium text-stone-900">Project</h1>
           <p className="mt-1 text-sm text-stone-500">
-            Kelola project beserta dokumentasinya.
+            Kelola project beserta sampul dan detailnya.
           </p>
         </div>
         <Button onClick={openCreate}>Tambah</Button>
@@ -202,15 +183,29 @@ export function ProjectPage() {
           <table className="w-full text-left text-sm">
             <thead className="border-b border-stone-200 bg-stone-50 text-xs uppercase text-stone-500">
               <tr>
+                <th className="px-4 py-3">Sampul</th>
                 <th className="px-4 py-3">Nama Project</th>
                 <th className="px-4 py-3">Status</th>
-                <th className="px-4 py-3">Periode</th>
+                <th className="px-4 py-3">Tanggal</th>
                 <th className="px-4 py-3 text-right">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-stone-100">
               {items.map((item) => (
                 <tr key={item.id}>
+                  <td className="px-4 py-3">
+                    {item.dokumentasi[0]?.file_gambar_url ? (
+                      <img
+                        src={item.dokumentasi[0].file_gambar_url}
+                        alt=""
+                        className="h-10 w-14 rounded object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-10 w-14 items-center justify-center rounded bg-stone-100 text-[10px] text-stone-400">
+                        -
+                      </div>
+                    )}
+                  </td>
                   <td className="max-w-xs truncate px-4 py-3 font-medium text-stone-800">
                     {item.nama_project}
                   </td>
@@ -220,7 +215,7 @@ export function ProjectPage() {
                     </Badge>
                   </td>
                   <td className="px-4 py-3 text-stone-600">
-                    {item.tgl_mulai ?? '-'} — {item.tgl_selesai ?? 'Saat ini'}
+                    {item.tgl_dibuat ?? '-'}
                   </td>
                   <td className="space-x-2 px-4 py-3 text-right">
                     <button
@@ -248,7 +243,10 @@ export function ProjectPage() {
       <Modal
         open={modalOpen}
         title={editing ? 'Edit Project' : 'Tambah Project'}
-        onClose={() => setModalOpen(false)}
+        onClose={() => {
+          resetCover()
+          setModalOpen(false)
+        }}
       >
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
@@ -276,69 +274,43 @@ export function ProjectPage() {
               { value: 'selesai', label: 'Selesai' },
             ]}
           />
-          <div className="grid gap-4 sm:grid-cols-2">
-            <Input
-              id="tgl_mulai"
-              label="Tanggal Mulai"
-              type="date"
-              value={form.tgl_mulai}
-              onChange={(e) => updateField('tgl_mulai', e.target.value)}
-            />
-            <Input
-              id="tgl_selesai"
-              label="Tanggal Selesai"
-              type="date"
-              value={form.tgl_selesai}
-              onChange={(e) => updateField('tgl_selesai', e.target.value)}
-            />
-          </div>
+          <Input
+            id="tgl_dibuat"
+            label="Tanggal Dibuat"
+            type="date"
+            value={form.tgl_dibuat}
+            onChange={(e) => updateField('tgl_dibuat', e.target.value)}
+          />
 
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <p className="text-sm font-medium text-stone-700">Dokumentasi</p>
-              <button
-                type="button"
-                onClick={addDokumentasi}
-                className="text-xs font-medium text-brand-600 hover:text-brand-700"
-              >
-                + Tambah Dokumentasi
-              </button>
+          <Input
+            id="file_gambar"
+            label="Gambar Sampul"
+            type="file"
+            accept="image/*"
+            onChange={(e) => handleCoverChange(e.target.files?.[0] ?? null)}
+          />
+
+          {coverSrc && (
+            <div className="rounded-lg border border-stone-200 p-2">
+              <img
+                src={coverSrc}
+                alt={editing ? 'Sampul project saat ini' : 'Pratinjau sampul'}
+                className="h-28 w-full rounded object-cover"
+              />
+              {!previewUrl && existingCover && (
+                <p className="mt-1 text-xs text-stone-500">
+                  Sampul saat ini. Pilih file baru untuk menggantinya.
+                </p>
+              )}
             </div>
+          )}
 
-            {form.dokumentasi.map((dok, index) => (
-              <div key={index} className="rounded-lg border border-stone-200 p-3">
-                <Input
-                  id={`dok-gambar-${index}`}
-                  label="File Gambar"
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) =>
-                    updateDokumentasi(index, 'file_gambar', e.target.files?.[0] ?? null)
-                  }
-                  required
-                />
-                <div className="mt-2">
-                  <Input
-                    id={`dok-ket-${index}`}
-                    label="Keterangan"
-                    value={dok.keterangan}
-                    onChange={(e) =>
-                      updateDokumentasi(index, 'keterangan', e.target.value)
-                    }
-                  />
-                </div>
-                <div className="mt-2 text-right">
-                  <button
-                    type="button"
-                    onClick={() => removeDokumentasi(index)}
-                    className="text-xs font-medium text-red-600 hover:text-red-700"
-                  >
-                    Hapus Dokumentasi
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
+          <Input
+            id="keterangan"
+            label="Keterangan Gambar"
+            value={form.keterangan}
+            onChange={(e) => updateField('keterangan', e.target.value)}
+          />
 
           <div className="pt-2">
             <Button type="submit" loading={saving}>

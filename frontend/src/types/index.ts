@@ -23,17 +23,6 @@ export interface Struktur {
   divisi: Divisi[]
 }
 
-export type KategoriInformasi = 'berita' | 'artikel' | 'pengumuman'
-
-export interface Informasi {
-  id: number
-  judul: string
-  kategori: KategoriInformasi
-  isi: string
-  gambar_url: string | null
-  tanggal: string
-}
-
 export interface Dokumentasi {
   id: number
   project_id: number
@@ -48,23 +37,13 @@ export interface Project {
   nama_project: string
   deskripsi: string
   status: StatusProject
-  tgl_mulai: string | null
-  tgl_selesai: string | null
+  tgl_dibuat: string | null
   dokumentasi: Dokumentasi[]
 }
 
 export interface Kontak {
   id: number
   email: string
-}
-
-export interface PesanKontak {
-  id: number
-  nama_pengirim: string
-  email: string
-  subjek: string
-  pesan: string
-  tanggal: string
 }
 
 export interface Admin {

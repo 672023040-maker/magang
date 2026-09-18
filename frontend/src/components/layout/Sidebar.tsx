@@ -5,10 +5,8 @@ const menu = [
   { to: '/admin', label: 'Dashboard', end: true },
   { to: '/admin/profil', label: 'Profil' },
   { to: '/admin/struktur', label: 'Struktur Organisasi' },
-  { to: '/admin/informasi', label: 'Informasi' },
   { to: '/admin/project', label: 'Project' },
   { to: '/admin/kontak', label: 'Kontak' },
-  { to: '/admin/pesan', label: 'Pesan Masuk' },
 ]
 
 export function Sidebar() {

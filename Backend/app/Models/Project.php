@@ -13,15 +13,13 @@ class Project extends Model
         'nama_project',
         'deskripsi',
         'status',
-        'tgl_mulai',
-        'tgl_selesai',
+        'tgl_dibuat',
     ];
 
     protected function casts(): array
     {
         return [
-            'tgl_mulai' => 'date',
-            'tgl_selesai' => 'date',
+            'tgl_dibuat' => 'date',
         ];
     }
 

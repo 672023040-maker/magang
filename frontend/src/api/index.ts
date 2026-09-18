@@ -2,10 +2,8 @@ import client from './client'
 import type {
   Admin,
   ApiResponse,
-  Informasi,
   Kontak,
   LoginResponse,
-  PesanKontak,
   Profil,
   Project,
   Struktur,
@@ -44,21 +42,6 @@ export const struktur = {
     client.delete(`/admin/struktur/${id}`).then((res) => res.data),
 }
 
-export const informasi = {
-  get: () =>
-    client
-      .get<ApiResponse<Informasi[]>>('/informasi')
-      .then((res) => res.data.data),
-  create: (data: FormData) =>
-    client.post<ApiResponse<Informasi>>('/admin/informasi', data).then((res) => res.data),
-  update: (id: number, data: FormData) =>
-    client
-      .put<ApiResponse<Informasi>>(`/admin/informasi/${id}`, data)
-      .then((res) => res.data),
-  remove: (id: number) =>
-    client.delete(`/admin/informasi/${id}`).then((res) => res.data),
-}
-
 export const project = {
   get: () =>
     client
@@ -89,22 +72,4 @@ export const kontak = {
       .then((res) => res.data),
   remove: (id: number) =>
     client.delete(`/admin/kontak/${id}`).then((res) => res.data),
-}
-
-export const pesanKontak = {
-  kirim: (data: {
-    nama_pengirim: string
-    email: string
-    subjek: string
-    pesan: string
-  }) =>
-    client
-      .post<ApiResponse<PesanKontak>>('/pesan-kontak', data)
-      .then((res) => res.data),
-  get: () =>
-    client
-      .get<ApiResponse<PesanKontak[]>>('/admin/pesan')
-      .then((res) => res.data.data),
-  remove: (id: number) =>
-    client.delete(`/admin/pesan/${id}`).then((res) => res.data),
 }

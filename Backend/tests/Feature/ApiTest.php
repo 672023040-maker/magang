@@ -25,20 +25,8 @@ class ApiTest extends TestCase
     {
         $this->getJson('/api/profil')->assertOk();
         $this->getJson('/api/struktur')->assertOk();
-        $this->getJson('/api/informasi')->assertOk();
         $this->getJson('/api/project')->assertOk();
         $this->getJson('/api/kontak')->assertOk();
-    }
-
-    public function test_pengunjung_dapat_mengirim_pesan_kontak(): void
-    {
-        $this->postJson('/api/pesan-kontak', [
-            'nama_pengirim' => 'Tester',
-            'email' => 'tester@example.com',
-            'subjek' => 'Halo',
-            'pesan' => 'Mau tanya layanan.',
-        ])->assertStatus(201)
-            ->assertJsonPath('data.nama_pengirim', 'Tester');
     }
 
     public function test_login_sukses_mengembalikan_token(): void

@@ -25,8 +25,7 @@ class ProjectController extends Controller
             'nama_project',
             'deskripsi',
             'status',
-            'tgl_mulai',
-            'tgl_selesai',
+            'tgl_dibuat',
         ]);
 
         $project = Project::create($data);
@@ -49,13 +48,12 @@ class ProjectController extends Controller
             'nama_project',
             'deskripsi',
             'status',
-            'tgl_mulai',
-            'tgl_selesai',
+            'tgl_dibuat',
         ]);
 
         $project->update($data);
 
-        $this->syncDokumentasi($project, $request->input('dokumentasi', []));
+        $this->syncCover($project, $request);
 
         return response()->json([
             'message' => 'Project berhasil diperbarui',
@@ -72,6 +70,28 @@ class ProjectController extends Controller
         return response()->json([
             'message' => 'Project berhasil dihapus',
         ]);
+    }
+
+    /**
+     * Sinkronkan gambar sampul. Jika ada file baru, dokumentasi dibuat ulang.
+     * Jika tidak ada file baru, sampul lama dipertahankan dan hanya keterangan
+     * yang diperbarui bila diisi.
+     */
+    private function syncCover(Project $project, ProjectRequest $request): void
+    {
+        $files = $request->file('dokumentasi', []);
+
+        if (isset($files[0]['file_gambar']) && $files[0]['file_gambar'] instanceof UploadedFile) {
+            $this->syncDokumentasi($project, $request->input('dokumentasi', []));
+
+            return;
+        }
+
+        $keterangan = $request->input('dokumentasi.0.keterangan');
+
+        if ($keterangan !== null) {
+            $project->dokumentasi()->first()?->update(['keterangan' => $keterangan]);
+        }
     }
 
     /**

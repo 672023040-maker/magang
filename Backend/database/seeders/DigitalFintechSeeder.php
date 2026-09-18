@@ -5,9 +5,6 @@ namespace Database\Seeders;
 use App\Models\Admin;
 use App\Models\Divisi;
 use App\Models\DokumentasiProject;
-use App\Models\Informasi;
-use App\Models\Kontak;
-use App\Models\PesanKontak;
 use App\Models\Profil;
 use App\Models\Project;
 use App\Models\SosialMedia;
@@ -22,10 +19,8 @@ class DigitalFintechSeeder extends Seeder
         $this->seedAdmin();
         $this->seedProfil();
         $this->seedStruktur();
-        $this->seedInformasi();
         $this->seedProject();
         $this->seedKontak();
-        $this->seedPesanKontak();
     }
 
     private function seedAdmin(): void
@@ -83,42 +78,13 @@ class DigitalFintechSeeder extends Seeder
         ]);
     }
 
-    private function seedInformasi(): void
-    {
-        $items = [
-            [
-                'judul' => 'DIGIFIN Meluncurkan Fitur Baru Dompet Digital',
-                'kategori' => 'berita',
-                'isi' => 'Kami dengan bangga mengumumkan peluncuran fitur dompet digital terbaru yang memudahkan pengguna melakukan transaksi harian dengan lebih cepat dan aman.',
-                'tanggal' => now()->subDays(2)->toDateString(),
-            ],
-            [
-                'judul' => 'Tips Mengelola Keuangan Digital untuk Pemula',
-                'kategori' => 'artikel',
-                'isi' => 'Artikel ini membahas langkah-langkah sederhana untuk mulai mengelola keuangan secara digital, mulai dari mencatat pengeluaran hingga memanfaatkan fitur keamanan.',
-                'tanggal' => now()->subDays(5)->toDateString(),
-            ],
-            [
-                'judul' => 'Pemeliharaan Sistem Berkala',
-                'kategori' => 'pengumuman',
-                'isi' => 'Sistem akan mengalami pemeliharaan berkala pada akhir pekan. Beberapa layanan mungkin tidak dapat diakses sementara selama proses berlangsung.',
-                'tanggal' => now()->subDays(1)->toDateString(),
-            ],
-        ];
-
-        foreach ($items as $item) {
-            Informasi::query()->firstOrCreate(['judul' => $item['judul']], $item);
-        }
-    }
-
     private function seedProject(): void
     {
         $projectSelesai = Project::query()->create([
             'nama_project' => 'Pengembangan Platform Mobile Banking',
             'deskripsi' => 'Membangun platform perbankan digital yang responsif dengan fitur transfer, pembayaran, dan manajemen akun.',
             'status' => 'selesai',
-            'tgl_mulai' => now()->subMonths(6)->toDateString(),
-            'tgl_selesai' => now()->subMonth()->toDateString(),
+            'tgl_dibuat' => now()->subMonths(6)->toDateString(),
         ]);
 
         DokumentasiProject::query()->create([
@@ -131,8 +97,7 @@ class DigitalFintechSeeder extends Seeder
             'nama_project' => 'Integrasi Pembayaran QRIS',
             'deskripsi' => 'Mengintegrasikan sistem pembayaran QRIS agar pengguna dapat bertransaksi di berbagai merchant secara praktis.',
             'status' => 'berjalan',
-            'tgl_mulai' => now()->subMonth()->toDateString(),
-            'tgl_selesai' => null,
+            'tgl_dibuat' => now()->subMonth()->toDateString(),
         ]);
 
         DokumentasiProject::query()->create([
@@ -165,16 +130,5 @@ class DigitalFintechSeeder extends Seeder
                 'url' => $item['url'],
             ]);
         }
-    }
-
-    private function seedPesanKontak(): void
-    {
-        PesanKontak::query()->create([
-            'nama_pengirim' => 'Andi Pratama',
-            'email' => 'andi@example.com',
-            'subjek' => 'Informasi Layanan',
-            'pesan' => 'Halo, saya ingin bertanya mengenai layanan dompet digital yang tersedia di DIGIFIN.',
-            'tanggal' => now()->subHours(3),
-        ]);
     }
 }

@@ -14,8 +14,7 @@ class ProjectResource extends JsonResource
             'nama_project' => $this->nama_project,
             'deskripsi' => $this->deskripsi,
             'status' => $this->status,
-            'tgl_mulai' => $this->tgl_mulai?->toDateString(),
-            'tgl_selesai' => $this->tgl_selesai?->toDateString(),
+            'tgl_dibuat' => $this->tgl_dibuat?->toDateString(),
             'dokumentasi' => DokumentasiResource::collection($this->whenLoaded('dokumentasi')),
         ];
     }
