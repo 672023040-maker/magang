@@ -7,6 +7,8 @@ const menu = [
   { to: '/admin/struktur', label: 'Struktur Organisasi' },
   { to: '/admin/project', label: 'Project' },
   { to: '/admin/kontak', label: 'Kontak' },
+  { to: '/admin/ganti-password', label: 'Ganti Password' },
+  { to: '/admin/perangkat', label: 'Perangkat' },
 ]
 
 export function Sidebar() {

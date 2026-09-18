@@ -14,6 +14,8 @@ class AdminResource extends JsonResource
             'username' => $this->username,
             'nama' => $this->nama,
             'role' => $this->role,
+            'must_change_password' => (bool) $this->must_change_password,
+            'last_login_at' => $this->last_login_at?->toDateTimeString(),
         ];
     }
 }

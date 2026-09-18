@@ -3,39 +3,45 @@ import { auth } from '../api'
 import type { Admin } from '../types'
 import { AuthContext } from './AuthContext'
 
-const TOKEN_KEY = 'digifin_token'
-
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [admin, setAdmin] = useState<Admin | null>(null)
   const [loading, setLoading] = useState(true)
 
+  // Session disimpan backend sebagai cookie HttpOnly. Tidak ada token yang
+  // perlu disimpan di localStorage — browser otomatis mengirim cookie session
+  // + header X-XSRF-TOKEN (dibaca axios dari cookie XSRF-TOKEN).
   useEffect(() => {
-    const token = localStorage.getItem(TOKEN_KEY)
-
-    if (!token) {
-      queueMicrotask(() => setLoading(false))
-      return
-    }
+    let mounted = true
 
     auth
       .me()
-      .then((res) => setAdmin(res.data))
-      .catch(() => localStorage.removeItem(TOKEN_KEY))
-      .finally(() => setLoading(false))
+      .then((adminData) => {
+        if (mounted) setAdmin(adminData)
+      })
+      .catch(() => {
+        // Cookie HttpOnly kosong / session kedaluwarsa — admin tetap null.
+      })
+      .finally(() => {
+        if (mounted) setLoading(false)
+      })
+
+    return () => {
+      mounted = false
+    }
   }, [])
 
   const login = async (username: string, password: string) => {
     const res = await auth.login(username, password)
 
-    localStorage.setItem(TOKEN_KEY, res.token)
     setAdmin(res.admin)
+
+    return res.admin
   }
 
   const logout = async () => {
     try {
       await auth.logout()
     } finally {
-      localStorage.removeItem(TOKEN_KEY)
       setAdmin(null)
     }
   }

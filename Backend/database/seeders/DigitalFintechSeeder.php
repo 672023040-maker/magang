@@ -5,12 +5,15 @@ namespace Database\Seeders;
 use App\Models\Admin;
 use App\Models\Divisi;
 use App\Models\DokumentasiProject;
+use App\Models\Kontak;
 use App\Models\Profil;
 use App\Models\Project;
 use App\Models\SosialMedia;
 use App\Models\StrukturOrganisasi;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class DigitalFintechSeeder extends Seeder
 {
@@ -25,12 +28,17 @@ class DigitalFintechSeeder extends Seeder
 
     private function seedAdmin(): void
     {
+        // Sekali dibuat, password default TIDAK boleh diketahui siapa pun.
+        // Gunakan password acak + must_change_password = true sehingga login
+        // pertama di-paksa ganti password. Kredensial awal diatur via:
+        //     php artisan digfin:init-admin <username>
         Admin::query()->firstOrCreate(
             ['username' => 'admin'],
             [
-                'password' => Hash::make('admin123'),
+                'password' => Hash::make(Str::password(20)),
                 'nama' => 'Admin DIGIFIN',
                 'role' => 'admin',
+                'must_change_password' => true,
             ]
         );
     }
@@ -89,7 +97,7 @@ class DigitalFintechSeeder extends Seeder
 
         DokumentasiProject::query()->create([
             'project_id' => $projectSelesai->id,
-            'file_gambar' => 'dokumentasi/mobile-banking.jpg',
+            'file_gambar' => $this->ensurePlaceholderJpeg('dokumentasi/mobile-banking.jpg'),
             'keterangan' => 'Tampilan antarmuka utama platform mobile banking.',
         ]);
 
@@ -102,9 +110,28 @@ class DigitalFintechSeeder extends Seeder
 
         DokumentasiProject::query()->create([
             'project_id' => $projectBerjalan->id,
-            'file_gambar' => 'dokumentasi/qris-integration.jpg',
+            'file_gambar' => $this->ensurePlaceholderJpeg('dokumentasi/qris-integration.jpg'),
             'keterangan' => 'Proses pengujian integrasi pembayaran QRIS.',
         ]);
+    }
+
+    /**
+     * Sediakan gambar placeholder JPEG asli (bukan referensi 404) untuk
+     * dokumentasi project. Dibuat hanya bila belum ada di disk publik.
+     */
+    private function ensurePlaceholderJpeg(string $relativePath): string
+    {
+        if (! Storage::disk('public')->exists($relativePath)) {
+            $width = 1200;
+            $height = 675;
+            $canvas = imagecreatetruecolor($width, $height);
+            $color = imagecolorallocate($canvas, 56, 116, 96);
+            imagefill($canvas, 0, 0, $color);
+            imagejpeg($canvas, Storage::disk('public')->path($relativePath), (int) config('security.upload.jpeg_quality', 85));
+            imagedestroy($canvas);
+        }
+
+        return $relativePath;
     }
 
     private function seedKontak(): void

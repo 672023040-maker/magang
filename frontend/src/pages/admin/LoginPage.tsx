@@ -24,8 +24,13 @@ export function LoginPage() {
 
     try {
       setSubmitting(true)
-      await login(username, password)
-      navigate('/admin', { replace: true })
+      const authenticated = await login(username, password)
+      navigate(
+        authenticated.must_change_password
+          ? '/admin/ganti-password'
+          : '/admin',
+        { replace: true },
+      )
     } catch (err) {
       const message =
         (err as { response?: { data?: { message?: string } } }).response?.data

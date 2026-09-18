@@ -51,12 +51,29 @@ export interface Admin {
   username: string
   nama: string
   role: string
+  must_change_password: boolean
 }
 
 export interface LoginResponse {
   message: string
-  token: string
   admin: Admin
+}
+
+export interface AdminSessions {
+  id: number
+  current: boolean
+  ip_address: string | null
+  user_agent: string | null
+  last_active_at: string | null
+  login_at: string | null
+  expires_at: string | null
+  revoked_at: string | null
+}
+
+export interface PasswordChangePayload {
+  current_password: string
+  new_password: string
+  new_password_confirmation: string
 }
 
 export interface ApiResponse<T> {

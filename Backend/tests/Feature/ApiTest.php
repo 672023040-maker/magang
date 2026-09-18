@@ -33,11 +33,14 @@ class ApiTest extends TestCase
     {
         $this->createAdmin();
 
-        $this->postJson('/api/login', [
-            'username' => 'admin',
-            'password' => 'admin123',
-        ])->assertOk()
-            ->assertJsonStructure(['token', 'admin' => ['username', 'nama']]);
+        $this->from(config('app.url'))
+            ->withSession([])
+            ->postJson('/api/login', [
+                'username' => 'admin',
+                'password' => 'admin123',
+            ])
+            ->assertOk()
+            ->assertJsonStructure(['admin' => ['username', 'nama']]);
     }
 
     public function test_login_gagal_mengembalikan_401(): void
@@ -50,16 +53,34 @@ class ApiTest extends TestCase
 
     public function test_area_admin_membutuhkan_autentikasi(): void
     {
-        $this->getJson('/api/admin/profil')->assertStatus(401);
+        $path = trim((string) config('security.admin_path', 'admin'), '/');
+
+        $this->getJson("/api/{$path}/profil")->assertStatus(401);
     }
 
     public function test_admin_dapat_mengakses_area_admin(): void
     {
-        $admin = $this->createAdmin();
-        $token = $admin->createToken('admin-token')->plainTextToken;
+        $this->createAdmin();
+        $path = trim((string) config('security.admin_path'), '/');
 
-        $this->withToken($token)
-            ->getJson('/api/admin/profil')
+        // SPA nyata: stateful login dulu (membuat device session aktif di
+        // tabel AdminUserSession, id sesi = hasil regenerate di controller).
+        $this->from(config('app.url'))
+            ->withSession([])
+            ->postJson('/api/login', [
+                'username' => 'admin',
+                'password' => 'admin123',
+            ])
+            ->assertOk();
+
+        // Request berikutnya membawa cookie session yang SAMA (persis browser
+        // SPA HttpOnly). Session store singleton mempertahankan id hasil
+        // regenerate → TrackAdminSession mendapati device aktif → 200.
+        $sessionId = $this->app['session']->getId();
+        $this->from(config('app.url'))
+            ->withCredentials()
+            ->withCookie(config('session.cookie'), $sessionId)
+            ->getJson("/api/{$path}/profil")
             ->assertOk();
     }
 }

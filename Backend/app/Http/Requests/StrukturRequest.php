@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\SecureJpeg;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StrukturRequest extends FormRequest
@@ -16,15 +17,24 @@ class StrukturRequest extends FormRequest
      */
     public function rules(): array
     {
+        $maxSize = (int) config('security.upload.max_size');
+
         return [
             'nama' => ['required', 'string', 'max:255'],
             'jabatan' => ['required', 'string', 'max:255'],
-            'foto' => ['nullable', 'image', 'max:2048'],
+            'foto' => ['nullable', 'file', 'mimes:jpg,jpeg', 'max:'.$maxSize, new SecureJpeg],
             'instagram' => ['nullable', 'string', 'max:255'],
             'email' => ['nullable', 'email', 'max:255'],
-            'divisi' => ['nullable', 'array'],
+            'divisi' => ['nullable', 'array', 'max:20'],
             'divisi.*.nama_divisi' => ['required_with:divisi', 'string', 'max:255'],
             'divisi.*.deskripsi' => ['required_with:divisi', 'string'],
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'foto' => 'foto',
         ];
     }
 }
