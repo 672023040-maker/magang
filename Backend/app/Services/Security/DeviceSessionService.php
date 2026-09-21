@@ -118,28 +118,6 @@ class DeviceSessionService
         }
     }
 
-    public function revokeAll(Admin $admin): void
-    {
-        $rows = AdminUserSession::query()
-            ->where('admin_id', $admin->id)
-            ->whereNull('revoked_at')
-            ->get();
-
-        $ids = $rows->pluck('session_id')->all();
-
-        if ($ids !== []) {
-            DB::table(config('session.table', 'sessions'))
-                ->whereIn('id', $ids)
-                ->delete();
-        }
-
-        $now = now();
-
-        foreach ($rows as $row) {
-            $row->update(['revoked_at' => $now]);
-        }
-    }
-
     /**
      * Daftar session id dari baris tracking yang masih bernilai aktif.
      */

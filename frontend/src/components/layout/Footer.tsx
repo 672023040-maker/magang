@@ -1,23 +1,23 @@
 export function Footer() {
   return (
     <footer className="bg-[#538932] text-white/90">
-      <div className="grid items-start gap-10 py-8 pl-5 pr-4 md:grid-cols-[1fr_auto_1fr]">
-        <div className="justify-self-start">
-          <div className="flex items-center gap-3">
+      <div className="grid items-start gap-10 py-8 px-5 md:grid-cols-[auto_auto_auto] md:justify-center">
+        <div>
+          <div className="mt-2 flex items-center gap-3">
             <img
               src="/uksw.png"
               alt="Logo UKSW"
-              className="w-20 h-auto object-contain"
+              className="h-auto w-[100px] object-contain"
             />
             <img
               src="/did.png"
               alt="DIGFIN"
-              className="w-52 h-auto object-contain"
+              className="h-auto w-[228px] object-contain"
             />
           </div>
         </div>
 
-        <div className="gap-8 md:flex md:gap-12 md:justify-self-center md:translate-x-[45px]">
+        <div className="gap-8 md:flex md:gap-12">
           <div className="text-left">
             <div className="flex items-center gap-2">
               <img
@@ -56,7 +56,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="justify-self-end mr-[250px]">
+        <div className="md:-ml-[30px]">
           <p className="text-sm font-semibold uppercase tracking-wide text-white/60">
             Email
           </p>

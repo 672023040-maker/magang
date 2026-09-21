@@ -1,4 +1,3 @@
-import type { AxiosError } from 'axios'
 import client, { csrfClient } from './client'
 import type {
   Admin,
@@ -90,8 +89,6 @@ export const kontak = {
     client
       .put<ApiResponse<Kontak>>(`${adminPath}/kontak/${id}`, data)
       .then((res) => res.data),
-  remove: (id: number) =>
-    client.delete(`${adminPath}/kontak/${id}`).then((res) => res.data),
 }
 
 export const password = {
@@ -114,17 +111,4 @@ export const devices = {
     client
       .post(`${adminPath}/devices/revoke-all`)
       .then((res) => res.data),
-}
-
-export function httpErrorMessage(
-  error: unknown,
-  fallback = 'Terjadi kesalahan. Silakan coba lagi.',
-): string {
-  if (error && typeof error === 'object') {
-    const axiosError = error as AxiosError<{ message?: string }>
-    const message = axiosError.response?.data?.message
-    if (message) return message
-  }
-  if (error instanceof Error && error.message) return error.message
-  return fallback
 }

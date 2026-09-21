@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AdminPasswordHistory extends Model
 {
@@ -22,10 +21,5 @@ class AdminPasswordHistory extends Model
         return [
             'created_at' => 'datetime',
         ];
-    }
-
-    public function admin(): BelongsTo
-    {
-        return $this->belongsTo(Admin::class);
     }
 }

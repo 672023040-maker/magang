@@ -1,16 +1,23 @@
-import { SectionContainer } from './SectionHeading'
-
 export function KontakSection() {
   return (
-    <SectionContainer id="kontak" className="bg-white">
-      <div className="mx-auto max-w-xl text-center">
-        <p className="font-display text-sm font-medium italic text-accent-600">
-          05 — Kontak
-        </p>
-        <h2 className="mt-3 font-display text-3xl font-medium leading-snug tracking-tight text-stone-900 md:text-4xl">
-          Bicara dengan kami
+    <section
+      id="kontak"
+      className="relative w-full overflow-hidden py-20 md:py-24"
+      style={{
+        backgroundImage: "url('/background tim.jpg')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
+      <div aria-hidden className="absolute inset-0 bg-black/60" />
+
+      <div className="relative z-10 mx-auto max-w-xl px-5 text-center">
+        <h2 className="font-display text-4xl font-bold uppercase tracking-tight text-brand-500 md:text-5xl">
+          Kontak Kami
         </h2>
-        <p className="mt-3 text-[15px] leading-relaxed text-stone-600">
+        <div aria-hidden className="mx-auto mt-4 h-px w-24 bg-brand-500/50" />
+
+        <p className="mt-5 text-[15px] leading-relaxed text-white/70">
           Ada yang ingin ditanyakan soal DIGFIN? Kirim email ke alamat di bawah
           ini, kami akan membalas sebisanya.
         </p>
@@ -19,7 +26,7 @@ export function KontakSection() {
           href="https://mail.google.com/mail/?view=cm&to=did@uksw.edu"
           target="_blank"
           rel="noreferrer"
-          className="mt-8 inline-flex items-center gap-3 rounded-xl border border-stone-200 bg-stone-50 px-6 py-4 text-sm font-medium text-stone-800 transition hover:border-brand-300 hover:bg-brand-50"
+          className="mt-8 inline-flex items-center gap-3 rounded-xl border border-brand-500/60 bg-white/[0.08] px-6 py-4 text-sm font-medium text-white backdrop-blur-sm transition hover:bg-brand-500/20"
         >
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-600 text-white">
             <svg
@@ -38,6 +45,6 @@ export function KontakSection() {
           did@uksw.edu
         </a>
       </div>
-    </SectionContainer>
+    </section>
   )
 }

@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AdminUserSession extends Model
 {
@@ -30,15 +29,5 @@ class AdminUserSession extends Model
             'last_activity_at' => 'datetime',
             'revoked_at' => 'datetime',
         ];
-    }
-
-    public function admin(): BelongsTo
-    {
-        return $this->belongsTo(Admin::class);
-    }
-
-    public function scopeActive($query)
-    {
-        return $query->whereNull('revoked_at');
     }
 }

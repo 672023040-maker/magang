@@ -21,19 +21,23 @@ export function Hero() {
         <div aria-hidden className="absolute inset-0 bg-black/40" />
 
         <div className="relative z-10 px-5 pb-20 pt-24 text-center md:pt-28">
+          <p className="mb-3 font-display text-[25px] font-semibold text-white/75">
+            Selamat Datang Di
+          </p>
+
           <h1 className="font-display text-[clamp(1.75rem,5.5vw,4rem)] font-bold uppercase leading-tight text-[#70B52A]">
             Digitalisasi dan Fintech
           </h1>
 
           <p className="mx-auto mt-10 max-w-[1100px] text-[clamp(0.875rem,1.5vw,1.25rem)] leading-[1.55] text-white md:mt-12">
-            DIGITALISASI DAN FINTECH MERUPAKAN BAGIAN DARI DIREKTORAT
-            INFRASTRUKTUR DAN DIGITALISASI (DID) UNIVERSITAS KRISTEN SATYA
-            WACANA YANG BERPERAN DALAM MENDUKUNG TRANSFORMASI DIGITAL MELALUI
-            PENGEMBANGAN DAN PEMANFAATAN TEKNOLOGI INFORMASI SERTA INOVASI
-            LAYANAN DIGITAL. KAMI BERKOMITMEN MENGHADIRKAN SOLUSI TEKNOLOGI
-            YANG EFEKTIF, TERINTEGRASI, DAN BERKELANJUTAN UNTUK MENDUKUNG
-            KEBUTUHAN AKADEMIK MAUPUN NONAKADEMIK SERTA MENCIPTAKAN EKOSISTEM
-            DIGITAL UKSW YANG INOVATIF DAN ADAPTIF.
+            Digitalisasi dan Fintech merupakan bagian dari Direktorat
+            Infrastruktur dan Digitalisasi (DID) Universitas Kristen Satya
+            Wacana yang berperan dalam mendukung transformasi digital melalui
+            pengembangan dan pemanfaatan teknologi informasi serta inovasi
+            layanan digital. Kami berkomitmen menghadirkan solusi teknologi
+            yang efektif, terintegrasi, dan berkelanjutan untuk mendukung
+            kebutuhan akademik maupun nonakademik serta menciptakan ekosistem
+            digital UKSW yang inovatif dan adaptif.
           </p>
 
           <div className="mt-10 flex flex-col items-center gap-5 md:flex-row md:justify-center md:gap-x-28">

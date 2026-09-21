@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class SosialMedia extends Model
 {
@@ -14,9 +13,4 @@ class SosialMedia extends Model
         'platform',
         'url',
     ];
-
-    public function kontak(): BelongsTo
-    {
-        return $this->belongsTo(Kontak::class);
-    }
 }
