@@ -1,5 +1,7 @@
 import { useState, type FormEvent } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { password } from '../../api'
+import { useAuth } from '../../hooks/useAuth'
 import { Alert } from '../../components/ui/Alert'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
@@ -10,6 +12,9 @@ import { Input } from '../../components/ui/Input'
  * dan mewajibkan konfirmasi password lama.
  */
 export function ChangePasswordPage() {
+  const { refresh } = useAuth()
+  const navigate = useNavigate()
+
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [confirm, setConfirm] = useState('')
@@ -38,6 +43,9 @@ export function ChangePasswordPage() {
       setCurrentPassword('')
       setNewPassword('')
       setConfirm('')
+
+      await refresh()
+      navigate('/admin', { replace: true })
     } catch (err) {
       const message =
         (err as { response?: { data?: { message?: string } } }).response?.data

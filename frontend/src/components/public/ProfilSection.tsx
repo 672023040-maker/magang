@@ -19,7 +19,7 @@ export function ProfilSection({ profil }: ProfilSectionProps) {
           <p className="font-display text-lg font-medium italic text-brand-700">
             Tentang Kami
           </p>
-          <p className="mt-3 border-l-2 border-accent-400 pl-4 text-[15px] leading-relaxed text-stone-600">
+          <p className="mt-3 border-l-2 border-accent-400 pl-4 text-[15px] leading-relaxed text-stone-600"> 
             {profil?.tentang_kami ?? 'Belum ada data profil.'}
           </p>
 

@@ -145,15 +145,15 @@ class AuthorizationCsrfTest extends TestCase
 
         $payload = '<script>alert(document.cookie)</script>';
         $this->withAdminSession($sessionId)
-            ->postJson("/api/{$path}/kontak", [
-                'email' => 'kontak@digfin.test',
-                'phone' => '081234567890',
-                'alamat' => "Jl. Test 1, RT 2 {$payload}",
+            ->postJson("/api/{$path}/project", [
+                'nama_project' => 'Proyek XSS',
+                'deskripsi' => "Deskripsi proyek {$payload}",
+                'status' => 'berjalan',
             ])
             ->assertStatus(201);
 
         // Data tersimpan apa adanya; tidak ada field respon yang mengeksekusi.
-        $raw = DB::table('kontak')->where('email', 'kontak@digfin.test')->value('alamat');
+        $raw = DB::table('project')->where('nama_project', 'Proyek XSS')->value('deskripsi');
         $this->assertStringContainsString('<script>', $raw);
     }
 
@@ -168,8 +168,6 @@ class AuthorizationCsrfTest extends TestCase
         $this->withAdminSession($sessionId)
             ->postJson("/api/{$path}/kontak", [
                 'email' => 'mass@digfin.test',
-                'phone' => '081234567890',
-                'alamat' => 'Alamat',
                 'role' => 'superadmin',
                 'password' => 'nembus123',
                 'is_admin' => true,

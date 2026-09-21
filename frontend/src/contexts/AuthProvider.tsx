@@ -38,6 +38,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return res.admin
   }
 
+  const refresh = async () => {
+    const adminData = await auth.me()
+
+    setAdmin(adminData)
+
+    return adminData
+  }
+
   const logout = async () => {
     try {
       await auth.logout()
@@ -47,7 +55,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ admin, loading, login, logout }}>
+    <AuthContext.Provider value={{ admin, loading, login, logout, refresh }}>
       {children}
     </AuthContext.Provider>
   )

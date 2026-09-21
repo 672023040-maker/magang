@@ -11,8 +11,6 @@ class Kontak extends Model
 
     protected $fillable = [
         'email',
-        'phone',
-        'alamat',
     ];
 
     public function sosialMedia(): HasMany

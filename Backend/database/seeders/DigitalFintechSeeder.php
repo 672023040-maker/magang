@@ -138,8 +138,6 @@ class DigitalFintechSeeder extends Seeder
     {
         $kontak = Kontak::query()->firstOrCreate(['id' => 1], [
             'email' => 'halo@digifin.co.id',
-            'phone' => '+62 21 1234 5678',
-            'alamat' => 'Jl. Teknologi No. 88, Jakarta Selatan, DKI Jakarta 12345',
         ]);
 
         $sosmed = [

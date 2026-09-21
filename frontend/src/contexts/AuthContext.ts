@@ -11,6 +11,7 @@ export interface AuthContextValue {
   loading: boolean
   login: (username: string, password: string) => Promise<Admin>
   logout: () => Promise<void>
+  refresh: () => Promise<Admin>
 }
 
 export const AuthContext = createContext<AuthContextValue | undefined>(undefined)

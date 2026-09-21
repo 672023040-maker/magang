@@ -12,8 +12,6 @@ class KontakResource extends JsonResource
         return [
             'id' => $this->id,
             'email' => $this->email,
-            'phone' => $this->phone,
-            'alamat' => $this->alamat,
             'sosial_media' => SosialMediaResource::collection($this->whenLoaded('sosialMedia')),
         ];
     }

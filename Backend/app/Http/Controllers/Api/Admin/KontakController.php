@@ -21,7 +21,7 @@ class KontakController extends Controller
 
     public function store(KontakRequest $request): JsonResponse
     {
-        $kontak = Kontak::create($request->only(['email', 'phone', 'alamat']));
+        $kontak = Kontak::create($request->only(['email']));
 
         $this->syncSosialMedia($kontak, $request->input('sosial_media', []));
 
@@ -37,7 +37,7 @@ class KontakController extends Controller
     {
         $kontak = Kontak::findOrFail($id);
 
-        $kontak->update($request->only(['email', 'phone', 'alamat']));
+        $kontak->update($request->only(['email']));
 
         $this->syncSosialMedia($kontak, $request->input('sosial_media', []));
 
