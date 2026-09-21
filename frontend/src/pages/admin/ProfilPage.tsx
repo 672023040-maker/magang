@@ -7,10 +7,9 @@ import { Spinner } from '../../components/ui/Spinner'
 import { Textarea } from '../../components/ui/Textarea'
 
 const initialForm = {
-  tentang_kami: '',
   visi: '',
   misi: '',
-  nilai: '',
+  tujuan: '',
 }
 
 export function ProfilPage() {
@@ -26,10 +25,9 @@ export function ProfilPage() {
       .then((data: Profil | null) => {
         if (data) {
           setForm({
-            tentang_kami: data.tentang_kami,
             visi: data.visi,
             misi: data.misi,
-            nilai: data.nilai,
+            tujuan: data.tujuan,
           })
         }
       })
@@ -72,7 +70,7 @@ export function ProfilPage() {
       <div>
         <h1 className="font-display text-2xl font-medium text-stone-900">Halaman Profil</h1>
         <p className="mt-1 text-sm text-stone-500">
-          Kelola konten Tentang Kami, Visi, Misi, dan Nilai.
+          Kelola konten Visi, Misi, dan Tujuan.
         </p>
       </div>
 
@@ -80,15 +78,6 @@ export function ProfilPage() {
         onSubmit={handleSubmit}
         className="space-y-4 rounded-xl border border-stone-200 bg-white p-6"
       >
-        <Textarea
-          id="tentang_kami"
-          label="Tentang Kami"
-          name="tentang_kami"
-          rows={4}
-          value={form.tentang_kami}
-          onChange={handleChange}
-          required
-        />
         <Textarea
           id="visi"
           label="Visi"
@@ -108,11 +97,11 @@ export function ProfilPage() {
           required
         />
         <Textarea
-          id="nilai"
-          label="Nilai"
-          name="nilai"
+          id="tujuan"
+          label="Tujuan"
+          name="tujuan"
           rows={3}
-          value={form.nilai}
+          value={form.tujuan}
           onChange={handleChange}
           required
         />

@@ -9,9 +9,8 @@ class Profil extends Model
     protected $table = 'profil';
 
     protected $fillable = [
-        'tentang_kami',
         'visi',
         'misi',
-        'nilai',
+        'tujuan',
     ];
 }

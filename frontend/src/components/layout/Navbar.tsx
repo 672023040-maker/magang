@@ -35,14 +35,18 @@ export function Navbar() {
       <nav className="grid h-16 items-center pl-2.5 pr-4 md:grid-cols-[1fr_auto_1fr]">
         <a
           href="#hero"
-          className="justify-self-start flex items-center gap-2.5 font-display text-xl font-semibold text-white"
+          className="justify-self-start ml-[150px] flex items-center gap-2.5 font-display text-xl font-semibold text-white md:mr-[60px]"
         >
           <img
             src="/uksw.png"
             alt="Logo UKSW"
-            className="h-8 w-auto object-contain"
+            className="h-[42px] w-auto object-contain"
           />
-          <img src="/did.png" alt="DIGFIN" className="h-7 w-auto object-contain" />
+          <img
+            src="/did.png"
+            alt="DIGFIN"
+            className="h-[38px] w-auto object-contain"
+          />
         </a>
 
         <ul className="hidden items-center gap-6 md:flex">
@@ -62,7 +66,36 @@ export function Navbar() {
           ))}
         </ul>
 
-        <div className="justify-self-end md:justify-self-auto">
+        <div className="md:justify-self-auto flex items-center gap-2.5">
+          <div className="hidden items-center gap-2.5 md:ml-[320px] md:flex">
+            <a
+              href="https://www.instagram.com/did_uksw"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Instagram DID UKSW"
+              className="transition hover:opacity-75"
+            >
+              <img
+                src="/instagram putih.png"
+                alt="Instagram"
+                className="h-[19px] w-auto object-contain"
+              />
+            </a>
+            <a
+              href="https://mail.google.com/mail/?view=cm&to=did@uksw.edu"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Email DID UKSW"
+              className="transition hover:opacity-75"
+            >
+              <img
+                src="/email white.png"
+                alt="Email"
+                className="h-[19px] w-auto object-contain"
+              />
+            </a>
+          </div>
+
           <button
             type="button"
             onClick={() => setMenuOpen((open) => !open)}
@@ -116,6 +149,37 @@ export function Navbar() {
               </li>
             ))}
           </ul>
+
+          <div className="mt-4 ml-[30px] flex items-center gap-3 border-t border-white/20 pt-4">
+            <a
+              href="https://www.instagram.com/did_uksw"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Instagram DID UKSW"
+              onClick={() => setMenuOpen(false)}
+              className="transition hover:opacity-75"
+            >
+              <img
+                src="/instagram putih.png"
+                alt="Instagram"
+                className="h-[19px] w-auto object-contain"
+              />
+            </a>
+            <a
+              href="https://mail.google.com/mail/?view=cm&to=did@uksw.edu"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Email DID UKSW"
+              onClick={() => setMenuOpen(false)}
+              className="transition hover:opacity-75"
+            >
+              <img
+                src="/email white.png"
+                alt="Email"
+                className="h-[19px] w-auto object-contain"
+              />
+            </a>
+          </div>
         </div>
       )}
     </header>

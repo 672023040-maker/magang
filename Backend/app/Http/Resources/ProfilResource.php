@@ -11,10 +11,9 @@ class ProfilResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'tentang_kami' => $this->tentang_kami,
             'visi' => $this->visi,
             'misi' => $this->misi,
-            'nilai' => $this->nilai,
+            'tujuan' => $this->tujuan,
         ];
     }
 }

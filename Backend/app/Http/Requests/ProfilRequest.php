@@ -17,10 +17,9 @@ class ProfilRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'tentang_kami' => ['required', 'string'],
             'visi' => ['required', 'string'],
             'misi' => ['required', 'string'],
-            'nilai' => ['required', 'string'],
+            'tujuan' => ['required', 'string'],
         ];
     }
 }

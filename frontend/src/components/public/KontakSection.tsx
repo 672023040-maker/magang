@@ -1,4 +1,29 @@
+import { useEffect, useRef, useState } from 'react'
+
 export function KontakSection() {
+  const boxRef = useRef<HTMLDivElement>(null)
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    const node = boxRef.current
+
+    if (!node) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setVisible(true)
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.2 },
+    )
+
+    observer.observe(node)
+
+    return () => observer.disconnect()
+  }, [])
+
   return (
     <section
       id="kontak"
@@ -11,7 +36,7 @@ export function KontakSection() {
     >
       <div aria-hidden className="absolute inset-0 bg-black/60" />
 
-      <div className="relative z-10 mx-auto max-w-xl px-5 text-center">
+      <div ref={boxRef} className="relative z-10 mx-auto max-w-xl px-5 text-center">
         <h2 className="font-display text-4xl font-bold uppercase tracking-tight text-brand-500 md:text-5xl">
           Kontak Kami
         </h2>
@@ -26,7 +51,9 @@ export function KontakSection() {
           href="https://mail.google.com/mail/?view=cm&to=did@uksw.edu"
           target="_blank"
           rel="noreferrer"
-          className="mt-8 inline-flex items-center gap-3 rounded-xl border border-brand-500/60 bg-white/[0.08] px-6 py-4 text-sm font-medium text-white backdrop-blur-sm transition hover:bg-brand-500/20"
+          className={`mt-8 inline-flex items-center gap-3 rounded-xl border border-brand-500/60 bg-white/[0.08] px-6 py-4 text-sm font-medium text-white backdrop-blur-sm transition hover:bg-brand-500/20 ${
+            visible ? 'animate-fade-in-down' : 'opacity-0'
+          }`}
         >
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-600 text-white">
             <svg

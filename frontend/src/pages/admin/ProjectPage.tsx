@@ -120,8 +120,8 @@ export function ProjectPage() {
 
     if (form.file_gambar) {
       data.append('dokumentasi[0][file_gambar]', form.file_gambar)
+      data.append('dokumentasi[0][keterangan]', form.keterangan)
     }
-    data.append('dokumentasi[0][keterangan]', form.keterangan)
 
     return data
   }

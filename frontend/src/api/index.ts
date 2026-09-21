@@ -53,10 +53,12 @@ export const struktur = {
     client
       .post<ApiResponse<Struktur>>(`${adminPath}/struktur`, data)
       .then((res) => res.data),
-  update: (id: number, data: FormData) =>
-    client
-      .put<ApiResponse<Struktur>>(`${adminPath}/struktur/${id}`, data)
-      .then((res) => res.data),
+  update: (id: number, data: FormData) => {
+    data.append('_method', 'PUT')
+    return client
+      .post<ApiResponse<Struktur>>(`${adminPath}/struktur/${id}`, data)
+      .then((res) => res.data)
+  },
   remove: (id: number) =>
     client.delete(`${adminPath}/struktur/${id}`).then((res) => res.data),
 }
@@ -70,10 +72,12 @@ export const project = {
     client
       .post<ApiResponse<Project>>(`${adminPath}/project`, data)
       .then((res) => res.data),
-  update: (id: number, data: FormData) =>
-    client
-      .put<ApiResponse<Project>>(`${adminPath}/project/${id}`, data)
-      .then((res) => res.data),
+  update: (id: number, data: FormData) => {
+    data.append('_method', 'PUT')
+    return client
+      .post<ApiResponse<Project>>(`${adminPath}/project/${id}`, data)
+      .then((res) => res.data)
+  },
   remove: (id: number) =>
     client.delete(`${adminPath}/project/${id}`).then((res) => res.data),
 }

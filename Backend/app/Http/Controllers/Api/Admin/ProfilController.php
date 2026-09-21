@@ -22,10 +22,9 @@ class ProfilController extends Controller
     public function update(ProfilRequest $request): JsonResponse
     {
         $profil = Profil::updateOrCreate(['id' => 1], $request->only([
-            'tentang_kami',
             'visi',
             'misi',
-            'nilai',
+            'tujuan',
         ]));
 
         return response()->json([

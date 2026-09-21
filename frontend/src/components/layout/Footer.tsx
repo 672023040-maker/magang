@@ -81,7 +81,7 @@ export function Footer() {
               className="mt-3 inline-block opacity-80 transition hover:opacity-100"
             >
               <img
-                src="/instagram.png"
+                src="/instagram putih.png"
                 alt="Instagram"
                 className="h-6 w-auto object-contain"
               />

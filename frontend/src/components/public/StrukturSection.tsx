@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { Struktur } from '../../types'
 
 interface StrukturSectionProps {
@@ -10,6 +10,28 @@ const instagramUrl = (value: string) =>
 
 export function StrukturSection({ struktur }: StrukturSectionProps) {
   const [activeId, setActiveId] = useState<number | null>(null)
+  const gridRef = useRef<HTMLDivElement>(null)
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    const node = gridRef.current
+
+    if (!node) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setVisible(true)
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.2 },
+    )
+
+    observer.observe(node)
+
+    return () => observer.disconnect()
+  }, [])
 
   return (
     <section
@@ -36,8 +58,8 @@ export function StrukturSection({ struktur }: StrukturSectionProps) {
             Belum ada data struktur organisasi.
           </p>
         ) : (
-          <div className="mt-14 flex flex-col gap-6 md:flex-row md:gap-4">
-            {struktur.map((orang) => {
+          <div ref={gridRef} className="mt-14 flex flex-col gap-6 md:flex-row md:gap-4">
+            {struktur.map((orang, index) => {
               const isActive = activeId === orang.id
 
               return (
@@ -49,7 +71,10 @@ export function StrukturSection({ struktur }: StrukturSectionProps) {
                   }}
                   onMouseEnter={() => setActiveId(orang.id)}
                   onMouseLeave={() => setActiveId(null)}
+                  style={{ animationDelay: `${index * 90}ms` }}
                   className={`group flex min-w-0 flex-1 flex-col items-center overflow-hidden rounded-2xl border p-6 text-center transition-all duration-500 ease-in-out ${
+                    visible ? 'animate-fade-in-down' : 'opacity-0'
+                  } ${
                     isActive
                       ? 'flex-[2.2] border-brand-500/70 bg-white/[0.14] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.6)]'
                       : 'border-white/20 bg-white/[0.08] hover:bg-white/[0.12]'

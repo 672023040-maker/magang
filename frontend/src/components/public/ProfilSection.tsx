@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import type { Profil } from '../../types'
 
 interface ProfilSectionProps {
@@ -9,6 +10,7 @@ interface InfoCardProps {
   number: string
   text: string
   animationDelay: string
+  visible: boolean
 }
 
 const PLACEHOLDER =
@@ -24,10 +26,12 @@ function extractPlainLines(value: string | null | undefined): string {
     .join('\n')
 }
 
-function InfoCard({ label, number, text, animationDelay }: InfoCardProps) {
+function InfoCard({ label, number, text, animationDelay, visible }: InfoCardProps) {
   return (
     <article
-      className="group animate-fade-up relative mx-auto w-full max-w-xs"
+      className={`group relative mx-auto w-full max-w-xs ${
+        visible ? 'animate-fade-in-down' : 'opacity-0'
+      }`}
       style={{ animationDelay }}
     >
       <div className="rounded-2xl border border-brand-500/40 bg-white/25 px-6 py-12 text-center shadow-lg shadow-black/10 backdrop-blur-[3px] transition-all duration-300 ease-out group-hover:-translate-y-1.5 group-hover:scale-[1.02] group-hover:border-brand-500/70 group-hover:bg-white/30 group-hover:shadow-[0_14px_30px_rgba(0,0,0,0.25)]">
@@ -55,7 +59,30 @@ function InfoCard({ label, number, text, animationDelay }: InfoCardProps) {
 export function ProfilSection({ profil }: ProfilSectionProps) {
   const misiText = extractPlainLines(profil?.misi)
 
-  const cards: InfoCardProps[] = [
+  const gridRef = useRef<HTMLDivElement>(null)
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    const node = gridRef.current
+
+    if (!node) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setVisible(true)
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.3 },
+    )
+
+    observer.observe(node)
+
+    return () => observer.disconnect()
+  }, [])
+
+  const cards: Omit<InfoCardProps, 'visible'>[] = [
     {
       label: 'VISI',
       number: '1.',
@@ -71,7 +98,7 @@ export function ProfilSection({ profil }: ProfilSectionProps) {
     {
       label: 'TUJUAN',
       number: '3.',
-      text: PLACEHOLDER,
+      text: profil?.tujuan?.trim() || PLACEHOLDER,
       animationDelay: '180ms',
     },
   ]
@@ -93,9 +120,12 @@ export function ProfilSection({ profil }: ProfilSectionProps) {
         </h2>
         <div aria-hidden className="mt-4 h-px w-24 animate-fade-up bg-brand-500/50" />
 
-        <div className="mt-12 grid w-full grid-cols-1 gap-x-6 gap-y-14 md:mt-16 md:grid-cols-3 md:gap-x-8 md:gap-y-0">
+        <div
+          ref={gridRef}
+          className="mt-12 grid w-full grid-cols-1 gap-x-6 gap-y-14 md:mt-16 md:grid-cols-3 md:gap-x-8 md:gap-y-0"
+        >
           {cards.map((card) => (
-            <InfoCard key={card.label} {...card} />
+            <InfoCard key={card.label} {...card} visible={visible} />
           ))}
         </div>
       </div>

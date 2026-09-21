@@ -46,10 +46,9 @@ class DigitalFintechSeeder extends Seeder
     private function seedProfil(): void
     {
         Profil::query()->firstOrCreate(['id' => 1], [
-            'tentang_kami' => 'DIGIFIN adalah platform digital fintech yang berfokus pada penyediaan layanan keuangan digital yang inovatif, inklusif, dan terpercaya untuk mendukung pertumbuhan ekonomi masyarakat.',
             'visi' => 'Menjadi perusahaan fintech digital terdepan di Indonesia yang memberdayakan masyarakat melalui teknologi keuangan.',
             'misi' => '1. Menyediakan layanan keuangan digital yang mudah diakses.\n2. Mendorong inklusi keuangan bagi seluruh lapisan masyarakat.\n3. Menjaga keamanan dan kepercayaan pengguna.\n4. Berinovasi secara berkelanjutan di bidang teknologi keuangan.',
-            'nilai' => 'Integritas, Inovasi, Inklusivitas, Kolaborasi, dan Transparansi.',
+            'tujuan' => 'Mendukung transformasi digital UKSW melalui pengembangan dan pemanfaatan teknologi informasi serta inovasi layanan digital yang efektif, terintegrasi, dan berkelanjutan.',
         ]);
     }
 

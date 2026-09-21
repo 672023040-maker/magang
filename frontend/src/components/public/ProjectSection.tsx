@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { Project } from '../../types'
 
 interface ProjectSectionProps {
@@ -141,6 +141,29 @@ function ProjectCard({ project }: { project: Project }) {
 }
 
 export function ProjectSection({ project }: ProjectSectionProps) {
+  const gridRef = useRef<HTMLDivElement>(null)
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    const node = gridRef.current
+
+    if (!node) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setVisible(true)
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.15 },
+    )
+
+    observer.observe(node)
+
+    return () => observer.disconnect()
+  }, [])
+
   return (
     <section
       id="project"
@@ -171,17 +194,22 @@ export function ProjectSection({ project }: ProjectSectionProps) {
             Belum ada project.
           </p>
         ) : (
-          <div className="mt-14 flex snap-x gap-6 overflow-x-auto pb-5 md:mt-16 md:gap-7">
-            {project.map((item, index) => (
-              <div
-                key={item.id}
-                className="w-[300px] min-w-[280px] shrink-0 snap-start animate-fade-up md:w-[340px] lg:w-[380px]"
-                style={{ animationDelay: `${index * 90}ms` }}
-              >
-                <ProjectCard project={item} />
-              </div>
-            ))}
-          </div>
+          <div
+              ref={gridRef}
+              className="mt-14 flex snap-x gap-6 overflow-x-auto pb-5 md:mt-16 md:gap-7"
+            >
+              {project.map((item, index) => (
+                <div
+                  key={item.id}
+                  className={`w-[300px] min-w-[280px] shrink-0 snap-start ${
+                    visible ? 'animate-fade-in-down' : 'opacity-0'
+                  } md:w-[340px] lg:w-[380px]`}
+                  style={{ animationDelay: `${index * 90}ms` }}
+                >
+                  <ProjectCard project={item} />
+                </div>
+              ))}
+            </div>
         )}
       </div>
     </section>

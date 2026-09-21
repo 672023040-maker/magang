@@ -1,9 +1,8 @@
 export interface Profil {
   id: number
-  tentang_kami: string
   visi: string
   misi: string
-  nilai: string
+  tujuan: string
 }
 
 export interface Divisi {
