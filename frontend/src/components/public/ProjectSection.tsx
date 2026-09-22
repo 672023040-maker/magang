@@ -169,7 +169,7 @@ export function ProjectSection({ project }: ProjectSectionProps) {
       id="project"
       className="relative flex min-h-screen w-full items-start justify-center overflow-hidden pt-20 pb-20 md:pt-28"
       style={{
-        backgroundImage: "url('/Project.jpg')",
+        backgroundImage: "url('/profil projek.jpg')",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',

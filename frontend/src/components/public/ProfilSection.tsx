@@ -108,7 +108,7 @@ export function ProfilSection({ profil }: ProfilSectionProps) {
       id="profil"
       className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden py-20 md:py-28"
       style={{
-        backgroundImage: "url('/profil.jpg')",
+        backgroundImage: "url('/profil projek.jpg')",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
