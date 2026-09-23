@@ -36,9 +36,13 @@ export function HomePage() {
   return (
     <PublicLayout>
       <Hero />
+      <div className="h-[0.5px] bg-[#F3EAE1] shadow-none" />
       <ProfilSection profil={data.profil} />
+      <div className="h-[0.5px] bg-[#F3EAE1] shadow-none" />
       <StrukturSection struktur={data.struktur} />
+      <div className="h-[0.5px] bg-[#F3EAE1] shadow-none" />
       <ProjectSection project={data.project} />
+      <div className="h-[0.5px] bg-[#F3EAE1] shadow-none" />
       <KontakSection />
     </PublicLayout>
   )

@@ -33,11 +33,11 @@ function ProjectCard({ project }: { project: Project }) {
 
   return (
     <article
-      className={`group flex h-full flex-col overflow-hidden rounded-2xl border border-brand-500/40 bg-black/60 shadow-lg shadow-black/20 backdrop-blur-md transition-all duration-500 ${
-        open
-          ? '-translate-y-1 border-brand-500/70 shadow-[0_20px_40px_-12px_rgba(0,0,0,0.6)] lg:h-auto'
-          : 'hover:-translate-y-2 hover:border-brand-500/60 hover:shadow-[0_24px_50px_-16px_rgba(0,0,0,0.65)] lg:h-[420px]'
-      } focus-within:border-brand-500/70`}
+className={`group flex h-full flex-col overflow-hidden rounded-2xl border border-stone-300 bg-white shadow-lg shadow-stone-400/30 transition-all duration-500 ${
+          open
+            ? '-translate-y-1 border-stone-900 shadow-[0_20px_40px_-12px_rgba(0,0,0,0.25)] lg:h-auto'
+            : 'hover:-translate-y-2 hover:border-stone-400 hover:shadow-[0_24px_50px_-16px_rgba(0,0,0,0.25)] lg:h-[420px]'
+        } focus-within:border-stone-900`}
     >
       <div className="relative aspect-video w-full overflow-hidden lg:h-[180px] lg:aspect-auto">
         {cover ? (
@@ -48,9 +48,9 @@ function ProjectCard({ project }: { project: Project }) {
             className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.05]"
           />
         ) : (
-          <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-gradient-to-br from-brand-900/50 to-black">
+          <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-gradient-to-br from-neutral-900/60 to-black">
             <svg
-              className="h-10 w-10 text-brand-500/70"
+              className="h-10 w-10 text-white/70"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -71,21 +71,21 @@ function ProjectCard({ project }: { project: Project }) {
 
         <div
           className={`pointer-events-none absolute inset-0 transition-colors duration-500 ${
-            open ? 'bg-black/40' : 'bg-black/10 group-hover:bg-black/30'
+            open ? 'bg-stone-900/20' : 'bg-stone-900/5 group-hover:bg-stone-900/10'
           }`}
         />
 
-        <span className="absolute left-4 top-4 rounded-full bg-black/60 px-3 py-1 text-xs font-medium text-brand-400 backdrop-blur">
+        <span className="absolute left-4 top-4 rounded-full bg-black/60 px-3 py-1 text-xs font-medium text-white backdrop-blur">
           {statusLabel[project.status]}
         </span>
       </div>
 
       <div className="flex flex-1 flex-col p-5 md:p-6 lg:p-5">
-        <h3 className="font-display text-lg font-semibold text-white md:text-xl">
+        <h3 className="font-display text-lg font-semibold text-stone-900 md:text-xl">
           {project.nama_project}
         </h3>
 
-        <p className="mt-2 line-clamp-3 text-[18px] leading-relaxed text-white/70">
+        <p className="mt-2 line-clamp-3 text-[18px] leading-relaxed text-stone-600">
           {project.deskripsi}
         </p>
 
@@ -94,7 +94,7 @@ function ProjectCard({ project }: { project: Project }) {
           onClick={() => setOpen((value) => !value)}
           aria-expanded={open}
           aria-controls={`project-detail-${project.id}`}
-          className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-brand-500/60 bg-transparent px-4 py-2.5 text-sm font-semibold text-brand-500 transition hover:bg-brand-500 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/70 lg:mt-4"
+          className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-stone-900 bg-transparent px-4 py-2.5 text-sm font-semibold text-stone-900 transition hover:bg-stone-900 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-900/70 lg:mt-4"
         >
           {open ? 'TUTUP PROJECT' : 'LIHAT PROJECT'}
           <svg
@@ -118,18 +118,18 @@ function ProjectCard({ project }: { project: Project }) {
           }`}
         >
           <div className="overflow-hidden">
-            <div className="mt-5 border-t border-white/10 pt-5">
-              <p className="text-xs font-semibold uppercase tracking-wide text-brand-500">
+            <div className="mt-5 border-t border-stone-200 pt-5">
+              <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">
                 Dibuat
               </p>
-              <p className="mt-1 text-[18px] text-white/90">
+              <p className="mt-1 text-[18px] text-stone-800">
                 {dibuat ?? 'Tidak diketahui'}
               </p>
 
-              <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-brand-500">
+              <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-stone-500">
                 Tentang Project
               </p>
-              <p className="mt-1 whitespace-pre-line text-[18px] leading-relaxed text-white/80">
+              <p className="mt-1 whitespace-pre-line text-[18px] leading-relaxed text-stone-600">
                 {project.deskripsi}
               </p>
             </div>
@@ -167,30 +167,22 @@ export function ProjectSection({ project }: ProjectSectionProps) {
   return (
     <section
       id="project"
-      className="relative flex min-h-screen w-full items-start justify-center overflow-hidden pt-20 pb-20 md:pt-28"
-      style={{
-        backgroundImage: "url('/profil projek.png')",
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-      }}
+      className="relative flex min-h-screen w-full items-start justify-center overflow-hidden bg-[#dbba99] pt-20 pb-20 md:pt-28"
     >
-      <div aria-hidden className="absolute inset-0 bg-black/55" />
-
       <div className="relative z-10 mx-auto w-full max-w-7xl px-5 md:px-10">
         <div className="animate-fade-up text-center">
-          <h2 className="font-display text-[clamp(2rem,6vw,4rem)] font-bold uppercase leading-tight tracking-tight text-brand-500">
+          <h2 className="font-display text-[clamp(2rem,6vw,4rem)] font-bold uppercase leading-tight tracking-tight text-stone-900">
             Projek DIGFIN
           </h2>
 
-          <p className="mx-auto mt-5 max-w-2xl text-center text-[18px] leading-relaxed text-white/70">
+          <p className="mx-auto mt-5 max-w-2xl text-center text-[18px] leading-relaxed text-stone-600">
             Jelajahi berbagai proyek dan inovasi digital yang dikembangkan oleh
             DIGFIN.
           </p>
         </div>
 
         {project.length === 0 ? (
-          <p className="mt-16 animate-fade-up text-center text-[18px] text-white/60">
+          <p className="mt-16 animate-fade-up text-center text-[18px] text-stone-500">
             Belum ada project.
           </p>
         ) : (

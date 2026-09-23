@@ -37,24 +37,17 @@ export function StrukturSection({ struktur }: StrukturSectionProps) {
     <section
       id="struktur"
       onClick={() => setActiveId(null)}
-      className="relative flex min-h-screen w-full overflow-hidden pt-20 md:pt-28"
-      style={{
-        backgroundImage: "url('/background tim.jpg')",
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
+      className="relative flex min-h-screen w-full overflow-hidden bg-[#dbba99] pt-20 md:pt-28"
     >
-      <div aria-hidden className="absolute inset-0 bg-black/60" />
-
       <div className="relative z-10 mx-auto w-full max-w-[1400px] px-5 pb-16 md:px-10 md:pb-20">
         <div className="text-center">
-          <h2 className="font-display text-4xl font-bold uppercase tracking-tight text-brand-500 md:text-6xl">
+          <h2 className="font-display text-4xl font-bold uppercase tracking-tight text-stone-900 md:text-6xl">
             TIM DIGFIN
           </h2>
         </div>
 
         {struktur.length === 0 ? (
-          <p className="mt-16 text-center text-[18px] text-white/60">
+          <p className="mt-16 text-center text-[18px] text-stone-500">
             Belum ada data struktur organisasi.
           </p>
         ) : (
@@ -76,18 +69,18 @@ export function StrukturSection({ struktur }: StrukturSectionProps) {
                     visible ? 'animate-fade-in-down' : 'opacity-0'
                   } ${
                     isActive
-                      ? 'border-brand-500/70 bg-white/[0.14] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.6)] lg:flex-[2.2]'
-                      : 'border-white/20 bg-white/[0.08] hover:bg-white/[0.12]'
+                      ? 'border-stone-900 bg-white shadow-[0_20px_50px_-12px_rgba(0,0,0,0.35)] lg:flex-[2.2]'
+                      : 'border-stone-300 bg-white/70 hover:bg-white'
                   }`}
                 >
                   {orang.foto_url ? (
                     <img
                       src={orang.foto_url}
                       alt={orang.nama}
-                      className="h-20 w-20 shrink-0 rounded-full object-cover ring-2 ring-brand-500/60"
+                      className="h-20 w-20 shrink-0 rounded-full object-cover ring-2 ring-stone-400/70"
                     />
                   ) : (
-                    <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-brand-500 text-xl font-semibold text-white">
+                    <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-stone-900 text-xl font-semibold text-white">
                       {orang.nama
                         .split(' ')
                         .slice(0, 2)
@@ -96,8 +89,8 @@ export function StrukturSection({ struktur }: StrukturSectionProps) {
                     </div>
                   )}
                   <div className="mt-4 min-w-0">
-                    <p className="font-semibold text-white">{orang.nama}</p>
-                    <p className="mt-0.5 text-[18px] text-brand-500/80">{orang.jabatan}</p>
+                    <p className="font-semibold text-stone-900">{orang.nama}</p>
+                    <p className="mt-0.5 text-[18px] text-stone-600">{orang.jabatan}</p>
                   </div>
 
                   <div
@@ -116,10 +109,10 @@ export function StrukturSection({ struktur }: StrukturSectionProps) {
                             rel="noreferrer"
                             aria-label={`Instagram ${orang.nama}`}
                             onClick={(e) => e.stopPropagation()}
-                            className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/20 transition hover:bg-white/20 hover:ring-brand-500/70"
+                            className="flex h-9 w-9 items-center justify-center rounded-full bg-stone-900 ring-1 ring-stone-700 transition hover:bg-stone-700 hover:ring-stone-500"
                           >
                             <img
-                              src="/instagram.png"
+                              src="/instagram putih.png"
                               alt=""
                               className="h-4 w-auto object-contain"
                             />
@@ -132,7 +125,7 @@ export function StrukturSection({ struktur }: StrukturSectionProps) {
                             rel="noreferrer"
                             aria-label={`Email ${orang.nama}`}
                             onClick={(e) => e.stopPropagation()}
-                            className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/20 transition hover:bg-white/20 hover:ring-brand-500/70"
+                            className="flex h-9 w-9 items-center justify-center rounded-full bg-stone-900 ring-1 ring-stone-700 transition hover:bg-stone-700 hover:ring-stone-500"
                           >
                             <img
                               src="/email white.png"

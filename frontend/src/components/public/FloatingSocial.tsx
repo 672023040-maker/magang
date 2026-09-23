@@ -1,15 +1,42 @@
 const sosial = [
   {
     href: 'https://www.instagram.com/did_uksw',
-    icon: '/instagram bulat.png',
-    alt: 'Instagram',
     label: 'Instagram DID UKSW',
+    icon: (
+      <svg
+        className="h-5 w-5 text-stone-900"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden
+      >
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+      </svg>
+    ),
   },
   {
     href: 'https://mail.google.com/mail/?view=cm&to=did@uksw.edu',
-    icon: '/email putih bulat.png',
-    alt: 'Email',
     label: 'Email DID UKSW',
+    icon: (
+      <svg
+        className="h-5 w-5 text-stone-900"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden
+      >
+        <path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" />
+        <path d="M22 6l-10 7L2 6" />
+      </svg>
+    ),
   },
 ]
 
@@ -23,13 +50,9 @@ export function FloatingSocial() {
           target="_blank"
           rel="noreferrer"
           aria-label={item.label}
-          className="flex h-11 w-11 items-center justify-center rounded-full bg-[#111111]/85 p-2 backdrop-blur transition hover:bg-[#70B52A] sm:h-12 sm:w-12"
+          className="flex h-11 w-11 items-center justify-center rounded-full border border-stone-300/80 bg-[#F3EAE1] p-2 transition hover:bg-[#eadbd0] sm:h-12 sm:w-12"
         >
-          <img
-            src={item.icon}
-            alt={item.alt}
-            className="h-full w-full object-contain"
-          />
+          {item.icon}
         </a>
       ))}
     </div>

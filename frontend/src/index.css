@@ -55,7 +55,7 @@ html {
 }
 
 body {
-  @apply bg-stone-50 text-stone-700 antialiased;
+  @apply bg-[#dbba99] text-stone-700 antialiased;
   font-family: var(--font-sans);
 }
 
