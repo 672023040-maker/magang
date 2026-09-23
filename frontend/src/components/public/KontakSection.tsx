@@ -44,7 +44,7 @@ export function KontakSection() {
 
         <p className="mt-5 text-[18px] leading-relaxed text-white/70">
           Ada yang ingin ditanyakan soal DIGFIN? Kirim email ke alamat di bawah
-          ini, kami akan membalas sebisanya.
+          ini.
         </p>
 
         <a
