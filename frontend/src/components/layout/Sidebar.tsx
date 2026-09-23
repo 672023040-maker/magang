@@ -11,12 +11,21 @@ const menu = [
   { to: '/admin/perangkat', label: 'Perangkat' },
 ]
 
-export function Sidebar() {
+interface SidebarProps {
+  open: boolean
+  onClose: () => void
+}
+
+export function Sidebar({ open, onClose }: SidebarProps) {
   const { admin, logout } = useAuth()
 
   return (
-    <aside className="flex w-64 flex-col border-r border-stone-200 bg-white">
-      <div className="flex h-16 items-center border-b border-stone-200 px-5">
+    <aside
+      className={`fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-stone-200 bg-white transition-transform duration-300 lg:static lg:z-auto lg:translate-x-0 lg:transition-none ${
+        open ? 'translate-x-0' : '-translate-x-full'
+      }`}
+    >
+      <div className="flex h-16 shrink-0 items-center border-b border-stone-200 px-5">
         <span className="font-display text-lg font-semibold text-stone-900">
           DIGFIN<span className="text-brand-600">.</span>
         </span>
@@ -31,6 +40,7 @@ export function Sidebar() {
             key={item.to}
             to={item.to}
             end={item.end}
+            onClick={onClose}
             className={({ isActive }) =>
               `block rounded-lg px-3 py-2 text-sm font-medium transition ${
                 isActive
@@ -44,7 +54,7 @@ export function Sidebar() {
         ))}
       </nav>
 
-      <div className="border-t border-stone-200 p-3">
+      <div className="shrink-0 border-t border-stone-200 p-3">
         <p className="truncate px-3 text-sm font-medium text-stone-800">
           {admin?.nama}
         </p>

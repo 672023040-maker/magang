@@ -18,7 +18,6 @@ class StrukturResource extends JsonResource
             'foto_url' => $this->foto
                 ? url('storage/'.$this->foto)
                 : null,
-            'divisi' => DivisiResource::collection($this->whenLoaded('divisi')),
         ];
     }
 }

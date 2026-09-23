@@ -77,7 +77,29 @@ export function DevicesPage() {
   }
 
   useEffect(() => {
-    void load()
+    let cancelled = false
+
+    const fetchInitial = async () => {
+      try {
+        const data = await devices.list()
+        if (!cancelled) setSessions(data)
+      } catch (err) {
+        if (!cancelled) {
+          const message =
+            (err as { response?: { data?: { message?: string } } }).response
+              ?.data?.message ?? 'Gagal memuat daftar perangkat.'
+          setError(message)
+        }
+      } finally {
+        if (!cancelled) setLoading(false)
+      }
+    }
+
+    void fetchInitial()
+
+    return () => {
+      cancelled = true
+    }
   }, [])
 
   const handleRevoke = async (id: number) => {

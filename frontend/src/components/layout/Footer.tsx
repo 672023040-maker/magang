@@ -1,9 +1,9 @@
 export function Footer() {
   return (
     <footer className="bg-[#538932] text-white/90">
-      <div className="grid items-start gap-10 py-8 px-5 md:grid-cols-[auto_auto_auto] md:justify-center">
-        <div>
-          <div className="mt-2 flex items-center gap-3">
+      <div className="mx-auto grid w-full max-w-6xl items-start gap-10 px-5 py-8 md:grid-cols-3 md:gap-8 lg:px-8">
+        <div className="flex justify-center md:justify-start">
+          <div className="flex items-center gap-3">
             <img
               src="/uksw.png"
               alt="Logo UKSW"
@@ -12,12 +12,12 @@ export function Footer() {
             <img
               src="/did.png"
               alt="DIGFIN"
-              className="h-auto w-[228px] object-contain"
+              className="h-auto w-[180px] object-contain sm:w-[228px]"
             />
           </div>
         </div>
 
-        <div className="gap-8 md:flex md:gap-12">
+        <div className="flex flex-col items-center gap-8 text-center md:flex-row md:justify-center md:gap-12 md:text-left">
           <div className="text-left">
             <div className="flex items-center gap-2">
               <img
@@ -33,8 +33,8 @@ export function Footer() {
             <p className="mt-1 text-sm text-white/80">07.30 - 16.00</p>
           </div>
 
-          <div className="text-left">
-            <div className="flex items-center gap-2">
+          <div className="text-center md:text-left">
+            <div className="flex items-center justify-center gap-2 md:justify-start">
               <img
                 src="/lokasi.png"
                 alt="Lokasi"
@@ -44,19 +44,19 @@ export function Footer() {
                 Lokasi
               </p>
             </div>
-            <p className="mt-3 max-w-[260px] text-sm leading-relaxed text-white/80">
+            <p className="mt-3 text-sm leading-relaxed text-white/80">
               Kampus Diponegoro
             </p>
-            <p className="max-w-[260px] text-sm leading-relaxed text-white/80">
+            <p className="text-sm leading-relaxed text-white/80">
               Belakang Gedung F
             </p>
-            <p className="max-w-[260px] text-sm leading-relaxed text-white/80">
+            <p className="text-sm leading-relaxed text-white/80">
               Jl. Diponegoro No. 52 - 60, Salatiga, Indonesia
             </p>
           </div>
         </div>
 
-        <div className="md:-ml-[30px]">
+        <div className="flex flex-col items-center md:items-start">
           <p className="text-sm font-semibold uppercase tracking-wide text-white/60">
             Email
           </p>

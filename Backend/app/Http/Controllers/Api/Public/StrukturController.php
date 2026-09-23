@@ -11,7 +11,7 @@ class StrukturController extends Controller
 {
     public function index(): AnonymousResourceCollection
     {
-        $struktur = StrukturOrganisasi::with('divisi')->get();
+        $struktur = StrukturOrganisasi::get();
 
         return StrukturResource::collection($struktur);
     }

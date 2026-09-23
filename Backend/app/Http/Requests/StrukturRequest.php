@@ -25,9 +25,6 @@ class StrukturRequest extends FormRequest
             'foto' => ['nullable', 'file', 'mimes:jpg,jpeg', 'max:'.$maxSize, new SecureJpeg],
             'instagram' => ['nullable', 'string', 'max:255'],
             'email' => ['nullable', 'email', 'max:255'],
-            'divisi' => ['nullable', 'array', 'max:20'],
-            'divisi.*.nama_divisi' => ['required_with:divisi', 'string', 'max:255'],
-            'divisi.*.deskripsi' => ['required_with:divisi', 'string'],
         ];
     }
 

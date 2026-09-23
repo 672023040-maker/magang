@@ -6,12 +6,6 @@ import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
 import { Modal } from '../../components/ui/Modal'
 import { Spinner } from '../../components/ui/Spinner'
-import { Textarea } from '../../components/ui/Textarea'
-
-interface DivisiForm {
-  nama_divisi: string
-  deskripsi: string
-}
 
 interface StrukturForm {
   nama: string
@@ -19,10 +13,7 @@ interface StrukturForm {
   instagram: string
   email: string
   foto: File | null
-  divisi: DivisiForm[]
 }
-
-const emptyDivisi: DivisiForm = { nama_divisi: '', deskripsi: '' }
 
 const emptyForm: StrukturForm = {
   nama: '',
@@ -30,7 +21,6 @@ const emptyForm: StrukturForm = {
   instagram: '',
   email: '',
   foto: null,
-  divisi: [],
 }
 
 export function StrukturPage() {
@@ -74,10 +64,6 @@ export function StrukturPage() {
       instagram: item.instagram ?? '',
       email: item.email ?? '',
       foto: null,
-      divisi: item.divisi.map((d) => ({
-        nama_divisi: d.nama_divisi,
-        deskripsi: d.deskripsi,
-      })),
     })
     setError(null)
     setSuccess(null)
@@ -96,27 +82,8 @@ export function StrukturPage() {
     }
   }
 
-  const updateField = (name: keyof Omit<StrukturForm, 'divisi'>, value: string | File | null) => {
+  const updateField = (name: keyof StrukturForm, value: string | File | null) => {
     setForm((prev) => ({ ...prev, [name]: value }))
-  }
-
-  const updateDivisi = (index: number, field: keyof DivisiForm, value: string) => {
-    setForm((prev) => {
-      const divisi = [...prev.divisi]
-      divisi[index] = { ...divisi[index], [field]: value }
-      return { ...prev, divisi }
-    })
-  }
-
-  const addDivisi = () => {
-    setForm((prev) => ({ ...prev, divisi: [...prev.divisi, { ...emptyDivisi }] }))
-  }
-
-  const removeDivisi = (index: number) => {
-    setForm((prev) => ({
-      ...prev,
-      divisi: prev.divisi.filter((_, i) => i !== index),
-    }))
   }
 
   const buildFormData = (): FormData => {
@@ -130,11 +97,6 @@ export function StrukturPage() {
     if (form.foto) {
       data.append('foto', form.foto)
     }
-
-    form.divisi.forEach((d, index) => {
-      data.append(`divisi[${index}][nama_divisi]`, d.nama_divisi)
-      data.append(`divisi[${index}][deskripsi]`, d.deskripsi)
-    })
 
     return data
   }
@@ -171,7 +133,7 @@ export function StrukturPage() {
         <div>
           <h1 className="font-display text-2xl font-medium text-stone-900">Struktur Organisasi</h1>
           <p className="mt-1 text-sm text-stone-500">
-            Kelola pimpinan dan divisi organisasi.
+            Kelola pimpinan organisasi.
           </p>
         </div>
         <Button onClick={openCreate}>Tambah</Button>
@@ -185,30 +147,26 @@ export function StrukturPage() {
           <Spinner size="lg" />
         </div>
       ) : items.length === 0 ? (
-<p className="py-10 text-center text-sm text-stone-500">
-            Belum ada data struktur.
-          </p>
-        ) : (
-          <div className="overflow-hidden rounded-xl border border-stone-200 bg-white">
-            <table className="w-full text-left text-sm">
-              <thead className="border-b border-stone-200 bg-stone-50 text-xs uppercase text-stone-500">
-                <tr>
-                  <th className="px-4 py-3">Nama</th>
-                  <th className="px-4 py-3">Jabatan</th>
-                  <th className="px-4 py-3">Divisi</th>
-                  <th className="px-4 py-3 text-right">Aksi</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-stone-100">
-                {items.map((item) => (
-                  <tr key={item.id}>
-                    <td className="px-4 py-3 font-medium text-stone-800">
-                      {item.nama}
-                    </td>
-                    <td className="px-4 py-3 text-stone-600">{item.jabatan}</td>
-                    <td className="px-4 py-3 text-stone-600">
-                      {item.divisi.length} divisi
-                    </td>
+        <p className="py-10 text-center text-sm text-stone-500">
+          Belum ada data struktur.
+        </p>
+      ) : (
+        <div className="overflow-x-auto rounded-xl border border-stone-200 bg-white">
+          <table className="w-full min-w-[560px] text-left text-sm">
+            <thead className="border-b border-stone-200 bg-stone-50 text-xs uppercase text-stone-500">
+              <tr>
+                <th className="px-4 py-3">Nama</th>
+                <th className="px-4 py-3">Jabatan</th>
+                <th className="px-4 py-3 text-right">Aksi</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-stone-100">
+              {items.map((item) => (
+                <tr key={item.id}>
+                  <td className="px-4 py-3 font-medium text-stone-800">
+                    {item.nama}
+                  </td>
+                  <td className="px-4 py-3 text-stone-600">{item.jabatan}</td>
                   <td className="space-x-2 px-4 py-3 text-right">
                     <button
                       type="button"
@@ -274,50 +232,6 @@ export function StrukturPage() {
             accept="image/*"
             onChange={(e) => updateField('foto', e.target.files?.[0] ?? null)}
           />
-
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <p className="text-sm font-medium text-stone-700">Divisi</p>
-              <button
-                type="button"
-                onClick={addDivisi}
-                className="text-xs font-medium text-brand-600 hover:text-brand-700"
-              >
-                + Tambah Divisi
-              </button>
-            </div>
-
-            {form.divisi.map((divisi, index) => (
-              <div key={index} className="rounded-lg border border-stone-200 p-3">
-                <Input
-                  id={`divisi-nama-${index}`}
-                  label="Nama Divisi"
-                  value={divisi.nama_divisi}
-                  onChange={(e) => updateDivisi(index, 'nama_divisi', e.target.value)}
-                  required
-                />
-                <div className="mt-2">
-                  <Textarea
-                    id={`divisi-desk-${index}`}
-                    label="Deskripsi"
-                    rows={2}
-                    value={divisi.deskripsi}
-                    onChange={(e) => updateDivisi(index, 'deskripsi', e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="mt-2 text-right">
-                  <button
-                    type="button"
-                    onClick={() => removeDivisi(index)}
-                    className="text-xs font-medium text-red-600 hover:text-red-700"
-                  >
-                    Hapus Divisi
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
 
           <div className="pt-2">
             <Button type="submit" loading={saving}>

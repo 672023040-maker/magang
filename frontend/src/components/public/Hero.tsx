@@ -69,7 +69,7 @@ export function Hero() {
             <circle cx="11" cy="11" r="8" />
             <path d="M21 21l-4.35-4.35" />
           </svg>
-          <span className="text-center font-inter text-sm font-medium text-stone-500 transition hover:text-brand-600">
+          <span className="min-w-0 truncate text-center font-inter text-xs font-medium text-stone-500 sm:text-sm">
             <a
               href="https://www.uksw.edu/direktorat/direktorat-infrastruktur-dan-digitalisasi/"
               target="_blank"

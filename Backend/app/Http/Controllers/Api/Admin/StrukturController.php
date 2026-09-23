@@ -23,7 +23,7 @@ class StrukturController extends Controller
     public function index(): AnonymousResourceCollection
     {
         return StrukturResource::collection(
-            StrukturOrganisasi::with('divisi')->latest()->get()
+            StrukturOrganisasi::latest()->get()
         );
     }
 
@@ -41,13 +41,9 @@ class StrukturController extends Controller
 
         $struktur = StrukturOrganisasi::create($data);
 
-        $this->syncDivisi($struktur, $request->input('divisi', []));
-
         return response()->json([
             'message' => 'Data struktur berhasil ditambahkan',
-            'data' => new StrukturResource(
-                $struktur->load('divisi')
-            ),
+            'data' => new StrukturResource($struktur),
         ], 201);
     }
 
@@ -71,13 +67,9 @@ class StrukturController extends Controller
 
         $struktur->update($data);
 
-        $this->syncDivisi($struktur, $request->input('divisi', []));
-
         return response()->json([
             'message' => 'Data struktur berhasil diperbarui',
-            'data' => new StrukturResource(
-                $struktur->refresh()->load('divisi')
-            ),
+            'data' => new StrukturResource($struktur->refresh()),
         ]);
     }
 
@@ -115,20 +107,5 @@ class StrukturController extends Controller
         ]);
 
         return $path;
-    }
-
-    /**
-     * @param  array<int, array{nama_divisi: string, deskripsi: string}>  $items
-     */
-    private function syncDivisi(StrukturOrganisasi $struktur, array $items): void
-    {
-        $struktur->divisi()->delete();
-
-        foreach ($items as $item) {
-            $struktur->divisi()->create([
-                'nama_divisi' => $item['nama_divisi'],
-                'deskripsi' => $item['deskripsi'],
-            ]);
-        }
     }
 }

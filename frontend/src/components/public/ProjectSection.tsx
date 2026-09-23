@@ -169,7 +169,7 @@ export function ProjectSection({ project }: ProjectSectionProps) {
       id="project"
       className="relative flex min-h-screen w-full items-start justify-center overflow-hidden pt-20 pb-20 md:pt-28"
       style={{
-        backgroundImage: "url('/profil projek.jpg')",
+        backgroundImage: "url('/profil projek.png')",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
@@ -201,9 +201,9 @@ export function ProjectSection({ project }: ProjectSectionProps) {
               {project.map((item, index) => (
                 <div
                   key={item.id}
-                  className={`w-[300px] min-w-[280px] shrink-0 snap-start ${
+                  className={`w-[85vw] max-w-[300px] shrink-0 snap-start ${
                     visible ? 'animate-fade-in-down' : 'opacity-0'
-                  } md:w-[340px] lg:w-[380px]`}
+                  } sm:max-w-none sm:w-[300px] md:w-[340px] lg:w-[380px]`}
                   style={{ animationDelay: `${index * 90}ms` }}
                 >
                   <ProjectCard project={item} />

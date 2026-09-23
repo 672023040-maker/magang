@@ -5,13 +5,6 @@ export interface Profil {
   tujuan: string
 }
 
-export interface Divisi {
-  id: number
-  struktur_organisasi_id: number
-  nama_divisi: string
-  deskripsi: string
-}
-
 export interface Struktur {
   id: number
   nama: string
@@ -19,7 +12,6 @@ export interface Struktur {
   instagram: string | null
   email: string | null
   foto_url: string | null
-  divisi: Divisi[]
 }
 
 export interface Dokumentasi {

@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Admin;
-use App\Models\Divisi;
 use App\Models\DokumentasiProject;
 use App\Models\Kontak;
 use App\Models\Profil;
@@ -54,34 +53,16 @@ class DigitalFintechSeeder extends Seeder
 
     private function seedStruktur(): void
     {
-        $direktur = StrukturOrganisasi::query()->create([
+        StrukturOrganisasi::query()->create([
             'nama' => 'Budi Santoso',
             'jabatan' => 'Direktur Utama',
             'foto' => null,
         ]);
 
-        Divisi::query()->create([
-            'struktur_organisasi_id' => $direktur->id,
-            'nama_divisi' => 'Divisi Teknologi',
-            'deskripsi' => 'Mengelola pengembangan platform digital dan infrastruktur teknologi perusahaan.',
-        ]);
-
-        Divisi::query()->create([
-            'struktur_organisasi_id' => $direktur->id,
-            'nama_divisi' => 'Divisi Keuangan',
-            'deskripsi' => 'Mengelola produk keuangan, kepatuhan, dan hubungan dengan mitra keuangan.',
-        ]);
-
-        $direkturOps = StrukturOrganisasi::query()->create([
+        StrukturOrganisasi::query()->create([
             'nama' => 'Siti Rahayu',
             'jabatan' => 'Direktur Operasional',
             'foto' => null,
-        ]);
-
-        Divisi::query()->create([
-            'struktur_organisasi_id' => $direkturOps->id,
-            'nama_divisi' => 'Divisi Layanan Pelanggan',
-            'deskripsi' => 'Memberikan layanan dan dukungan terbaik kepada pelanggan.',
         ]);
     }
 

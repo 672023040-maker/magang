@@ -58,7 +58,7 @@ export function StrukturSection({ struktur }: StrukturSectionProps) {
             Belum ada data struktur organisasi.
           </p>
         ) : (
-          <div ref={gridRef} className="mt-14 flex flex-col gap-6 md:flex-row md:gap-4">
+          <div ref={gridRef} className="mt-14 flex flex-col gap-6 lg:flex-row lg:gap-4">
             {struktur.map((orang, index) => {
               const isActive = activeId === orang.id
 
@@ -76,7 +76,7 @@ export function StrukturSection({ struktur }: StrukturSectionProps) {
                     visible ? 'animate-fade-in-down' : 'opacity-0'
                   } ${
                     isActive
-                      ? 'flex-[2.2] border-brand-500/70 bg-white/[0.14] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.6)]'
+                      ? 'border-brand-500/70 bg-white/[0.14] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.6)] lg:flex-[2.2]'
                       : 'border-white/20 bg-white/[0.08] hover:bg-white/[0.12]'
                   }`}
                 >
@@ -108,7 +108,7 @@ export function StrukturSection({ struktur }: StrukturSectionProps) {
                     }`}
                   >
                     {(orang.instagram || orang.email) && (
-                      <div className="flex items-center justify-center gap-4 pb-5">
+                      <div className="flex items-center justify-center gap-4 pb-2">
                         {orang.instagram && (
                           <a
                             href={instagramUrl(orang.instagram)}
@@ -143,28 +143,6 @@ export function StrukturSection({ struktur }: StrukturSectionProps) {
                         )}
                       </div>
                     )}
-
-                    <div className="border-t border-white/20 pt-5">
-                      {orang.divisi.length > 0 ? (
-                        <ul className="space-y-4 text-left">
-                          {orang.divisi.map((divisi) => (
-                            <li key={divisi.id} className="flex gap-3">
-                              <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-400" />
-                              <div>
-                                <p className="text-sm font-medium text-white">
-                                  {divisi.nama_divisi}
-                                </p>
-                                <p className="mt-0.5 text-sm text-white/70">
-                                  {divisi.deskripsi}
-                                </p>
-                              </div>
-                            </li>
-                          ))}
-                        </ul>
-                      ) : (
-                        <p className="text-sm text-white/50">Belum ada divisi.</p>
-                      )}
-                    </div>
                   </div>
                 </div>
               )
