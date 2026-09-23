@@ -175,6 +175,8 @@ export function ProjectSection({ project }: ProjectSectionProps) {
             Projek DIGFIN
           </h2>
 
+          <div aria-hidden className="mx-auto mt-4 h-px w-24 bg-stone-400" />
+
           <p className="mx-auto mt-5 max-w-2xl text-center text-[18px] leading-relaxed text-stone-600">
             Jelajahi berbagai proyek dan inovasi digital yang dikembangkan oleh
             DIGFIN.

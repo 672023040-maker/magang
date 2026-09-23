@@ -44,6 +44,7 @@ export function StrukturSection({ struktur }: StrukturSectionProps) {
           <h2 className="font-display text-4xl font-bold uppercase tracking-tight text-stone-900 md:text-6xl">
             TIM DIGFIN
           </h2>
+          <div aria-hidden className="mx-auto mt-4 h-px w-24 bg-stone-400" />
         </div>
 
         {struktur.length === 0 ? (
