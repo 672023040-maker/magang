@@ -54,7 +54,7 @@ export function StrukturSection({ struktur }: StrukturSectionProps) {
         </div>
 
         {struktur.length === 0 ? (
-          <p className="mt-16 text-center text-sm text-white/60">
+          <p className="mt-16 text-center text-[18px] text-white/60">
             Belum ada data struktur organisasi.
           </p>
         ) : (
@@ -97,7 +97,7 @@ export function StrukturSection({ struktur }: StrukturSectionProps) {
                   )}
                   <div className="mt-4 min-w-0">
                     <p className="font-semibold text-white">{orang.nama}</p>
-                    <p className="mt-0.5 text-sm text-brand-500/80">{orang.jabatan}</p>
+                    <p className="mt-0.5 text-[18px] text-brand-500/80">{orang.jabatan}</p>
                   </div>
 
                   <div

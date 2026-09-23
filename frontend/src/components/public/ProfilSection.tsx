@@ -34,12 +34,12 @@ function InfoCard({ label, number, text, animationDelay, visible }: InfoCardProp
       }`}
       style={{ animationDelay }}
     >
-      <div className="rounded-2xl border border-brand-500/40 bg-white/25 px-6 py-12 text-center shadow-lg shadow-black/10 backdrop-blur-[3px] transition-all duration-300 ease-out group-hover:-translate-y-1.5 group-hover:scale-[1.02] group-hover:border-brand-500/70 group-hover:bg-white/30 group-hover:shadow-[0_14px_30px_rgba(0,0,0,0.25)]">
-        <h3 className="font-display text-lg font-bold uppercase tracking-widest text-brand-600 md:text-xl">
+      <div className="rounded-2xl border border-brand-500/40 bg-black/60 px-6 py-12 text-center shadow-lg shadow-black/10 backdrop-blur-md transition-all duration-300 ease-out group-hover:-translate-y-1.5 group-hover:scale-[1.02] group-hover:border-brand-500/70 group-hover:bg-black/70 group-hover:shadow-[0_14px_30px_rgba(0,0,0,0.5)]">
+        <h3 className="font-display text-lg font-bold uppercase tracking-widest text-brand-500 md:text-xl">
           {label}
         </h3>
         <span aria-hidden className="mx-auto mt-2.5 h-px w-8 bg-brand-500/50" />
-        <p className="mt-4 whitespace-pre-line text-[13px] leading-relaxed text-stone-700 md:text-sm">
+        <p className="mt-4 whitespace-pre-line text-[18px] leading-relaxed text-white/75">
           {text}
         </p>
       </div>
@@ -106,7 +106,7 @@ export function ProfilSection({ profil }: ProfilSectionProps) {
   return (
     <section
       id="profil"
-      className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden py-20 md:py-28"
+      className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden pt-0 pb-20 md:pt-6 md:pb-28"
       style={{
         backgroundImage: "url('/profil projek.png')",
         backgroundSize: 'cover',
@@ -114,8 +114,10 @@ export function ProfilSection({ profil }: ProfilSectionProps) {
         backgroundRepeat: 'no-repeat',
       }}
     >
-      <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col items-center px-5 md:px-10">
-        <h2 className="animate-fade-up text-center font-display text-[clamp(2rem,6vw,4rem)] font-bold uppercase leading-none tracking-tight text-brand-500 drop-shadow-[0_2px_10px_rgba(255,255,255,0.7)]">
+      <div aria-hidden className="absolute inset-0 bg-black/55" />
+
+      <div className="relative z-10 mx-auto -mt-[90px] flex w-full max-w-6xl flex-col items-center px-5 md:px-10">
+        <h2 className="animate-fade-up text-center font-display text-[clamp(2rem,6vw,4rem)] font-bold uppercase leading-none tracking-tight text-brand-500">
           PROFIL
         </h2>
         <div aria-hidden className="mt-4 h-px w-24 animate-fade-up bg-brand-500/50" />

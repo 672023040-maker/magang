@@ -42,7 +42,7 @@ export function KontakSection() {
         </h2>
         <div aria-hidden className="mx-auto mt-4 h-px w-24 bg-brand-500/50" />
 
-        <p className="mt-5 text-[15px] leading-relaxed text-white/70">
+        <p className="mt-5 text-[18px] leading-relaxed text-white/70">
           Ada yang ingin ditanyakan soal DIGFIN? Kirim email ke alamat di bawah
           ini, kami akan membalas sebisanya.
         </p>

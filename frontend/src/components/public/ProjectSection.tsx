@@ -85,7 +85,7 @@ function ProjectCard({ project }: { project: Project }) {
           {project.nama_project}
         </h3>
 
-        <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-white/70">
+        <p className="mt-2 line-clamp-3 text-[18px] leading-relaxed text-white/70">
           {project.deskripsi}
         </p>
 
@@ -122,14 +122,14 @@ function ProjectCard({ project }: { project: Project }) {
               <p className="text-xs font-semibold uppercase tracking-wide text-brand-500">
                 Dibuat
               </p>
-              <p className="mt-1 text-sm text-white/90">
+              <p className="mt-1 text-[18px] text-white/90">
                 {dibuat ?? 'Tidak diketahui'}
               </p>
 
               <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-brand-500">
                 Tentang Project
               </p>
-              <p className="mt-1 whitespace-pre-line text-sm leading-relaxed text-white/80">
+              <p className="mt-1 whitespace-pre-line text-[18px] leading-relaxed text-white/80">
                 {project.deskripsi}
               </p>
             </div>
@@ -183,14 +183,14 @@ export function ProjectSection({ project }: ProjectSectionProps) {
             Projek DIGFIN
           </h2>
 
-          <p className="mx-auto mt-5 max-w-2xl text-center text-[15px] leading-relaxed text-white/70 md:text-base">
+          <p className="mx-auto mt-5 max-w-2xl text-center text-[18px] leading-relaxed text-white/70">
             Jelajahi berbagai proyek dan inovasi digital yang dikembangkan oleh
             DIGFIN.
           </p>
         </div>
 
         {project.length === 0 ? (
-          <p className="mt-16 animate-fade-up text-center text-sm text-white/60">
+          <p className="mt-16 animate-fade-up text-center text-[18px] text-white/60">
             Belum ada project.
           </p>
         ) : (
