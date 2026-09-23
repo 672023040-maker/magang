@@ -32,24 +32,19 @@ export function Navbar() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-40 bg-[#538932] shadow-sm">
-      <nav className="flex h-16 items-center pl-2.5 pr-4 md:grid md:grid-cols-[1fr_auto_1fr]">
+      <nav className="flex h-[84px] items-center pl-2.5 pr-4 md:grid md:grid-cols-[1fr_auto_1fr]">
         <a
           href="#hero"
           className="flex items-center gap-2.5 font-display text-xl font-semibold text-white md:ml-[150px] md:mr-[60px] md:justify-self-start"
         >
           <img
-            src="/uksw.png"
-            alt="Logo UKSW"
-            className="h-[42px] w-auto object-contain"
-          />
-          <img
             src="/did.png"
             alt="DIGFIN"
-            className="h-[38px] w-auto object-contain"
+            className="h-[52px] w-auto object-contain"
           />
         </a>
 
-        <ul className="hidden items-center gap-6 md:flex">
+        <ul className="hidden items-center gap-[40px] md:flex">
           {links.map((link) => (
             <li key={link.href}>
               <a
@@ -67,7 +62,7 @@ export function Navbar() {
         </ul>
 
         <div className="ml-auto flex items-center gap-2.5 md:ml-0 md:justify-self-auto">
-          <div className="hidden items-center gap-2.5 md:ml-[40px] md:flex lg:ml-[320px]">
+          <div className="hidden items-center gap-[20px] md:ml-[40px] md:flex lg:ml-[320px]">
             <a
               href="https://www.instagram.com/did_uksw"
               target="_blank"
