@@ -30,7 +30,9 @@ export function KontakSection() {
       className="relative w-full overflow-hidden bg-[#dbba99] py-20 md:py-24"
     >
       <div ref={boxRef} className="relative z-10 mx-auto max-w-xl px-5 text-center">
-        <h2 className="font-display text-4xl font-bold uppercase tracking-tight text-stone-900 md:text-5xl">
+        <h2 className={`font-display text-4xl font-bold uppercase tracking-tight text-stone-900 md:text-5xl ${
+            visible ? 'animate-fade-in-down' : 'opacity-0'
+          }`}>
           Kontak Kami
         </h2>
         <div aria-hidden className="mx-auto mt-4 h-px w-24 bg-stone-400/60" />

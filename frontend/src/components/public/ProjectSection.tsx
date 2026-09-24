@@ -140,9 +140,28 @@ className={`group flex h-full flex-col overflow-hidden rounded-2xl border border
   )
 }
 
+function chunkProjects<T>(items: T[], size: number): T[][] {
+  if (size <= 0) return [items]
+
+  const result: T[][] = []
+
+  for (let i = 0; i < items.length; i += size) {
+    result.push(items.slice(i, i + size))
+  }
+
+  return result
+}
+
 export function ProjectSection({ project }: ProjectSectionProps) {
   const gridRef = useRef<HTMLDivElement>(null)
+  const viewportRef = useRef<HTMLDivElement>(null)
   const [visible, setVisible] = useState(false)
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const [visibleCount, setVisibleCount] = useState(1)
+  const [viewportWidth, setViewportWidth] = useState(0)
+
+  const slides = chunkProjects(project, visibleCount)
+  const effectiveSlide = Math.min(currentSlide, slides.length - 1)
 
   useEffect(() => {
     const node = gridRef.current
@@ -164,20 +183,54 @@ export function ProjectSection({ project }: ProjectSectionProps) {
     return () => observer.disconnect()
   }, [])
 
+  useEffect(() => {
+    const lg = window.matchMedia('(min-width: 1024px)')
+    const sm = window.matchMedia('(min-width: 640px)')
+
+    const update = () => {
+      if (lg.matches) setVisibleCount(3)
+      else if (sm.matches) setVisibleCount(2)
+      else setVisibleCount(1)
+    }
+
+    update()
+    lg.addEventListener('change', update)
+    sm.addEventListener('change', update)
+
+    return () => {
+      lg.removeEventListener('change', update)
+      sm.removeEventListener('change', update)
+    }
+  }, [])
+
+  useEffect(() => {
+    const node = viewportRef.current
+
+    if (!node) return
+
+    const updateWidth = () => setViewportWidth(node.offsetWidth)
+    const observer = new ResizeObserver(updateWidth)
+
+    updateWidth()
+    observer.observe(node)
+
+    return () => observer.disconnect()
+  }, [])
+
   return (
     <section
       id="project"
-      className="relative flex min-h-screen w-full items-start justify-center overflow-hidden bg-[#dbba99] pt-20 pb-20 md:pt-28"
+      className="relative flex min-h-screen w-full items-start justify-center overflow-hidden bg-[#dbba99] pt-20 pb-20 md:pt-[50px]"
     >
       <div className="relative z-10 mx-auto w-full max-w-7xl px-5 md:px-10">
-        <div className="animate-fade-up text-center">
+        <div className={`text-center ${visible ? 'animate-fade-in-down' : 'opacity-0'}`}>
           <h2 className="font-display text-[clamp(2rem,6vw,4rem)] font-bold uppercase leading-tight tracking-tight text-stone-900">
             Projek DIGFIN
           </h2>
 
           <div aria-hidden className="mx-auto mt-4 h-px w-24 bg-stone-400" />
 
-          <p className="mx-auto mt-5 max-w-2xl text-center text-[18px] leading-relaxed text-stone-600">
+          <p className="mx-auto -mt-2.5 max-w-2xl text-center text-[18px] leading-relaxed text-stone-600">
             Jelajahi berbagai proyek dan inovasi digital yang dikembangkan oleh
             DIGFIN.
           </p>
@@ -190,19 +243,81 @@ export function ProjectSection({ project }: ProjectSectionProps) {
         ) : (
           <div
               ref={gridRef}
-              className="mt-14 flex snap-x gap-6 overflow-x-auto pb-5 md:mt-16 md:gap-7"
+              className="mt-14 flex items-center gap-3 sm:gap-4 md:mt-[25px] lg:gap-5"
             >
-              {project.map((item, index) => (
-                <div
-                  key={item.id}
-                  className={`w-[85vw] max-w-[300px] shrink-0 snap-start ${
-                    visible ? 'animate-fade-in-down' : 'opacity-0'
-                  } sm:max-w-none sm:w-[300px] md:w-[340px] lg:w-[380px]`}
-                  style={{ animationDelay: `${index * 90}ms` }}
+              <button
+                type="button"
+                onClick={() => setCurrentSlide((prev) => Math.max(prev - 1, 0))}
+                disabled={effectiveSlide === 0}
+                aria-label="Project sebelumnya"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-stone-300 bg-white/80 text-stone-900 transition hover:scale-105 hover:bg-white disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:scale-100"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="h-5 w-5"
+                  aria-hidden
                 >
-                  <ProjectCard project={item} />
+                  <path d="m15 18-6-6 6-6" />
+                </svg>
+              </button>
+
+              <div ref={viewportRef} className="min-w-0 flex-1 overflow-x-clip">
+                <div
+                  className="flex transition-transform duration-[400ms] ease-in-out"
+                  style={{ transform: `translateX(-${effectiveSlide * viewportWidth}px)` }}
+                >
+                  {slides.map((slideItems, slideIndex) => (
+                    <div key={slideIndex} className="w-full shrink-0">
+                      <div
+                        className="grid gap-6 md:gap-7"
+                        style={{
+                          gridTemplateColumns: `repeat(${visibleCount}, minmax(0, 1fr))`,
+                        }}
+                      >
+                        {slideItems.map((item, index) => (
+                          <div
+                            key={item.id}
+                            className={`min-w-0 ${
+                              visible ? 'animate-fade-in-down' : 'opacity-0'
+                            }`}
+                            style={{ animationDelay: `${index * 90}ms` }}
+                          >
+                            <ProjectCard project={item} />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
+
+              <button
+                type="button"
+                onClick={() =>
+                  setCurrentSlide((prev) => Math.min(prev + 1, slides.length - 1))
+                }
+                disabled={effectiveSlide >= slides.length - 1}
+                aria-label="Project berikutnya"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-stone-300 bg-white/80 text-stone-900 transition hover:scale-105 hover:bg-white disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:scale-100"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="h-5 w-5"
+                  aria-hidden
+                >
+                  <path d="m9 18 6-6-6-6" />
+                </svg>
+              </button>
             </div>
         )}
       </div>

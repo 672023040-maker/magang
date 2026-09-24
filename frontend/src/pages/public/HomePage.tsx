@@ -42,7 +42,7 @@ export function HomePage() {
       <StrukturSection struktur={data.struktur} />
       <div className="h-[0.5px] bg-[#F3EAE1] shadow-none" />
       <ProjectSection project={data.project} />
-      <div className="h-[0.5px] bg-[#F3EAE1] shadow-none" />
+      <div className="h-px bg-[#F3EAE1] shadow-none" />
       <KontakSection />
     </PublicLayout>
   )
