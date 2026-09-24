@@ -286,7 +286,7 @@ export function ProjectPage() {
             id="file_gambar"
             label="Gambar Sampul"
             type="file"
-            accept="image/*"
+            accept="image/jpeg,image/png"
             onChange={(e) => handleCoverChange(e.target.files?.[0] ?? null)}
           />
 

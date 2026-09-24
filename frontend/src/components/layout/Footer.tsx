@@ -3,11 +3,11 @@ export function Footer() {
     <footer className="bg-[#F3EAE1] text-stone-700">
       <div className="grid items-start gap-10 py-8 px-5 lg:grid-cols-[auto_auto_auto] lg:justify-center">
         <div>
-          <div className="mt-2 flex items-center gap-3">
+          <div className="-mt-2.5 -ml-5 flex items-center gap-3">
             <img
-              src="/did.png"
+              src="/digfin logo.png"
               alt="DIGFIN"
-              className="h-auto w-[228px] object-contain"
+              className="h-[175px] w-auto object-contain"
             />
           </div>
         </div>

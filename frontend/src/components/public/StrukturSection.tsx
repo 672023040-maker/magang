@@ -5,9 +5,6 @@ interface StrukturSectionProps {
   struktur: Struktur[]
 }
 
-const instagramUrl = (value: string) =>
-  /^https?:\/\//i.test(value) ? value : `https://www.instagram.com/${value}`
-
 export function StrukturSection({ struktur }: StrukturSectionProps) {
   const [activeId, setActiveId] = useState<number | null>(null)
   const gridRef = useRef<HTMLDivElement>(null)
@@ -101,40 +98,22 @@ export function StrukturSection({ struktur }: StrukturSectionProps) {
                         : 'max-h-0 -translate-x-3 opacity-0'
                     }`}
                   >
-                    {(orang.instagram || orang.email) && (
+                    {orang.email && (
                       <div className="flex items-center justify-center gap-4 pb-2">
-                        {orang.instagram && (
-                          <a
-                            href={instagramUrl(orang.instagram)}
-                            target="_blank"
-                            rel="noreferrer"
-                            aria-label={`Instagram ${orang.nama}`}
-                            onClick={(e) => e.stopPropagation()}
-                            className="flex h-9 w-9 items-center justify-center rounded-full bg-stone-900 ring-1 ring-stone-700 transition hover:bg-stone-700 hover:ring-stone-500"
-                          >
-                            <img
-                              src="/instagram putih.png"
-                              alt=""
-                              className="h-4 w-auto object-contain"
-                            />
-                          </a>
-                        )}
-                        {orang.email && (
-                          <a
-                            href={`https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(orang.email)}`}
-                            target="_blank"
-                            rel="noreferrer"
-                            aria-label={`Email ${orang.nama}`}
-                            onClick={(e) => e.stopPropagation()}
-                            className="flex h-9 w-9 items-center justify-center rounded-full bg-stone-900 ring-1 ring-stone-700 transition hover:bg-stone-700 hover:ring-stone-500"
-                          >
-                            <img
-                              src="/email white.png"
-                              alt=""
-                              className="h-4 w-auto object-contain"
-                            />
-                          </a>
-                        )}
+                        <a
+                          href={`https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(orang.email)}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          aria-label={`Email ${orang.nama}`}
+                          onClick={(e) => e.stopPropagation()}
+                          className="flex h-9 w-9 items-center justify-center rounded-full bg-stone-900 ring-1 ring-stone-700 transition hover:bg-stone-700 hover:ring-stone-500"
+                        >
+                          <img
+                            src="/email white.png"
+                            alt=""
+                            className="h-4 w-auto object-contain"
+                          />
+                        </a>
                       </div>
                     )}
                   </div>

@@ -38,9 +38,9 @@ export function Navbar() {
           className="flex items-center gap-2.5 font-display text-xl font-semibold text-stone-900 md:ml-[150px] md:mr-[60px] md:justify-self-start"
         >
           <img
-            src="/did.png"
+            src="/digfin logo.png"
             alt="DIGFIN"
-            className="h-[52px] w-auto object-contain"
+            className="h-[84px] w-auto object-contain"
           />
         </a>
 

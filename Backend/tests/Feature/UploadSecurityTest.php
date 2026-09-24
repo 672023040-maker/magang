@@ -34,6 +34,25 @@ class UploadSecurityTest extends TestCase
         return $bytes;
     }
 
+    private function pngBytes(int $width = 16, int $height = 16): string
+    {
+        $img = imagecreatetruecolor($width, $height);
+
+        // Latar transparan + persegi berwarna, untuk memastikan alpha dipertahankan.
+        imagealphablending($img, false);
+        imagesavealpha($img, true);
+        imagefill($img, 0, 0, imagecolorallocatealpha($img, 0, 0, 0, 127));
+        imagealphablending($img, true);
+        imagefilledrectangle($img, 2, 2, $width - 3, $height - 3, imagecolorallocate($img, 40, 120, 60));
+
+        ob_start();
+        imagepng($img);
+        $bytes = (string) ob_get_clean();
+        imagedestroy($img);
+
+        return $bytes;
+    }
+
     private function uploaded(string $name, string $content): UploadedFile
     {
         return UploadedFile::fake()->createWithContent($name, $content);
@@ -82,13 +101,60 @@ class UploadSecurityTest extends TestCase
         $this->assertStringNotContainsString('GARBAGE-METADATA', (string) $stored);
     }
 
-    public function test_png_ditolak(): void
+    public function test_png_valid_tersimpan_aman_dengan_nama_random(): void
     {
         Storage::fake('public');
 
-        $png = $this->uploaded('gambar.png', 'x'.base64_decode('iVBORw0KGgo='));
+        $path = $this->service()->sanitizeAndStore($this->uploaded('foto.png', $this->pngBytes()), 'struktur', 'public');
+
+        $this->assertStringEndsWith('.png', $path);
+        $this->assertMatchesRegularExpression('#^struktur/[0-9a-f-]{36}\.png$#', $path);
+        $this->assertNotEquals('foto.png', basename($path), 'Nama asli file tidak boleh dipakai.');
+        $this->assertTrue(Storage::disk('public')->exists($path));
+        $this->assertTrue(Storage::disk('public')->has($path));
+    }
+
+    public function test_png_disimpan_ulang_dengan_metadata_dibuang(): void
+    {
+        Storage::fake('public');
+
+        // Sisipkan payload/metadata tambahan: re-encode wajib membuangnya
+        // sehingga hasil tersimpan berbeda dari input dan tetap PNG valid.
+        $original = $this->pngBytes().'GARBAGE-METADATA-TO-STRIP';
+        $path = $this->service()->sanitizeAndStore($this->uploaded('foto.png', $original), 'struktur', 'public');
+
+        $stored = (string) Storage::disk('public')->get($path);
+        $this->assertNotSame($original, $stored, 'File harus di-re-encode ulang agar payload asing hilang.');
+        $this->assertStringStartsWith("\x89PNG\r\n\x1a\n", $stored, 'Hasil re-encode harus tetap PNG asli.');
+        $this->assertStringNotContainsString('GARBAGE-METADATA', $stored);
+    }
+
+    public function test_png_transparansi_dipertahankan_saat_reencode(): void
+    {
+        Storage::fake('public');
+
+        $path = $this->service()->sanitizeAndStore($this->uploaded('logo.png', $this->pngBytes()), 'struktur', 'public');
+
+        $tmp = tempnam(sys_get_temp_dir(), 'digfin_png');
+        file_put_contents($tmp, (string) Storage::disk('public')->get($path));
+
+        $img = @imagecreatefrompng($tmp);
+        $this->assertNotFalse($img, 'Hasil re-encode harus tetap bisa didecode sebagai PNG.');
+        $alpha = (imagecolorat($img, 0, 0) >> 24) & 0x7F;
+        imagedestroy($img);
+        @unlink($tmp);
+
+        $this->assertGreaterThanOrEqual(120, $alpha, 'Transparansi PNG harus dipertahankan.');
+    }
+
+    public function test_corrupt_png_ditolak(): void
+    {
+        Storage::fake('public');
+
+        // Header PNG valid tapi tidak bisa didecode → harus ditolak.
+        $corrupt = $this->uploaded('rusak.png', "\x89PNG\r\n\x1a\n".str_repeat('X', 256));
         $this->expectException(UploadRejectedException::class);
-        $this->service()->sanitizeAndStore($png, 'dokumentasi', 'public');
+        $this->service()->sanitizeAndStore($corrupt, 'struktur', 'public');
     }
 
     public function test_gif_ditolak(): void
@@ -127,7 +193,7 @@ class UploadSecurityTest extends TestCase
             $this->service()->sanitizeAndStore($php, 'dokumentasi', 'public');
             $this->fail('PHP berkedok JPG harus ditolak.');
         } catch (UploadRejectedException $e) {
-            $this->assertStringContainsString('jpeg', strtolower($e->getMessage()));
+            $this->assertStringContainsString('JPG', strtoupper($e->getMessage()));
         }
     }
 
@@ -140,14 +206,25 @@ class UploadSecurityTest extends TestCase
         $this->service()->sanitizeAndStore($exe, 'dokumentasi', 'public');
     }
 
-    public function test_jpeg_dengan_ekstensi_salah_ditolak(): void
+    public function test_konten_jpeg_dengan_ekstensi_png_diterima_dan_disimpan_jpg(): void
     {
         Storage::fake('public');
 
-        // Konten valid JPEG tapi ekstensi .png → lapisan extension menolak.
-        $mismatch = $this->uploaded('foto.png', $this->jpegBytes());
+        // Kedua format (JPG & PNG) diizinkan → isi file yang menentukan format simpan:
+        // konten JPEG ber-ekstensi .png sah dan disimpan sebagai .jpg.
+        $path = $this->service()->sanitizeAndStore($this->uploaded('foto.png', $this->jpegBytes()), 'struktur', 'public');
+        $this->assertStringEndsWith('.jpg', $path);
+        $this->assertStringStartsWith("\xFF\xD8\xFF", (string) Storage::disk('public')->get($path));
+    }
+
+    public function test_konten_gif_dengan_ekstensi_png_ditolak(): void
+    {
+        Storage::fake('public');
+
+        // Ekstensi diizinkan tapi isi terlarang → harus tetap ditolak.
+        $mismatch = $this->uploaded('gambar.png', 'GIF89a'.str_repeat('A', 64));
         $this->expectException(UploadRejectedException::class);
-        $this->service()->sanitizeAndStore($mismatch, 'dokumentasi', 'public');
+        $this->service()->sanitizeAndStore($mismatch, 'struktur', 'public');
     }
 
     public function test_double_extension_ditolak(): void

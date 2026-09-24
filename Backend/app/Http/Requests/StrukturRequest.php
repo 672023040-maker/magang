@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\SecureJpeg;
+use App\Rules\SecureImage;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StrukturRequest extends FormRequest
@@ -22,8 +22,7 @@ class StrukturRequest extends FormRequest
         return [
             'nama' => ['required', 'string', 'max:255'],
             'jabatan' => ['required', 'string', 'max:255'],
-            'foto' => ['nullable', 'file', 'mimes:jpg,jpeg', 'max:'.$maxSize, new SecureJpeg],
-            'instagram' => ['nullable', 'string', 'max:255'],
+            'foto' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:'.$maxSize, new SecureImage],
             'email' => ['nullable', 'email', 'max:255'],
         ];
     }

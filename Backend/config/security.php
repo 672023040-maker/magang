@@ -97,13 +97,14 @@ return [
     */
 
     'upload' => [
-        'allowed_extensions' => ['jpg', 'jpeg'],
-        'allowed_mimes' => ['image/jpeg'],
+        'allowed_extensions' => ['jpg', 'jpeg', 'png'],
+        'allowed_mimes' => ['image/jpeg', 'image/png'],
         'max_size' => (int) env('MAX_IMAGE_SIZE', 5 * 1024), // KB
         'max_width' => (int) env('MAX_IMAGE_WIDTH', 6000),
         'max_height' => (int) env('MAX_IMAGE_HEIGHT', 6000),
         'max_files_per_request' => (int) env('MAX_IMAGE_FILES', 5),
         'jpeg_quality' => (int) env('JPEG_REENCODE_QUALITY', 85),
+        'png_compression' => (int) env('PNG_REENCODE_COMPRESSION', 6),
     ],
 
     /*

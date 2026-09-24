@@ -8,7 +8,7 @@ use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Http\UploadedFile;
 
-class SecureJpeg implements ValidationRule
+class SecureImage implements ValidationRule
 {
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {

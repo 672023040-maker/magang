@@ -9,7 +9,6 @@ export interface Struktur {
   id: number
   nama: string
   jabatan: string
-  instagram: string | null
   email: string | null
   foto_url: string | null
 }

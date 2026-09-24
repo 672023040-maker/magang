@@ -10,13 +10,13 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 /**
- * Pipeline penyimpanan gambar yang sangat ketat (JPEG only).
+ * Pipeline penyimpanan gambar yang sangat ketat (JPG/PNG only).
  *
  * Seluruh perintah "JANGAN percaya frontend" diterapkan di sini:
- * - extension hanya .jpg/.jpeg
- * - MIME harus image/jpeg (finfo, bukan value dari browser)
- * - magic bytes JPEG harus ada
- * - gambar harus benar-benar bisa didecode imagecreatefromjpeg
+ * - extension hanya .jpg/.jpeg/.png
+ * - MIME harus image/jpeg atau image/png (finfo, bukan value dari browser)
+ * - magic bytes JPEG/PNG harus ada
+ * - gambar harus benar-benar bisa didecode (imagecreatefromjpeg / imagecreatefrompng)
  * - ukuran & dimensi dibatasi
  * - ditulis ulang (re-encode) untuk membuang metadata/payload asing
  * - nama file random UUID, bukan nama original
@@ -33,6 +33,14 @@ class SecureImageService
         'htaccess', 'html', 'htm', 'shtml', 'svg', 'svgz',
     ];
 
+    private const PNG_SIGNATURE = "\x89PNG\r\n\x1a\n";
+    private const JPEG_SIGNATURE = "\xFF\xD8\xFF";
+
+    private const FORMAT_EXTENSION = [
+        IMAGETYPE_JPEG => 'jpg',
+        IMAGETYPE_PNG => 'png',
+    ];
+
     /**
      * Jalankan seluruh validasi (tanpa menyimpan) sebagai "rule" backend.
      *
@@ -43,15 +51,15 @@ class SecureImageService
         $this->assertAllowedExtension($file);
         $this->assertSafeFilename($file);
         $this->assertAllowedMime($file);
-        $this->assertJpegMagicBytes($file);
+        $this->assertMagicBytes($file);
         $this->assertSizeLimit($file);
         $this->decodeDimensions($file);
     }
 
     /**
-     * Proses penuh: validasi -> antisudah -> re-encode -> simpan.
+     * Proses penuh: validasi -> antivirus -> re-encode -> simpan.
      *
-     * @return string path relatif di disk tujuan (mis. "dokumentasi/xxxx.jpg")
+     * @return string path relatif di disk tujuan (mis. "dokumentasi/xxxx.jpg" atau "struktur/xxxx.png")
      *
      * @throws UploadRejectedException
      */
@@ -61,25 +69,26 @@ class SecureImageService
         $this->assertAllowedExtension($file);
         $this->assertSafeFilename($file);
         $this->assertAllowedMime($file);
-        $this->assertJpegMagicBytes($file);
+        $this->assertMagicBytes($file);
         $this->assertSizeLimit($file);
 
         // 5. Antivirus (optional, nonaktif default).
         $this->scanFile($file);
 
         // 6. Dekode & validasi dimensi.
-        $dimensions = $this->decodeDimensions($file);
+        $this->decodeDimensions($file);
 
         // 7-8. Re-encode gambar baru + buang metadata/payload.
-        $tempPath = $this->reencodeJpeg($file);
+        $format = $this->detectFormat($file);
+        $tempPath = $this->reencode($file, $format);
 
         try {
             $content = (string) file_get_contents($tempPath);
-            if ($content === '' || ! $this->hasJpegMagicBytesFromString($content)) {
+            if ($content === '' || ! $this->hasMagicBytesFromString($content, $format)) {
                 throw new UploadRejectedException('Hasil pemrosesan gambar tidak valid.');
             }
 
-            $filename = Str::uuid()->toString().'.jpg';
+            $filename = Str::uuid()->toString().'.'.$format;
             $storedPath = $directory.'/'.$filename;
 
             if (! Storage::disk($disk)->put($storedPath, $content, ['visibility' => 'public'])) {
@@ -97,36 +106,26 @@ class SecureImageService
     private function assertAllowedExtension(UploadedFile $file): void
     {
         $ext = strtolower((string) $file->getClientOriginalExtension());
-        $allowed = (array) config('security.upload.allowed_extensions', ['jpg', 'jpeg']);
+        $allowed = (array) config('security.upload.allowed_extensions', ['jpg', 'jpeg', 'png']);
 
         if (! in_array($ext, $allowed, true)) {
-            throw new UploadRejectedException('Hanya file gambar JPG/JPEG yang diperbolehkan.');
+            throw new UploadRejectedException('Hanya file gambar JPG/PNG yang diperbolehkan.');
         }
     }
 
     private function assertAllowedMime(UploadedFile $file): void
     {
-        $allowed = (array) config('security.upload.allowed_mimes', ['image/jpeg']);
+        $allowed = (array) config('security.upload.allowed_mimes', ['image/jpeg', 'image/png']);
         $mime = strtolower((string) $file->getMimeType());
 
         if (! in_array($mime, $allowed, true)) {
-            throw new UploadRejectedException('Tipe file tidak sesuai (harus image/jpeg).');
+            throw new UploadRejectedException('Tipe file tidak sesuai (harus JPG/PNG).');
         }
     }
 
-    private function assertJpegMagicBytes(UploadedFile $file): void
+    private function assertMagicBytes(UploadedFile $file): void
     {
-        $handle = fopen($file->getRealPath(), 'rb');
-        if ($handle === false) {
-            throw new UploadRejectedException('Gambar tidak dapat dibaca.');
-        }
-
-        $header = (string) fread($handle, 3);
-        fclose($handle);
-
-        if (! $this->isJpegSignature($header)) {
-            throw new UploadRejectedException('Struktur file bukan JPEG yang valid.');
-        }
+        $this->detectFormat($file);
     }
 
     private function assertSizeLimit(UploadedFile $file): void
@@ -136,6 +135,32 @@ class SecureImageService
         if ($file->getSize() > $maxBytes) {
             throw new UploadRejectedException('Ukuran gambar melebihi batas maksimum.');
         }
+    }
+
+    /**
+     * @return string 'jpg' atau 'png' berdasarkan magic bytes isi file.
+     *
+     * @throws UploadRejectedException
+     */
+    private function detectFormat(UploadedFile $file): string
+    {
+        $handle = fopen($file->getRealPath(), 'rb');
+        if ($handle === false) {
+            throw new UploadRejectedException('Gambar tidak dapat dibaca.');
+        }
+
+        $header = (string) fread($handle, 8);
+        fclose($handle);
+
+        if ($this->hasPngSignature($header)) {
+            return 'png';
+        }
+
+        if ($this->hasJpegSignature($header)) {
+            return 'jpg';
+        }
+
+        throw new UploadRejectedException('Struktur file bukan JPG/PNG yang valid.');
     }
 
     /**
@@ -154,8 +179,8 @@ class SecureImageService
         [$width, $height] = $imageInfo;
         $detectedType = $imageInfo[2] ?? IMAGETYPE_UNKNOWN;
 
-        if ($detectedType !== IMAGETYPE_JPEG) {
-            throw new UploadRejectedException('Format internal gambar bukan JPEG.');
+        if (! isset(self::FORMAT_EXTENSION[$detectedType])) {
+            throw new UploadRejectedException('Format internal gambar bukan JPG/PNG.');
         }
 
         $maxWidth = (int) config('security.upload.max_width');
@@ -165,8 +190,10 @@ class SecureImageService
             throw new UploadRejectedException('Dimensi gambar melebihi batas yang diizinkan.');
         }
 
-        // Pastikan struktur JPEG benar-benar dapat didecode (bukan header palsu).
-        $image = @imagecreatefromjpeg($file->getRealPath());
+        // Pastikan struktur benar-benar dapat didecode (bukan header palsu).
+        $image = $detectedType === IMAGETYPE_JPEG
+            ? @imagecreatefromjpeg($file->getRealPath())
+            : @imagecreatefrompng($file->getRealPath());
         if ($image === false) {
             throw new UploadRejectedException('Gambar rusak / tidak dapat diproses.');
         }
@@ -176,14 +203,14 @@ class SecureImageService
     }
 
     /**
-     * Re-encode JPEG baru, membuang seluruh metadata (EXIF, comment,
-     * thumbnail, payload tambahan dari file asli).
+     * Re-encode gambar baru, membuang seluruh metadata (EXIF, comment,
+     * thumbnail, payload tambahan dari file asli). Transparansi PNG dipertahankan.
      *
      * @return string path temp hasil re-encode
      *
      * @throws UploadRejectedException
      */
-    private function reencodeJpeg(UploadedFile $file): string
+    private function reencode(UploadedFile $file, string $format): string
     {
         $previousMemory = ini_get('memory_limit');
         @ini_set('memory_limit', '512M');
@@ -191,7 +218,9 @@ class SecureImageService
         $tempPath = tempnam(sys_get_temp_dir(), 'digfin_img');
 
         try {
-            $source = @imagecreatefromjpeg($file->getRealPath());
+            $source = $format === 'png'
+                ? @imagecreatefrompng($file->getRealPath())
+                : @imagecreatefromjpeg($file->getRealPath());
             if ($source === false) {
                 throw new UploadRejectedException('Gambar tidak dapat diproses.');
             }
@@ -205,12 +234,25 @@ class SecureImageService
                 throw new UploadRejectedException('Gagal memproses gambar.');
             }
 
+            if ($format === 'png') {
+                imagealphablending($canvas, false);
+                imagesavealpha($canvas, true);
+            }
+
             imagecopyresampled($canvas, $source, 0, 0, 0, 0, $width, $height, $width, $height);
 
-            $quality = max(1, min(100, (int) config('security.upload.jpeg_quality', 85)));
+            if ($format === 'png') {
+                $compression = max(0, min(9, (int) config('security.upload.png_compression', 6)));
 
-            if (! imagejpeg($canvas, $tempPath, $quality)) {
-                throw new UploadRejectedException('Gagal menulis ulang gambar.');
+                if (! imagepng($canvas, $tempPath, $compression)) {
+                    throw new UploadRejectedException('Gagal menulis ulang gambar.');
+                }
+            } else {
+                $quality = max(1, min(100, (int) config('security.upload.jpeg_quality', 85)));
+
+                if (! imagejpeg($canvas, $tempPath, $quality)) {
+                    throw new UploadRejectedException('Gagal menulis ulang gambar.');
+                }
             }
 
             imagedestroy($canvas);
@@ -266,13 +308,20 @@ class SecureImageService
         }
     }
 
-    private function isJpegSignature(string $bytes): bool
+    private function hasJpegSignature(string $bytes): bool
     {
-        return str_starts_with($bytes, "\xFF\xD8\xFF");
+        return str_starts_with($bytes, self::JPEG_SIGNATURE);
     }
 
-    private function hasJpegMagicBytesFromString(string $content): bool
+    private function hasPngSignature(string $bytes): bool
     {
-        return $this->isJpegSignature(mb_substr($content, 0, 3));
+        return str_starts_with($bytes, self::PNG_SIGNATURE);
+    }
+
+    private function hasMagicBytesFromString(string $content, string $format): bool
+    {
+        return $format === 'png'
+            ? $this->hasPngSignature(mb_substr($content, 0, 8))
+            : $this->hasJpegSignature(mb_substr($content, 0, 3));
     }
 }

@@ -6,7 +6,7 @@ export function Hero() {
       <section
         id="hero"
         className="relative min-h-[600px] overflow-visible bg-white md:min-h-[740px]"
-style={{ '--hero-background': 'url(/naruto.jpg)' } as CSSProperties}
+        style={{ '--hero-background': 'url(/hero4.jpg)' } as CSSProperties}
       >
         <div
           aria-hidden
@@ -14,7 +14,7 @@ style={{ '--hero-background': 'url(/naruto.jpg)' } as CSSProperties}
           style={{
             backgroundImage: 'var(--hero-background, none)',
             backgroundSize: 'cover',
-            backgroundPosition: 'center',
+            backgroundPosition: 'center top',
           }}
         />
         <div className="relative z-10 px-5 pb-20 pt-[165px] text-center">

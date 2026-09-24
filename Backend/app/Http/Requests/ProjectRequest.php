@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\SecureJpeg;
+use App\Rules\SecureImage;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ProjectRequest extends FormRequest
@@ -26,7 +26,7 @@ class ProjectRequest extends FormRequest
             'status' => ['required', 'in:berjalan,selesai'],
             'tgl_dibuat' => ['nullable', 'date'],
             'dokumentasi' => ['nullable', 'array', 'max:'.$maxFiles],
-            'dokumentasi.*.file_gambar' => ['required_with:dokumentasi', 'file', 'mimes:jpg,jpeg', 'max:'.$maxSize, new SecureJpeg],
+            'dokumentasi.*.file_gambar' => ['required_with:dokumentasi', 'file', 'mimes:jpg,jpeg,png', 'max:'.$maxSize, new SecureImage],
             'dokumentasi.*.keterangan' => ['nullable', 'string'],
         ];
     }

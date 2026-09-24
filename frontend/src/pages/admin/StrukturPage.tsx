@@ -10,7 +10,6 @@ import { Spinner } from '../../components/ui/Spinner'
 interface StrukturForm {
   nama: string
   jabatan: string
-  instagram: string
   email: string
   foto: File | null
 }
@@ -18,7 +17,6 @@ interface StrukturForm {
 const emptyForm: StrukturForm = {
   nama: '',
   jabatan: '',
-  instagram: '',
   email: '',
   foto: null,
 }
@@ -61,7 +59,6 @@ export function StrukturPage() {
     setForm({
       nama: item.nama,
       jabatan: item.jabatan,
-      instagram: item.instagram ?? '',
       email: item.email ?? '',
       foto: null,
     })
@@ -91,7 +88,6 @@ export function StrukturPage() {
 
     data.append('nama', form.nama)
     data.append('jabatan', form.jabatan)
-    data.append('instagram', form.instagram)
     data.append('email', form.email)
 
     if (form.foto) {
@@ -211,13 +207,6 @@ export function StrukturPage() {
             required
           />
           <Input
-            id="instagram"
-            label="Instagram URL"
-            placeholder="https://www.instagram.com/username"
-            value={form.instagram}
-            onChange={(e) => updateField('instagram', e.target.value)}
-          />
-          <Input
             id="email"
             label="Email"
             type="email"
@@ -229,7 +218,7 @@ export function StrukturPage() {
             id="foto"
             label="Foto"
             type="file"
-            accept="image/*"
+            accept="image/jpeg,image/png"
             onChange={(e) => updateField('foto', e.target.files?.[0] ?? null)}
           />
 
