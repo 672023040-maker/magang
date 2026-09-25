@@ -124,7 +124,7 @@ export function StrukturSection({ struktur }: StrukturSectionProps) {
                 className="flex items-start transition-transform duration-[400ms] ease-in-out"
                 style={{ transform: `translateX(-${effectiveIndex * slideWidth}px)` }}
               >
-                {struktur.map((orang, index) => {
+                {struktur.map((orang) => {
                   const isActive = activeId === orang.id
 
                   return (
@@ -139,10 +139,7 @@ export function StrukturSection({ struktur }: StrukturSectionProps) {
                         }}
                         onMouseEnter={() => setActiveId(orang.id)}
                         onMouseLeave={() => setActiveId(null)}
-                        style={{ animationDelay: `${index * 90}ms` }}
                         className={`group flex min-w-0 flex-1 flex-col items-center overflow-hidden rounded-2xl border p-6 text-center transition-[border-color,background-color,box-shadow] duration-300 ease-out ${
-                          visible ? 'animate-fade-in-down' : 'opacity-0'
-                        } ${
                           isActive
                             ? 'border-stone-900 bg-white shadow-[0_20px_50px_-12px_rgba(0,0,0,0.35)]'
                             : 'border-stone-300 bg-white/70 hover:bg-white'

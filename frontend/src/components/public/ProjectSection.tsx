@@ -279,14 +279,8 @@ export function ProjectSection({ project }: ProjectSectionProps) {
                           gridTemplateColumns: `repeat(${visibleCount}, minmax(0, 1fr))`,
                         }}
                       >
-                        {slideItems.map((item, index) => (
-                          <div
-                            key={item.id}
-                            className={`min-w-0 ${
-                              visible ? 'animate-fade-in-down' : 'opacity-0'
-                            }`}
-                            style={{ animationDelay: `${index * 90}ms` }}
-                          >
+                        {slideItems.map((item) => (
+                          <div key={item.id} className="min-w-0">
                             <ProjectCard project={item} />
                           </div>
                         ))}

@@ -9,8 +9,6 @@ interface InfoCardProps {
   label: string
   number: string
   text: string
-  animationDelay: string
-  visible: boolean
 }
 
 const PLACEHOLDER =
@@ -26,14 +24,9 @@ function extractPlainLines(value: string | null | undefined): string {
     .join('\n')
 }
 
-function InfoCard({ label, number, text, animationDelay, visible }: InfoCardProps) {
+function InfoCard({ label, number, text }: InfoCardProps) {
   return (
-    <article
-      className={`group relative mx-auto w-full max-w-xs ${
-        visible ? 'animate-fade-in-down' : 'opacity-0'
-      }`}
-      style={{ animationDelay }}
-    >
+    <article className="group relative mx-auto w-full max-w-xs">
       <div className="rounded-2xl border border-stone-300 bg-white px-6 py-12 text-center shadow-lg shadow-stone-400/30 transition-all duration-300 ease-out group-hover:-translate-y-1.5 group-hover:scale-[1.02] group-hover:border-stone-400 group-hover:bg-stone-100 group-hover:shadow-[0_14px_30px_rgba(0,0,0,0.15)]">
         <h3 className="font-display text-lg font-bold uppercase tracking-widest text-stone-900 md:text-xl">
           {label}
@@ -82,24 +75,21 @@ export function ProfilSection({ profil }: ProfilSectionProps) {
     return () => observer.disconnect()
   }, [])
 
-  const cards: Omit<InfoCardProps, 'visible'>[] = [
+  const cards: InfoCardProps[] = [
     {
       label: 'VISI',
       number: '1.',
       text: profil?.visi?.trim() || PLACEHOLDER,
-      animationDelay: '0ms',
     },
     {
       label: 'MISI',
       number: '2.',
       text: misiText || PLACEHOLDER,
-      animationDelay: '90ms',
     },
     {
       label: 'TUJUAN',
       number: '3.',
       text: profil?.tujuan?.trim() || PLACEHOLDER,
-      animationDelay: '180ms',
     },
   ]
 
@@ -121,7 +111,7 @@ export function ProfilSection({ profil }: ProfilSectionProps) {
           className="mt-12 grid w-full grid-cols-1 gap-x-6 gap-y-14 md:mt-16 md:grid-cols-3 md:gap-x-8 md:gap-y-0"
         >
           {cards.map((card) => (
-            <InfoCard key={card.label} {...card} visible={visible} />
+            <InfoCard key={card.label} {...card} />
           ))}
         </div>
       </div>
