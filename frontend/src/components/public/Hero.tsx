@@ -23,18 +23,13 @@ export function Hero() {
           </p>
 
           <h1 className="animate-fade-in-down font-poppins text-[clamp(1.75rem,5.5vw,4rem)] font-bold uppercase leading-tight text-white">
-            Digitalisasi dan Fintech
+            Digitalisasi & Fintech
           </h1>
 
-          <p className="mx-auto mt-10 max-w-[850px] font-inter text-[clamp(0.875rem,1.5vw,1.25rem)] leading-[1.55] text-white md:mt-12">
-            Digitalisasi dan Fintech merupakan bagian dari Direktorat
-            Infrastruktur dan Digitalisasi (DID) Universitas Kristen Satya
-            Wacana yang berperan dalam mendukung transformasi digital melalui
-            pengembangan dan pemanfaatan teknologi informasi serta inovasi
-            layanan digital. Kami berkomitmen menghadirkan solusi teknologi
-            yang efektif, terintegrasi, dan berkelanjutan untuk mendukung
-            kebutuhan akademik maupun nonakademik serta menciptakan ekosistem
-            digital UKSW yang inovatif dan adaptif.
+          <p className="mx-auto mt-10 max-w-[750px] font-inter text-[clamp(0.875rem,1.5vw,1.25rem)] leading-[1.55] text-white md:mt-12">
+            Digfin merupakan bagian dari DID UKSW yang mendukung transformasi digital melalui 
+            teknologi dan inovasi layanan digital.Kami menghadirkan solusi teknologi terintegrasi 
+            untuk membangun ekosistem digital UKSW yang inovatif dan adaptif.
           </p>
 
           <div className="mt-10 flex flex-col items-center gap-5 md:flex-row md:justify-center md:gap-x-28">

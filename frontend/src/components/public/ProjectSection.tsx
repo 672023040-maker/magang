@@ -220,7 +220,7 @@ export function ProjectSection({ project }: ProjectSectionProps) {
   return (
     <section
       id="project"
-      className="relative flex min-h-screen w-full items-start justify-center overflow-hidden bg-[#dbba99] pt-20 pb-20 md:pt-[50px]"
+      className="relative flex min-h-screen w-full items-start justify-center overflow-hidden bg-[#F7F3ED] pt-20 pb-20 md:pt-[50px]"
     >
       <div className="relative z-10 mx-auto w-full max-w-7xl px-5 md:px-10">
         <div className={`text-center ${visible ? 'animate-fade-in-down' : 'opacity-0'}`}>

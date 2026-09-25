@@ -96,7 +96,7 @@ export function ProfilSection({ profil }: ProfilSectionProps) {
   return (
     <section
       id="profil"
-      className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-[#dbba99] pb-20 md:pb-28"
+      className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-[#F7F3ED] pb-20 md:pb-28"
     >
       <div className="relative z-10 mx-auto -mt-[90px] flex w-full max-w-6xl flex-col items-center px-5 md:px-10">
         <h2 className={`text-center font-display text-[clamp(2rem,6vw,4rem)] font-bold uppercase leading-none tracking-tight text-stone-900 ${
