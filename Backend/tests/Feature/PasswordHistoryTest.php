@@ -141,7 +141,7 @@ class PasswordHistoryTest extends TestCase
             ->postJson("/api/{$path}/project", [
                 'nama_project' => 'X',
                 'deskripsi' => 'D',
-                'status' => 'berjalan',
+                'status' => 'unpublish',
             ])
             ->assertStatus(403);
 

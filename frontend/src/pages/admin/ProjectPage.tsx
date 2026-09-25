@@ -22,7 +22,7 @@ interface ProjectForm {
 const emptyForm: ProjectForm = {
   nama_project: '',
   deskripsi: '',
-  status: 'berjalan',
+  status: 'unpublish',
   tgl_dibuat: '',
   file_gambar: null,
   keterangan: '',
@@ -210,8 +210,8 @@ export function ProjectPage() {
                     {item.nama_project}
                   </td>
                   <td className="px-4 py-3">
-                    <Badge variant={item.status === 'selesai' ? 'green' : 'amber'}>
-                      {item.status === 'selesai' ? 'Selesai' : 'Berjalan'}
+                    <Badge variant={item.status === 'publish' ? 'green' : 'amber'}>
+                      {item.status === 'publish' ? 'Publish' : 'Unpublish'}
                     </Badge>
                   </td>
                   <td className="px-4 py-3 text-stone-600">
@@ -270,8 +270,8 @@ export function ProjectPage() {
             value={form.status}
             onChange={(e) => updateField('status', e.target.value as StatusProject)}
             options={[
-              { value: 'berjalan', label: 'Berjalan' },
-              { value: 'selesai', label: 'Selesai' },
+              { value: 'publish', label: 'Publish' },
+              { value: 'unpublish', label: 'Unpublish' },
             ]}
           />
           <Input

@@ -23,7 +23,7 @@ class ProjectRequest extends FormRequest
         return [
             'nama_project' => ['required', 'string', 'max:255'],
             'deskripsi' => ['required', 'string'],
-            'status' => ['required', 'in:berjalan,selesai'],
+            'status' => ['required', 'in:publish,unpublish'],
             'tgl_dibuat' => ['nullable', 'date'],
             'dokumentasi' => ['nullable', 'array', 'max:'.$maxFiles],
             'dokumentasi.*.file_gambar' => ['required_with:dokumentasi', 'file', 'mimes:jpg,jpeg,png', 'max:'.$maxSize, new SecureImage],

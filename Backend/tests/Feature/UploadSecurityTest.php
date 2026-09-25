@@ -311,7 +311,7 @@ class UploadSecurityTest extends TestCase
         $this->post("/api/{$path}/project", [
             'nama_project' => 'X',
             'deskripsi' => 'D',
-            'status' => 'berjalan',
+            'status' => 'unpublish',
             'dokumentasi' => [
                 ['file_gambar' => $anonymous, 'keterangan' => 'k'],
             ],
@@ -341,7 +341,7 @@ class UploadSecurityTest extends TestCase
             ->post("/api/{$path}/project", [
                 'nama_project' => 'Project Tes Upload',
                 'deskripsi' => 'Deskripsi',
-                'status' => 'berjalan',
+                'status' => 'unpublish',
                 'dokumentasi' => [
                     ['file_gambar' => $file, 'keterangan' => 'Sampul'],
                 ],
@@ -381,7 +381,7 @@ class UploadSecurityTest extends TestCase
             ->post("/api/{$path}/project", [
                 'nama_project' => 'Project Tes Upload',
                 'deskripsi' => 'Deskripsi',
-                'status' => 'berjalan',
+                'status' => 'unpublish',
                 'password' => 'rahasia-super-sekali',
                 'dokumentasi' => [
                     ['file_gambar' => $file, 'keterangan' => 'Sampul'],

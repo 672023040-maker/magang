@@ -148,7 +148,7 @@ class AuthorizationCsrfTest extends TestCase
             ->postJson("/api/{$path}/project", [
                 'nama_project' => 'Proyek XSS',
                 'deskripsi' => "Deskripsi proyek {$payload}",
-                'status' => 'berjalan',
+                'status' => 'unpublish',
             ])
             ->assertStatus(201);
 

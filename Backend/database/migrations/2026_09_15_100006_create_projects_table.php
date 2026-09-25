@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('nama_project');
             $table->text('deskripsi');
-            $table->enum('status', ['berjalan', 'selesai']);
+            $table->enum('status', ['publish', 'unpublish']);
             $table->date('tgl_mulai')->nullable();
             $table->date('tgl_selesai')->nullable();
             $table->timestamps();

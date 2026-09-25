@@ -20,7 +20,7 @@ export interface Dokumentasi {
   keterangan: string | null
 }
 
-export type StatusProject = 'berjalan' | 'selesai'
+export type StatusProject = 'publish' | 'unpublish'
 
 export interface Project {
   id: number

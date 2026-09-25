@@ -67,9 +67,9 @@ export function DashboardPage() {
                   {item.nama_project}
                 </span>
                 <Badge
-                  variant={item.status === 'selesai' ? 'green' : 'amber'}
+                  variant={item.status === 'publish' ? 'green' : 'amber'}
                 >
-                  {item.status === 'selesai' ? 'Selesai' : 'Berjalan'}
+                  {item.status === 'publish' ? 'Publish' : 'Unpublish'}
                 </Badge>
               </li>
             ))}

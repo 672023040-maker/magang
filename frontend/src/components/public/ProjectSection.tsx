@@ -1,51 +1,35 @@
 import { useEffect, useRef, useState } from 'react'
 import type { Project } from '../../types'
+import { ProjectDetailModal } from './ProjectDetailModal'
 
 interface ProjectSectionProps {
   project: Project[]
 }
 
 const statusLabel: Record<Project['status'], string> = {
-  berjalan: 'Berjalan',
-  selesai: 'Selesai',
+  publish: 'Publish',
+  unpublish: 'Unpublish',
 }
 
-function formatDate(value: string | null): string | null {
-  if (!value) return null
-
-  const date = new Date(`${value}T00:00:00`)
-
-  if (Number.isNaN(date.getTime())) return value
-
-  return date.toLocaleDateString('id-ID', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  })
-}
-
-function ProjectCard({ project }: { project: Project }) {
-  const [open, setOpen] = useState(false)
-
+function ProjectCard({
+  project,
+  onView,
+}: {
+  project: Project
+  onView: (project: Project) => void
+}) {
   const coverDok = project.dokumentasi.find((d) => d.file_gambar_url)
   const cover = coverDok?.file_gambar_url
-  const dibuat = formatDate(project.tgl_dibuat)
 
   return (
-    <article
-className={`group flex h-full flex-col overflow-hidden rounded-2xl border border-stone-300 bg-white shadow-lg shadow-stone-400/30 transition-all duration-500 ${
-          open
-            ? '-translate-y-1 border-stone-900 shadow-[0_20px_40px_-12px_rgba(0,0,0,0.25)] lg:h-auto'
-            : 'hover:-translate-y-2 hover:border-stone-400 hover:shadow-[0_24px_50px_-16px_rgba(0,0,0,0.25)] lg:h-[420px]'
-        } focus-within:border-stone-900`}
-    >
+    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-stone-300 bg-white shadow-lg shadow-stone-400/30 transition-all duration-300 ease-out hover:-translate-y-1.5 hover:border-stone-400 hover:shadow-[0_24px_50px_-16px_rgba(0,0,0,0.25)] focus-within:border-stone-900 lg:min-h-[420px]">
       <div className="relative aspect-video w-full overflow-hidden lg:h-[180px] lg:aspect-auto">
         {cover ? (
           <img
             src={cover}
             alt={coverDok?.keterangan ?? project.nama_project}
             loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.05]"
+            className="h-full w-full object-cover transition-transform duration-300 ease-out group-hover:scale-[1.03]"
           />
         ) : (
           <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-gradient-to-br from-neutral-900/60 to-black">
@@ -69,11 +53,7 @@ className={`group flex h-full flex-col overflow-hidden rounded-2xl border border
           </div>
         )}
 
-        <div
-          className={`pointer-events-none absolute inset-0 transition-colors duration-500 ${
-            open ? 'bg-stone-900/20' : 'bg-stone-900/5 group-hover:bg-stone-900/10'
-          }`}
-        />
+        <div className="pointer-events-none absolute inset-0 bg-stone-900/5 transition-colors duration-300 group-hover:bg-stone-900/10" />
 
         <span className="absolute left-4 top-4 rounded-full bg-black/60 px-3 py-1 text-xs font-medium text-white backdrop-blur">
           {statusLabel[project.status]}
@@ -91,14 +71,12 @@ className={`group flex h-full flex-col overflow-hidden rounded-2xl border border
 
         <button
           type="button"
-          onClick={() => setOpen((value) => !value)}
-          aria-expanded={open}
-          aria-controls={`project-detail-${project.id}`}
+          onClick={() => onView(project)}
           className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-stone-900 bg-transparent px-4 py-2.5 text-sm font-semibold text-stone-900 transition hover:bg-stone-900 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-900/70 lg:mt-4"
         >
-          {open ? 'TUTUP PROJECT' : 'LIHAT PROJECT'}
+          LIHAT PROJECT
           <svg
-            className={`h-4 w-4 transition-transform duration-300 ${open ? 'rotate-180' : ''}`}
+            className="h-4 w-4"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -107,34 +85,9 @@ className={`group flex h-full flex-col overflow-hidden rounded-2xl border border
             strokeLinejoin="round"
             aria-hidden
           >
-            <path d="M6 9l6 6 6-6" />
+            <path d="M5 12h14M12 5l7 7-7 7" />
           </svg>
         </button>
-
-        <div
-          id={`project-detail-${project.id}`}
-          className={`grid transition-all duration-500 ease-in-out ${
-            open ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-          }`}
-        >
-          <div className="overflow-hidden">
-            <div className="mt-5 border-t border-stone-200 pt-5">
-              <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">
-                Dibuat
-              </p>
-              <p className="mt-1 text-[18px] text-stone-800">
-                {dibuat ?? 'Tidak diketahui'}
-              </p>
-
-              <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-stone-500">
-                Tentang Project
-              </p>
-              <p className="mt-1 whitespace-pre-line text-[18px] leading-relaxed text-stone-600">
-                {project.deskripsi}
-              </p>
-            </div>
-          </div>
-        </div>
       </div>
     </article>
   )
@@ -159,6 +112,7 @@ export function ProjectSection({ project }: ProjectSectionProps) {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [visibleCount, setVisibleCount] = useState(1)
   const [viewportWidth, setViewportWidth] = useState(0)
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null)
 
   const slides = chunkProjects(project, visibleCount)
   const effectiveSlide = Math.min(currentSlide, slides.length - 1)
@@ -229,11 +183,6 @@ export function ProjectSection({ project }: ProjectSectionProps) {
           </h2>
 
           <div aria-hidden className="mx-auto mt-4 h-px w-24 bg-stone-400" />
-
-          <p className="mx-auto -mt-2.5 max-w-2xl text-center text-[18px] leading-relaxed text-stone-600">
-            Jelajahi berbagai proyek dan inovasi digital yang dikembangkan oleh
-            DIGFIN.
-          </p>
         </div>
 
         {project.length === 0 ? (
@@ -281,7 +230,7 @@ export function ProjectSection({ project }: ProjectSectionProps) {
                       >
                         {slideItems.map((item) => (
                           <div key={item.id} className="min-w-0">
-                            <ProjectCard project={item} />
+                            <ProjectCard project={item} onView={setSelectedProject} />
                           </div>
                         ))}
                       </div>
@@ -315,6 +264,13 @@ export function ProjectSection({ project }: ProjectSectionProps) {
             </div>
         )}
       </div>
+
+      {selectedProject && (
+        <ProjectDetailModal
+          project={selectedProject}
+          onClose={() => setSelectedProject(null)}
+        />
+      )}
     </section>
   )
 }

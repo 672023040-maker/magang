@@ -71,7 +71,7 @@ class DigitalFintechSeeder extends Seeder
         $projectSelesai = Project::query()->create([
             'nama_project' => 'Pengembangan Platform Mobile Banking',
             'deskripsi' => 'Membangun platform perbankan digital yang responsif dengan fitur transfer, pembayaran, dan manajemen akun.',
-            'status' => 'selesai',
+            'status' => 'publish',
             'tgl_dibuat' => now()->subMonths(6)->toDateString(),
         ]);
 
@@ -84,7 +84,7 @@ class DigitalFintechSeeder extends Seeder
         $projectBerjalan = Project::query()->create([
             'nama_project' => 'Integrasi Pembayaran QRIS',
             'deskripsi' => 'Mengintegrasikan sistem pembayaran QRIS agar pengguna dapat bertransaksi di berbagai merchant secara praktis.',
-            'status' => 'berjalan',
+            'status' => 'unpublish',
             'tgl_dibuat' => now()->subMonth()->toDateString(),
         ]);
 
