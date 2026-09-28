@@ -27,7 +27,7 @@ function ProjectCard({
         {cover ? (
           <img
             src={cover}
-            alt={coverDok?.keterangan ?? project.nama_project}
+            alt={project.nama_project}
             loading="lazy"
             className="h-full w-full object-cover transition-transform duration-300 ease-out group-hover:scale-[1.03]"
           />

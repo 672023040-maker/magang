@@ -16,7 +16,6 @@ interface ProjectForm {
   status: StatusProject
   tgl_dibuat: string
   file_gambar: File | null
-  keterangan: string
 }
 
 const emptyForm: ProjectForm = {
@@ -25,7 +24,6 @@ const emptyForm: ProjectForm = {
   status: 'unpublish',
   tgl_dibuat: '',
   file_gambar: null,
-  keterangan: '',
 }
 
 export function ProjectPage() {
@@ -78,7 +76,6 @@ export function ProjectPage() {
       status: item.status,
       tgl_dibuat: item.tgl_dibuat ?? '',
       file_gambar: null,
-      keterangan: item.dokumentasi[0]?.keterangan ?? '',
     })
     resetCover()
     setExistingCover(item.dokumentasi[0]?.file_gambar_url ?? null)
@@ -120,7 +117,6 @@ export function ProjectPage() {
 
     if (form.file_gambar) {
       data.append('dokumentasi[0][file_gambar]', form.file_gambar)
-      data.append('dokumentasi[0][keterangan]', form.keterangan)
     }
 
     return data
@@ -304,13 +300,6 @@ export function ProjectPage() {
               )}
             </div>
           )}
-
-          <Input
-            id="keterangan"
-            label="Keterangan Gambar"
-            value={form.keterangan}
-            onChange={(e) => updateField('keterangan', e.target.value)}
-          />
 
           <div className="pt-2">
             <Button type="submit" loading={saving}>

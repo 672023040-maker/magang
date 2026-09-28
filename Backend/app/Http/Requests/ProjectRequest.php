@@ -26,8 +26,7 @@ class ProjectRequest extends FormRequest
             'status' => ['required', 'in:publish,unpublish'],
             'tgl_dibuat' => ['nullable', 'date'],
             'dokumentasi' => ['nullable', 'array', 'max:'.$maxFiles],
-            'dokumentasi.*.file_gambar' => ['required_with:dokumentasi', 'file', 'mimes:jpg,jpeg,png', 'max:'.$maxSize, new SecureImage],
-            'dokumentasi.*.keterangan' => ['nullable', 'string'],
+            'dokumentasi.*.file_gambar' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:'.$maxSize, new SecureImage],
         ];
     }
 

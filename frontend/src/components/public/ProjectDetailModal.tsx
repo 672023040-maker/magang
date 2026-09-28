@@ -114,7 +114,7 @@ export function ProjectDetailModal({ project, onClose }: ProjectDetailModalProps
             {cover ? (
               <img
                 src={cover}
-                alt={coverDok?.keterangan ?? project.nama_project}
+                alt={project.nama_project}
                 className="h-full w-full object-cover"
               />
             ) : (

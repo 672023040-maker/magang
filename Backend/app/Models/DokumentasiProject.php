@@ -11,6 +11,5 @@ class DokumentasiProject extends Model
     protected $fillable = [
         'project_id',
         'file_gambar',
-        'keterangan',
     ];
 }

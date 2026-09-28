@@ -313,7 +313,7 @@ class UploadSecurityTest extends TestCase
             'deskripsi' => 'D',
             'status' => 'unpublish',
             'dokumentasi' => [
-                ['file_gambar' => $anonymous, 'keterangan' => 'k'],
+                ['file_gambar' => $anonymous],
             ],
         ])->assertStatus(401);
     }
@@ -343,11 +343,13 @@ class UploadSecurityTest extends TestCase
                 'deskripsi' => 'Deskripsi',
                 'status' => 'unpublish',
                 'dokumentasi' => [
-                    ['file_gambar' => $file, 'keterangan' => 'Sampul'],
+                    ['file_gambar' => $file],
                 ],
             ])
             ->assertStatus(201)
-            ->assertJsonPath('data.dokumentasi.0.keterangan', 'Sampul');
+            // Keterangan dihapus total: field tidak lagi diterima, disimpan,
+            // maupun dikembalikan pada response API.
+            ->assertJsonMissingPath('data.dokumentasi.0.keterangan');
 
         $project = Project::query()->first();
         $this->assertNotNull($project);
@@ -384,7 +386,7 @@ class UploadSecurityTest extends TestCase
                 'status' => 'unpublish',
                 'password' => 'rahasia-super-sekali',
                 'dokumentasi' => [
-                    ['file_gambar' => $file, 'keterangan' => 'Sampul'],
+                    ['file_gambar' => $file],
                 ],
             ])
             ->assertStatus(201);

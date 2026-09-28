@@ -15,7 +15,6 @@ class DokumentasiResource extends JsonResource
             'file_gambar_url' => $this->file_gambar
                 ? url('storage/'.$this->file_gambar)
                 : null,
-            'keterangan' => $this->keterangan,
         ];
     }
 }

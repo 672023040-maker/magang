@@ -38,7 +38,7 @@ class ProjectController extends Controller
         ]));
 
         try {
-            $this->syncDokumentasi($project, $request->input('dokumentasi', []), $request);
+            $this->syncDokumentasi($project, $request);
         } catch (UploadRejectedException $e) {
             $project->delete();
 
@@ -99,30 +99,20 @@ class ProjectController extends Controller
 
     /**
      * Sinkronkan gambar sampul. Jika ada file baru, dokumentasi dibuat ulang.
-     * Jika tidak ada file baru, sampul lama dipertahankan dan hanya keterangan
-     * yang diperbarui bila diisi.
+     * Jika tidak ada file baru, sampul lama dipertahankan apa adanya.
      */
     private function syncCover(Project $project, ProjectRequest $request): void
     {
         $files = $request->file('dokumentasi', []);
 
-        if (isset($files[0]['file_gambar']) && $files[0]['file_gambar'] instanceof UploadedFile) {
-            $this->syncDokumentasi($project, $request->input('dokumentasi', []), $request);
-
+        if (! isset($files[0]['file_gambar']) || ! $files[0]['file_gambar'] instanceof UploadedFile) {
             return;
         }
 
-        $keterangan = $request->input('dokumentasi.0.keterangan');
-
-        if ($keterangan !== null) {
-            $project->dokumentasi()->first()?->update(['keterangan' => $keterangan]);
-        }
+        $this->syncDokumentasi($project, $request);
     }
 
-    /**
-     * @param  array<int, array{file_gambar: mixed, keterangan?: string|null}>  $items
-     */
-    private function syncDokumentasi(Project $project, array $items, $request): void
+    private function syncDokumentasi(Project $project, ProjectRequest $request): void
     {
         // Hapus file fisik lama sebelum membuang record.
         foreach ($project->dokumentasi()->pluck('file_gambar') as $path) {
@@ -136,11 +126,10 @@ class ProjectController extends Controller
         $createdPaths = [];
 
         try {
-            // File multipart tinggal di file bag (bukan input), jadi ambil dari
-            // $request->file() dan samakan urutannya dengan keterangan dari input.
+            // File multipart tinggal di file bag (bukan input).
             $files = $request->file('dokumentasi', []);
 
-            foreach ($files as $index => $fileGroup) {
+            foreach ($files as $fileGroup) {
                 $file = $fileGroup['file_gambar'] ?? null;
 
                 if (! $file instanceof UploadedFile) {
@@ -167,7 +156,6 @@ class ProjectController extends Controller
 
                 $project->dokumentasi()->create([
                     'file_gambar' => $storedPath,
-                    'keterangan' => $items[$index]['keterangan'] ?? null,
                 ]);
             }
         } catch (UploadRejectedException $e) {

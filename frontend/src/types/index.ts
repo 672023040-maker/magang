@@ -17,7 +17,6 @@ export interface Dokumentasi {
   id: number
   project_id: number
   file_gambar_url: string | null
-  keterangan: string | null
 }
 
 export type StatusProject = 'publish' | 'unpublish'

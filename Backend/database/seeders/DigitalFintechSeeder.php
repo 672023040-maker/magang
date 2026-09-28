@@ -78,7 +78,6 @@ class DigitalFintechSeeder extends Seeder
         DokumentasiProject::query()->create([
             'project_id' => $projectSelesai->id,
             'file_gambar' => $this->ensurePlaceholderJpeg('dokumentasi/mobile-banking.jpg'),
-            'keterangan' => 'Tampilan antarmuka utama platform mobile banking.',
         ]);
 
         $projectBerjalan = Project::query()->create([
@@ -91,7 +90,6 @@ class DigitalFintechSeeder extends Seeder
         DokumentasiProject::query()->create([
             'project_id' => $projectBerjalan->id,
             'file_gambar' => $this->ensurePlaceholderJpeg('dokumentasi/qris-integration.jpg'),
-            'keterangan' => 'Proses pengujian integrasi pembayaran QRIS.',
         ]);
     }
 
