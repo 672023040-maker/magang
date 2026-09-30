@@ -1,8 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
+import { mailtoHref, resolveContactEmail } from '../../constants/contact'
+import type { Kontak } from '../../types'
 
-export function KontakSection() {
+interface KontakSectionProps {
+  kontak: Kontak | null
+}
+
+export function KontakSection({ kontak }: KontakSectionProps) {
   const boxRef = useRef<HTMLDivElement>(null)
   const [visible, setVisible] = useState(false)
+
+  const email = resolveContactEmail(kontak)
 
   useEffect(() => {
     const node = boxRef.current
@@ -43,7 +51,7 @@ export function KontakSection() {
         </p>
 
         <a
-          href="https://mail.google.com/mail/?view=cm&to=did@uksw.edu"
+          href={mailtoHref(email)}
           target="_blank"
           rel="noreferrer"
           className="mt-8 inline-flex items-center gap-3 rounded-xl border border-stone-400 bg-white px-6 py-4 text-sm font-medium text-stone-900 shadow-lg shadow-stone-400/30 transition-all duration-300 ease-out hover:-translate-y-1.5 hover:scale-[1.02] hover:border-stone-500 hover:bg-stone-100 hover:shadow-[0_14px_30px_rgba(0,0,0,0.15)]"
@@ -60,7 +68,7 @@ export function KontakSection() {
             <path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" />
             <path d="M22 6l-10 7L2 6" />
           </svg>
-          did@uksw.edu
+          {email}
         </a>
       </div>
     </section>

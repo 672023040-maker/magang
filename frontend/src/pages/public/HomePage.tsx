@@ -34,7 +34,7 @@ export function HomePage() {
   }
 
   return (
-    <PublicLayout>
+    <PublicLayout kontak={data.kontak}>
       <Hero />
       <div className="h-[0.5px] bg-[#F3EAE1] shadow-none" />
       <ProfilSection profil={data.profil} />
@@ -43,7 +43,7 @@ export function HomePage() {
       <div className="h-[0.5px] bg-[#F3EAE1] shadow-none" />
       <ProjectSection project={data.project} />
       <div className="h-px bg-[#F3EAE1] shadow-none" />
-      <KontakSection />
+      <KontakSection kontak={data.kontak} />
     </PublicLayout>
   )
 }

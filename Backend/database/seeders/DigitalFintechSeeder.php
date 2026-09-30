@@ -7,7 +7,6 @@ use App\Models\DokumentasiProject;
 use App\Models\Kontak;
 use App\Models\Profil;
 use App\Models\Project;
-use App\Models\SosialMedia;
 use App\Models\StrukturOrganisasi;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -114,24 +113,8 @@ class DigitalFintechSeeder extends Seeder
 
     private function seedKontak(): void
     {
-        $kontak = Kontak::query()->firstOrCreate(['id' => 1], [
+        Kontak::query()->firstOrCreate(['id' => 1], [
             'email' => 'halo@digifin.co.id',
         ]);
-
-        $sosmed = [
-            ['platform' => 'Instagram', 'url' => 'https://instagram.com/digifin'],
-            ['platform' => 'LinkedIn', 'url' => 'https://linkedin.com/company/digifin'],
-            ['platform' => 'Twitter', 'url' => 'https://twitter.com/digifin'],
-        ];
-
-        SosialMedia::query()->where('kontak_id', $kontak->id)->delete();
-
-        foreach ($sosmed as $item) {
-            SosialMedia::query()->create([
-                'kontak_id' => $kontak->id,
-                'platform' => $item['platform'],
-                'url' => $item['url'],
-            ]);
-        }
     }
 }

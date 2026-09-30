@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Admin;
+use App\Models\Kontak;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
@@ -27,6 +28,45 @@ class ApiTest extends TestCase
         $this->getJson('/api/struktur')->assertOk();
         $this->getJson('/api/project')->assertOk();
         $this->getJson('/api/kontak')->assertOk();
+    }
+
+    public function test_endpoint_kontak_tidak_lagi_mengekspos_sosial_media(): void
+    {
+        // Fitur sosial media sudah dihapus; kontak kini hanya menyimpan email.
+        // Kontrak API harus ikut menyusut, bukan sekadar disembunyikan di UI.
+        Kontak::query()->create(['email' => 'halo@digfin.test']);
+
+        $data = $this->getJson('/api/kontak')->assertOk()->json('data');
+
+        $this->assertSame('halo@digfin.test', $data['email']);
+        $this->assertArrayNotHasKey('sosial_media', $data);
+    }
+
+    public function test_email_kontak_yang_diubah_admin_tampil_di_endpoint_publik(): void
+    {
+        $this->createAdmin();
+        $path = trim((string) config('security.admin_path'), '/');
+        $kontak = Kontak::query()->create(['email' => 'lama@digfin.test']);
+
+        $this->from(config('app.url'))
+            ->withSession([])
+            ->postJson('/api/login', [
+                'username' => 'admin',
+                'password' => 'admin123',
+            ])
+            ->assertOk();
+
+        $sessionId = $this->app['session']->getId();
+        $this->from(config('app.url'))
+            ->withCredentials()
+            ->withCookie(config('session.cookie'), $sessionId)
+            ->putJson("/api/{$path}/kontak/{$kontak->id}", ['email' => 'baru@digfin.test'])
+            ->assertOk();
+
+        // Landing page membaca endpoint ini — perubahan admin harus terlihat.
+        $this->getJson('/api/kontak')
+            ->assertOk()
+            ->assertJsonPath('data.email', 'baru@digfin.test');
     }
 
     public function test_login_sukses_mengembalikan_token(): void

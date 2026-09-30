@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import { mailtoHref, resolveContactEmail } from '../../constants/contact'
+import type { Kontak } from '../../types'
 
 const links = [
   { href: '#hero', label: 'BERANDA' },
@@ -8,9 +10,15 @@ const links = [
   { href: '#kontak', label: 'KONTAK' },
 ]
 
-export function Navbar() {
+interface NavbarProps {
+  kontak: Kontak | null
+}
+
+export function Navbar({ kontak }: NavbarProps) {
   const [active, setActive] = useState('#hero')
   const [menuOpen, setMenuOpen] = useState(false)
+
+  const email = resolveContactEmail(kontak)
 
   useEffect(() => {
     const onScroll = () => {
@@ -85,10 +93,10 @@ export function Navbar() {
               </svg>
             </a>
             <a
-              href="https://mail.google.com/mail/?view=cm&to=did@uksw.edu"
+              href={mailtoHref(email)}
               target="_blank"
               rel="noreferrer"
-              aria-label="Email DID UKSW"
+              aria-label={`Email ${email}`}
               className="transition hover:opacity-75"
             >
               <svg
@@ -184,10 +192,10 @@ export function Navbar() {
               </svg>
             </a>
             <a
-              href="https://mail.google.com/mail/?view=cm&to=did@uksw.edu"
+              href={mailtoHref(email)}
               target="_blank"
               rel="noreferrer"
-              aria-label="Email DID UKSW"
+              aria-label={`Email ${email}`}
               onClick={() => setMenuOpen(false)}
               className="transition hover:opacity-75"
             >

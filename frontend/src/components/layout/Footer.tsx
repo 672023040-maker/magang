@@ -1,4 +1,13 @@
-export function Footer() {
+import { mailtoHref, resolveContactEmail } from '../../constants/contact'
+import type { Kontak } from '../../types'
+
+interface FooterProps {
+  kontak: Kontak | null
+}
+
+export function Footer({ kontak }: FooterProps) {
+  const email = resolveContactEmail(kontak)
+
   return (
     <footer className="bg-[#F3EAE1] text-stone-700">
       <div className="grid items-start gap-10 py-8 px-5 lg:grid-cols-[auto_auto_auto] lg:justify-center">
@@ -72,12 +81,12 @@ export function Footer() {
             Email
           </p>
           <a
-            href="https://mail.google.com/mail/?view=cm&to=did@uksw.edu"
+            href={mailtoHref(email)}
             target="_blank"
             rel="noreferrer"
             className="mt-3 inline-block text-sm font-medium text-stone-900 underline decoration-stone-400 underline-offset-4 transition hover:text-stone-900"
           >
-            did@uksw.edu
+            {email}
           </a>
 
           <div className="mt-6">

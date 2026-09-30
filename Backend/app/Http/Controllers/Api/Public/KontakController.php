@@ -11,7 +11,7 @@ class KontakController extends Controller
 {
     public function index(): JsonResponse
     {
-        $kontak = Kontak::with('sosialMedia')->first();
+        $kontak = Kontak::first();
 
         return response()->json([
             'data' => $kontak ? new KontakResource($kontak) : null,

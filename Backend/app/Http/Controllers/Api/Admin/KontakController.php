@@ -12,7 +12,7 @@ class KontakController extends Controller
 {
     public function index(): JsonResponse
     {
-        $kontak = Kontak::with('sosialMedia')->first();
+        $kontak = Kontak::first();
 
         return response()->json([
             'data' => $kontak ? new KontakResource($kontak) : null,
@@ -23,13 +23,9 @@ class KontakController extends Controller
     {
         $kontak = Kontak::create($request->only(['email']));
 
-        $this->syncSosialMedia($kontak, $request->input('sosial_media', []));
-
         return response()->json([
             'message' => 'Kontak berhasil disimpan',
-            'data' => new KontakResource(
-                $kontak->load('sosialMedia')
-            ),
+            'data' => new KontakResource($kontak),
         ], 201);
     }
 
@@ -39,13 +35,9 @@ class KontakController extends Controller
 
         $kontak->update($request->only(['email']));
 
-        $this->syncSosialMedia($kontak, $request->input('sosial_media', []));
-
         return response()->json([
             'message' => 'Kontak berhasil diperbarui',
-            'data' => new KontakResource(
-                $kontak->refresh()->load('sosialMedia')
-            ),
+            'data' => new KontakResource($kontak->refresh()),
         ]);
     }
 
@@ -56,20 +48,5 @@ class KontakController extends Controller
         return response()->json([
             'message' => 'Kontak berhasil dihapus',
         ]);
-    }
-
-    /**
-     * @param  array<int, array{platform: string, url: string}>  $items
-     */
-    private function syncSosialMedia(Kontak $kontak, array $items): void
-    {
-        $kontak->sosialMedia()->delete();
-
-        foreach ($items as $item) {
-            $kontak->sosialMedia()->create([
-                'platform' => $item['platform'],
-                'url' => $item['url'],
-            ]);
-        }
     }
 }
