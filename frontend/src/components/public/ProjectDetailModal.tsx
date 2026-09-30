@@ -138,6 +138,10 @@ export function ProjectDetailModal({ project, onClose }: ProjectDetailModalProps
               {project.nama_project}
             </h3>
 
+            {project.author && (
+              <p className="mt-1.5 text-sm text-stone-500">By {project.author.nama}</p>
+            )}
+
             <div className="mt-5 border-t border-stone-200 pt-5">
               <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">
                 Tanggal Dibuat

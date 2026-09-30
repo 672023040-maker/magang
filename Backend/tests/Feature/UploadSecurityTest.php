@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Exceptions\UploadRejectedException;
 use App\Models\Admin;
 use App\Models\Project;
+use App\Models\StrukturOrganisasi;
 use App\Services\Upload\SecureImageService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -335,6 +336,10 @@ class UploadSecurityTest extends TestCase
         $sessionId = $this->app['session']->getId();
 
         $file = $this->uploaded('foto.jpg', $this->jpegBytes());
+        $authorId = StrukturOrganisasi::query()->create([
+            'nama' => 'Budi Santoso',
+            'jabatan' => 'Direktur Utama',
+        ])->id;
 
         $this->from(config('app.url'))
             ->withCookie(config('session.cookie'), $sessionId)
@@ -342,6 +347,7 @@ class UploadSecurityTest extends TestCase
                 'nama_project' => 'Project Tes Upload',
                 'deskripsi' => 'Deskripsi',
                 'status' => 'unpublish',
+                'author_id' => $authorId,
                 'dokumentasi' => [
                     ['file_gambar' => $file],
                 ],
@@ -377,6 +383,10 @@ class UploadSecurityTest extends TestCase
         // Kirim file asli + sisipan password di payload. Logging event tidak
         // boleh membocorkan password apa pun ke tabel security_events.
         $file = $this->uploaded('foto.jpg', $this->jpegBytes());
+        $authorId = StrukturOrganisasi::query()->create([
+            'nama' => 'Budi Santoso',
+            'jabatan' => 'Direktur Utama',
+        ])->id;
 
         $this->from(config('app.url'))
             ->withCookie(config('session.cookie'), $sessionId)
@@ -384,6 +394,7 @@ class UploadSecurityTest extends TestCase
                 'nama_project' => 'Project Tes Upload',
                 'deskripsi' => 'Deskripsi',
                 'status' => 'unpublish',
+                'author_id' => $authorId,
                 'password' => 'rahasia-super-sekali',
                 'dokumentasi' => [
                     ['file_gambar' => $file],

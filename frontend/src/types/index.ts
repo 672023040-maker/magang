@@ -27,6 +27,7 @@ export interface Project {
   deskripsi: string
   status: StatusProject
   tgl_dibuat: string | null
+  author: Struktur | null
   dokumentasi: Dokumentasi[]
 }
 

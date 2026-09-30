@@ -52,44 +52,64 @@ class DigitalFintechSeeder extends Seeder
 
     private function seedStruktur(): void
     {
-        StrukturOrganisasi::query()->create([
-            'nama' => 'Budi Santoso',
-            'jabatan' => 'Direktur Utama',
-            'foto' => null,
-        ]);
+        // updateOrCreate (bukan create) supaya menjalankan seeder berkali-kali
+        // tidak menggandakan anggota tim yang sama.
+        StrukturOrganisasi::query()->updateOrCreate(
+            ['nama' => 'Budi Santoso'],
+            [
+                'jabatan' => 'Direktur Utama',
+                'foto' => null,
+            ]
+        );
 
-        StrukturOrganisasi::query()->create([
-            'nama' => 'Siti Rahayu',
-            'jabatan' => 'Direktur Operasional',
-            'foto' => null,
-        ]);
+        StrukturOrganisasi::query()->updateOrCreate(
+            ['nama' => 'Siti Rahayu'],
+            [
+                'jabatan' => 'Direktur Operasional',
+                'foto' => null,
+            ]
+        );
     }
 
     private function seedProject(): void
     {
-        $projectSelesai = Project::query()->create([
-            'nama_project' => 'Pengembangan Platform Mobile Banking',
-            'deskripsi' => 'Membangun platform perbankan digital yang responsif dengan fitur transfer, pembayaran, dan manajemen akun.',
-            'status' => 'publish',
-            'tgl_dibuat' => now()->subMonths(6)->toDateString(),
-        ]);
+        $author = StrukturOrganisasi::query()
+            ->where('nama', 'Budi Santoso')
+            ->first();
 
-        DokumentasiProject::query()->create([
-            'project_id' => $projectSelesai->id,
-            'file_gambar' => $this->ensurePlaceholderJpeg('dokumentasi/mobile-banking.jpg'),
-        ]);
+        $projectSelesai = Project::query()->updateOrCreate(
+            ['nama_project' => 'Pengembangan Platform Mobile Banking'],
+            [
+                'deskripsi' => 'Membangun platform perbankan digital yang responsif dengan fitur transfer, pembayaran, dan manajemen akun.',
+                'status' => 'publish',
+                'tgl_dibuat' => now()->subMonths(6)->toDateString(),
+                'author_id' => $author?->id,
+            ]
+        );
 
-        $projectBerjalan = Project::query()->create([
-            'nama_project' => 'Integrasi Pembayaran QRIS',
-            'deskripsi' => 'Mengintegrasikan sistem pembayaran QRIS agar pengguna dapat bertransaksi di berbagai merchant secara praktis.',
-            'status' => 'unpublish',
-            'tgl_dibuat' => now()->subMonth()->toDateString(),
-        ]);
+        if ($projectSelesai->dokumentasi()->count() === 0) {
+            DokumentasiProject::query()->create([
+                'project_id' => $projectSelesai->id,
+                'file_gambar' => $this->ensurePlaceholderJpeg('dokumentasi/mobile-banking.jpg'),
+            ]);
+        }
 
-        DokumentasiProject::query()->create([
-            'project_id' => $projectBerjalan->id,
-            'file_gambar' => $this->ensurePlaceholderJpeg('dokumentasi/qris-integration.jpg'),
-        ]);
+        $projectBerjalan = Project::query()->updateOrCreate(
+            ['nama_project' => 'Integrasi Pembayaran QRIS'],
+            [
+                'deskripsi' => 'Mengintegrasikan sistem pembayaran QRIS agar pengguna dapat bertransaksi di berbagai merchant secara praktis.',
+                'status' => 'unpublish',
+                'tgl_dibuat' => now()->subMonth()->toDateString(),
+                'author_id' => $author?->id,
+            ]
+        );
+
+        if ($projectBerjalan->dokumentasi()->count() === 0) {
+            DokumentasiProject::query()->create([
+                'project_id' => $projectBerjalan->id,
+                'file_gambar' => $this->ensurePlaceholderJpeg('dokumentasi/qris-integration.jpg'),
+            ]);
+        }
     }
 
     /**

@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react'
-import { project } from '../../api'
-import type { Project, StatusProject } from '../../types'
+import { project, struktur } from '../../api'
+import type { Project, StatusProject, Struktur } from '../../types'
 import { Badge } from '../../components/ui/Badge'
 import { Alert } from '../../components/ui/Alert'
 import { Button } from '../../components/ui/Button'
@@ -12,6 +12,7 @@ import { Textarea } from '../../components/ui/Textarea'
 
 interface ProjectForm {
   nama_project: string
+  author_id: string
   deskripsi: string
   status: StatusProject
   tgl_dibuat: string
@@ -20,6 +21,7 @@ interface ProjectForm {
 
 const emptyForm: ProjectForm = {
   nama_project: '',
+  author_id: '',
   deskripsi: '',
   status: 'unpublish',
   tgl_dibuat: '',
@@ -28,6 +30,7 @@ const emptyForm: ProjectForm = {
 
 export function ProjectPage() {
   const [items, setItems] = useState<Project[]>([])
+  const [members, setMembers] = useState<Struktur[]>([])
   const [loading, setLoading] = useState(true)
   const [modalOpen, setModalOpen] = useState(false)
   const [editing, setEditing] = useState<Project | null>(null)
@@ -46,9 +49,12 @@ export function ProjectPage() {
   }
 
   useEffect(() => {
-    project
-      .get()
-      .then(setItems)
+    // Daftar anggota dimuat bersamaan karena form author butuh pilihan.
+    Promise.all([project.get(), struktur.get()])
+      .then(([data, memberData]) => {
+        setItems(data)
+        setMembers(memberData)
+      })
       .catch(() => setError('Gagal memuat data project.'))
       .finally(() => setLoading(false))
   }, [])
@@ -72,6 +78,7 @@ export function ProjectPage() {
     setEditing(item)
     setForm({
       nama_project: item.nama_project,
+      author_id: item.author ? String(item.author.id) : '',
       deskripsi: item.deskripsi,
       status: item.status,
       tgl_dibuat: item.tgl_dibuat ?? '',
@@ -112,6 +119,8 @@ export function ProjectPage() {
     data.append('nama_project', form.nama_project)
     data.append('deskripsi', form.deskripsi)
     data.append('status', form.status)
+
+    if (form.author_id) data.append('author_id', form.author_id)
 
     if (form.tgl_dibuat) data.append('tgl_dibuat', form.tgl_dibuat)
 
@@ -176,11 +185,12 @@ export function ProjectPage() {
         </p>
       ) : (
         <div className="overflow-x-auto rounded-xl border border-stone-200 bg-white">
-          <table className="w-full min-w-[640px] text-left text-sm">
+          <table className="w-full min-w-[760px] text-left text-sm">
             <thead className="border-b border-stone-200 bg-stone-50 text-xs uppercase text-stone-500">
               <tr>
                 <th className="px-4 py-3">Sampul</th>
                 <th className="px-4 py-3">Nama Project</th>
+                <th className="px-4 py-3">Author</th>
                 <th className="px-4 py-3">Status</th>
                 <th className="px-4 py-3">Tanggal</th>
                 <th className="px-4 py-3 text-right">Aksi</th>
@@ -204,6 +214,9 @@ export function ProjectPage() {
                   </td>
                   <td className="max-w-xs truncate px-4 py-3 font-medium text-stone-800">
                     {item.nama_project}
+                  </td>
+                  <td className="max-w-[160px] truncate px-4 py-3 text-stone-600">
+                    {item.author?.nama ?? '-'}
                   </td>
                   <td className="px-4 py-3">
                     <Badge variant={item.status === 'publish' ? 'green' : 'amber'}>
@@ -251,6 +264,20 @@ export function ProjectPage() {
             value={form.nama_project}
             onChange={(e) => updateField('nama_project', e.target.value)}
             required
+          />
+          <Select
+            id="author_id"
+            label="Author"
+            value={form.author_id}
+            onChange={(e) => updateField('author_id', e.target.value)}
+            required
+            options={[
+              { value: '', label: '— Pilih anggota tim —' },
+              ...members.map((member) => ({
+                value: String(member.id),
+                label: `${member.nama} (${member.jabatan})`,
+              })),
+            ]}
           />
           <Textarea
             id="deskripsi"

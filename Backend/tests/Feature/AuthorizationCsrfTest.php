@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Admin;
+use App\Models\StrukturOrganisasi;
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
@@ -149,6 +150,10 @@ class AuthorizationCsrfTest extends TestCase
                 'nama_project' => 'Proyek XSS',
                 'deskripsi' => "Deskripsi proyek {$payload}",
                 'status' => 'unpublish',
+                'author_id' => StrukturOrganisasi::query()->create([
+                    'nama' => 'Budi Santoso',
+                    'jabatan' => 'Direktur Utama',
+                ])->id,
             ])
             ->assertStatus(201);
 

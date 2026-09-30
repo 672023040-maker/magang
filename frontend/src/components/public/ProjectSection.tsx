@@ -65,6 +65,10 @@ function ProjectCard({
           {project.nama_project}
         </h3>
 
+        {project.author && (
+          <p className="mt-1.5 text-sm text-stone-500">By {project.author.nama}</p>
+        )}
+
         <p className="mt-2 line-clamp-3 text-[18px] leading-relaxed text-stone-600">
           {project.deskripsi}
         </p>

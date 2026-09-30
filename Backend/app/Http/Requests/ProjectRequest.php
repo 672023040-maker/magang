@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Rules\SecureImage;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ProjectRequest extends FormRequest
 {
@@ -22,6 +23,7 @@ class ProjectRequest extends FormRequest
 
         return [
             'nama_project' => ['required', 'string', 'max:255'],
+            'author_id' => ['required', 'integer', Rule::exists('struktur_organisasi', 'id')],
             'deskripsi' => ['required', 'string'],
             'status' => ['required', 'in:publish,unpublish'],
             'tgl_dibuat' => ['nullable', 'date'],
@@ -33,6 +35,7 @@ class ProjectRequest extends FormRequest
     public function attributes(): array
     {
         return [
+            'author_id' => 'author',
             'dokumentasi' => 'dokumentasi',
             'dokumentasi.*.file_gambar' => 'gambar sampul',
         ];

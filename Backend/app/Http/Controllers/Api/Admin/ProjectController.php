@@ -24,7 +24,7 @@ class ProjectController extends Controller
     public function index(): AnonymousResourceCollection
     {
         return ProjectResource::collection(
-            Project::with('dokumentasi')->latest()->get()
+            Project::with('dokumentasi', 'author')->latest()->get()
         );
     }
 
@@ -35,6 +35,7 @@ class ProjectController extends Controller
             'deskripsi',
             'status',
             'tgl_dibuat',
+            'author_id',
         ]));
 
         try {
@@ -48,7 +49,7 @@ class ProjectController extends Controller
         return response()->json([
             'message' => 'Project berhasil ditambahkan',
             'data' => new ProjectResource(
-                $project->load('dokumentasi')
+                $project->load('dokumentasi', 'author')
             ),
         ], 201);
     }
@@ -62,6 +63,7 @@ class ProjectController extends Controller
             'deskripsi',
             'status',
             'tgl_dibuat',
+            'author_id',
         ]));
 
         try {
@@ -73,7 +75,7 @@ class ProjectController extends Controller
         return response()->json([
             'message' => 'Project berhasil diperbarui',
             'data' => new ProjectResource(
-                $project->refresh()->load('dokumentasi')
+                $project->refresh()->load('dokumentasi', 'author')
             ),
         ]);
     }
