@@ -95,7 +95,7 @@ class ApiTest extends TestCase
             ->assertJsonPath('data.email', 'baru@digfin.test');
     }
 
-    public function test_project_memerlukan_author_id(): void
+    public function test_project_boleh_disimpan_tanpa_author(): void
     {
         $this->createAdmin();
         $path = trim((string) config('security.admin_path'), '/');
@@ -111,8 +111,8 @@ class ApiTest extends TestCase
                 'deskripsi' => 'Project tanpa author.',
                 'status' => 'publish',
             ])
-            ->assertStatus(422)
-            ->assertJsonValidationErrors('author_id');
+            ->assertStatus(201)
+            ->assertJsonPath('data.author', null);
     }
 
     public function test_author_id_harus_merujuk_anggota_yang_ada(): void

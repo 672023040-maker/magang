@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { project, struktur } from '../../api'
+import { getErrorFields, getErrorMessage } from '../../api/client'
 import type { Project, StatusProject, Struktur } from '../../types'
 import { Badge } from '../../components/ui/Badge'
 import { Alert } from '../../components/ui/Alert'
@@ -37,15 +38,22 @@ export function ProjectPage() {
   const [form, setForm] = useState<ProjectForm>(emptyForm)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({})
   const [success, setSuccess] = useState<string | null>(null)
   const [existingCover, setExistingCover] = useState<string | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+
+  const resetMessages = () => {
+    setError(null)
+    setFieldErrors({})
+    setSuccess(null)
+  }
 
   const load = () => {
     project
       .get()
       .then(setItems)
-      .catch(() => setError('Gagal memuat data project.'))
+      .catch((err) => setError(getErrorMessage(err, 'Gagal memuat data project.')))
   }
 
   useEffect(() => {
@@ -55,7 +63,7 @@ export function ProjectPage() {
         setItems(data)
         setMembers(memberData)
       })
-      .catch(() => setError('Gagal memuat data project.'))
+      .catch((err) => setError(getErrorMessage(err, 'Gagal memuat data project.')))
       .finally(() => setLoading(false))
   }, [])
 
@@ -69,8 +77,7 @@ export function ProjectPage() {
     setEditing(null)
     setForm(emptyForm)
     resetCover()
-    setError(null)
-    setSuccess(null)
+    resetMessages()
     setModalOpen(true)
   }
 
@@ -86,8 +93,7 @@ export function ProjectPage() {
     })
     resetCover()
     setExistingCover(item.dokumentasi[0]?.file_gambar_url ?? null)
-    setError(null)
-    setSuccess(null)
+    resetMessages()
     setModalOpen(true)
   }
 
@@ -97,9 +103,10 @@ export function ProjectPage() {
     try {
       await project.remove(item.id)
       setSuccess('Project berhasil dihapus.')
+      setError(null)
       load()
-    } catch {
-      setError('Gagal menghapus project.')
+    } catch (err) {
+      setError(getErrorMessage(err, 'Gagal menghapus project.'))
     }
   }
 
@@ -133,8 +140,7 @@ export function ProjectPage() {
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
-    setError(null)
-    setSuccess(null)
+    resetMessages()
 
     try {
       setSaving(true)
@@ -151,8 +157,9 @@ export function ProjectPage() {
       setModalOpen(false)
       resetCover()
       load()
-    } catch {
-      setError('Gagal menyimpan project.')
+    } catch (err) {
+      setFieldErrors(getErrorFields(err))
+      setError(getErrorMessage(err, 'Gagal menyimpan project.'))
     } finally {
       setSaving(false)
     }
@@ -173,7 +180,7 @@ export function ProjectPage() {
       </div>
 
       <Alert variant="success" message={success} />
-      <Alert variant="error" message={error} />
+      {!modalOpen && <Alert variant="error" message={error} />}
 
       {loading ? (
         <div className="flex justify-center py-16">
@@ -258,11 +265,13 @@ export function ProjectPage() {
         }}
       >
         <form onSubmit={handleSubmit} className="space-y-4">
+          <Alert variant="error" message={error} />
           <Input
             id="nama_project"
             label="Nama Project"
             value={form.nama_project}
             onChange={(e) => updateField('nama_project', e.target.value)}
+            error={fieldErrors.nama_project?.[0]}
             required
           />
           <Select
@@ -270,9 +279,9 @@ export function ProjectPage() {
             label="Author"
             value={form.author_id}
             onChange={(e) => updateField('author_id', e.target.value)}
-            required
+            error={fieldErrors.author_id?.[0]}
             options={[
-              { value: '', label: '— Pilih anggota tim —' },
+              { value: '', label: '— Tanpa author —' },
               ...members.map((member) => ({
                 value: String(member.id),
                 label: `${member.nama} (${member.jabatan})`,
@@ -285,6 +294,7 @@ export function ProjectPage() {
             rows={4}
             value={form.deskripsi}
             onChange={(e) => updateField('deskripsi', e.target.value)}
+            error={fieldErrors.deskripsi?.[0]}
             required
           />
           <Select
@@ -292,6 +302,7 @@ export function ProjectPage() {
             label="Status"
             value={form.status}
             onChange={(e) => updateField('status', e.target.value as StatusProject)}
+            error={fieldErrors.status?.[0]}
             options={[
               { value: 'publish', label: 'Publish' },
               { value: 'unpublish', label: 'Unpublish' },
@@ -303,6 +314,7 @@ export function ProjectPage() {
             type="date"
             value={form.tgl_dibuat}
             onChange={(e) => updateField('tgl_dibuat', e.target.value)}
+            error={fieldErrors.tgl_dibuat?.[0]}
           />
 
           <Input
@@ -311,6 +323,7 @@ export function ProjectPage() {
             type="file"
             accept="image/jpeg,image/png"
             onChange={(e) => handleCoverChange(e.target.files?.[0] ?? null)}
+            error={fieldErrors['dokumentasi.0.file_gambar']?.[0]}
           />
 
           {coverSrc && (

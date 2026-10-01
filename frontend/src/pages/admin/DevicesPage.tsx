@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { devices } from '../../api'
+import { getErrorMessage } from '../../api/client'
 import type { AdminSessions } from '../../types'
 import { Alert } from '../../components/ui/Alert'
 import { Button } from '../../components/ui/Button'
@@ -67,10 +68,7 @@ export function DevicesPage() {
       const data = await devices.list()
       setSessions(data)
     } catch (err) {
-      const message =
-        (err as { response?: { data?: { message?: string } } }).response?.data
-          ?.message ?? 'Gagal memuat daftar perangkat.'
-      setError(message)
+      setError(getErrorMessage(err, 'Gagal memuat daftar perangkat.'))
     } finally {
       setLoading(false)
     }
@@ -85,10 +83,7 @@ export function DevicesPage() {
         if (!cancelled) setSessions(data)
       } catch (err) {
         if (!cancelled) {
-          const message =
-            (err as { response?: { data?: { message?: string } } }).response
-              ?.data?.message ?? 'Gagal memuat daftar perangkat.'
-          setError(message)
+          setError(getErrorMessage(err, 'Gagal memuat daftar perangkat.'))
         }
       } finally {
         if (!cancelled) setLoading(false)
@@ -114,10 +109,7 @@ export function DevicesPage() {
       await devices.revoke(id)
       await load()
     } catch (err) {
-      const message =
-        (err as { response?: { data?: { message?: string } } }).response?.data
-          ?.message ?? 'Gagal mencabut perangkat.'
-      setError(message)
+      setError(getErrorMessage(err, 'Gagal mencabut perangkat.'))
     } finally {
       setBusyId(null)
     }
@@ -136,10 +128,7 @@ export function DevicesPage() {
       await devices.revokeAll()
       await load()
     } catch (err) {
-      const message =
-        (err as { response?: { data?: { message?: string } } }).response?.data
-          ?.message ?? 'Gagal mencabut semua perangkat.'
-      setError(message)
+      setError(getErrorMessage(err, 'Gagal mencabut semua perangkat.'))
     }
   }
 

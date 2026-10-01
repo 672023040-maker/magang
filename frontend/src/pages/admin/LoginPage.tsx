@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
+import { getErrorMessage } from '../../api/client'
 import { useAuth } from '../../hooks/useAuth'
 import { Alert } from '../../components/ui/Alert'
 import { Button } from '../../components/ui/Button'
@@ -32,10 +33,7 @@ export function LoginPage() {
         { replace: true },
       )
     } catch (err) {
-      const message =
-        (err as { response?: { data?: { message?: string } } }).response?.data
-          ?.message ?? 'Login gagal. Silakan coba lagi.'
-      setError(message)
+      setError(getErrorMessage(err, 'Login gagal. Silakan coba lagi.'))
     } finally {
       setSubmitting(false)
     }

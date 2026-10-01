@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { profil } from '../../api'
+import { getErrorMessage } from '../../api/client'
 import type { Profil } from '../../types'
 import { Alert } from '../../components/ui/Alert'
 import { Button } from '../../components/ui/Button'
@@ -50,8 +51,8 @@ export function ProfilPage() {
       setSaving(true)
       await profil.update(form)
       setSuccess('Profil berhasil disimpan.')
-    } catch {
-      setError('Gagal menyimpan profil.')
+    } catch (err) {
+      setError(getErrorMessage(err, 'Gagal menyimpan profil.'))
     } finally {
       setSaving(false)
     }

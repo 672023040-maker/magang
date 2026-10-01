@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { password } from '../../api'
+import { getErrorMessage } from '../../api/client'
 import { useAuth } from '../../hooks/useAuth'
 import { Alert } from '../../components/ui/Alert'
 import { Button } from '../../components/ui/Button'
@@ -47,10 +48,7 @@ export function ChangePasswordPage() {
       await refresh()
       navigate('/admin', { replace: true })
     } catch (err) {
-      const message =
-        (err as { response?: { data?: { message?: string } } }).response?.data
-          ?.message ?? 'Gagal mengganti password. Silakan coba lagi.'
-      setError(message)
+      setError(getErrorMessage(err, 'Gagal mengganti password. Silakan coba lagi.'))
     } finally {
       setSubmitting(false)
     }

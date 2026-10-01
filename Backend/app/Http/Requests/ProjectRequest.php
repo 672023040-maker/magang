@@ -23,7 +23,10 @@ class ProjectRequest extends FormRequest
 
         return [
             'nama_project' => ['required', 'string', 'max:255'],
-            'author_id' => ['required', 'integer', Rule::exists('struktur_organisasi', 'id')],
+            // Nullable: kolom project.author_id nullable dan sebagian project lama
+            // belum punya author. mewajibkan author membuat form tidak bisa
+            // mengedit project tersebut, jadi author hanya divalidasi bila dikirim.
+            'author_id' => ['nullable', 'integer', Rule::exists('struktur_organisasi', 'id')],
             'deskripsi' => ['required', 'string'],
             'status' => ['required', 'in:publish,unpublish'],
             'tgl_dibuat' => ['nullable', 'date'],

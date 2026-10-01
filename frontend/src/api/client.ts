@@ -27,4 +27,43 @@ export const csrfClient = axios.create({
   xsrfHeaderName: 'X-XSRF-TOKEN',
 })
 
+interface ApiErrorPayload {
+  message?: string
+  errors?: Record<string, string[] | string>
+}
+
+function readPayload(err: unknown): ApiErrorPayload | undefined {
+  const data = (err as { response?: { data?: unknown } })?.response?.data
+
+  if (!data || typeof data !== 'object') return undefined
+
+  return data as ApiErrorPayload
+}
+
+export function getErrorFields(err: unknown): Record<string, string[]> {
+  const errors = readPayload(err)?.errors
+
+  if (!errors || typeof errors !== 'object') return {}
+
+  const result: Record<string, string[]> = {}
+
+  for (const [field, value] of Object.entries(errors)) {
+    const messages = Array.isArray(value) ? value : [value]
+    result[field] = messages.filter((item): item is string => typeof item === 'string')
+  }
+
+  return result
+}
+
+export function getErrorMessage(err: unknown, fallback: string): string {
+  const payload = readPayload(err)
+
+  if (payload?.message) return payload.message
+
+  const fields = getErrorFields(err)
+  const first = Object.values(fields)[0]?.[0]
+
+  return first ?? fallback
+}
+
 export default client

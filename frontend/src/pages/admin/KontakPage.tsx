@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { kontak } from '../../api'
+import { getErrorMessage } from '../../api/client'
 import type { Kontak } from '../../types'
 import { Alert } from '../../components/ui/Alert'
 import { Button } from '../../components/ui/Button'
@@ -51,8 +52,8 @@ export function KontakPage() {
         await kontak.create({ email: form.email })
         setSuccess('Kontak berhasil disimpan.')
       }
-    } catch {
-      setError('Gagal menyimpan kontak.')
+    } catch (err) {
+      setError(getErrorMessage(err, 'Gagal menyimpan kontak.'))
     } finally {
       setSaving(false)
     }

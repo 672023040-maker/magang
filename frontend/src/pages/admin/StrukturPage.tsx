@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { struktur } from '../../api'
+import { getErrorFields, getErrorMessage } from '../../api/client'
 import type { Struktur } from '../../types'
 import { Alert } from '../../components/ui/Alert'
 import { Button } from '../../components/ui/Button'
@@ -29,28 +30,34 @@ export function StrukturPage() {
   const [form, setForm] = useState<StrukturForm>(emptyForm)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({})
   const [success, setSuccess] = useState<string | null>(null)
+
+  const resetMessages = () => {
+    setError(null)
+    setFieldErrors({})
+    setSuccess(null)
+  }
 
   const load = () => {
     struktur
       .get()
       .then(setItems)
-      .catch(() => setError('Gagal memuat data struktur.'))
+      .catch((err) => setError(getErrorMessage(err, 'Gagal memuat data struktur.')))
   }
 
   useEffect(() => {
     struktur
       .get()
       .then(setItems)
-      .catch(() => setError('Gagal memuat data struktur.'))
+      .catch((err) => setError(getErrorMessage(err, 'Gagal memuat data struktur.')))
       .finally(() => setLoading(false))
   }, [])
 
   const openCreate = () => {
     setEditing(null)
     setForm(emptyForm)
-    setError(null)
-    setSuccess(null)
+    resetMessages()
     setModalOpen(true)
   }
 
@@ -62,8 +69,7 @@ export function StrukturPage() {
       email: item.email ?? '',
       foto: null,
     })
-    setError(null)
-    setSuccess(null)
+    resetMessages()
     setModalOpen(true)
   }
 
@@ -73,9 +79,10 @@ export function StrukturPage() {
     try {
       await struktur.remove(item.id)
       setSuccess('Data struktur berhasil dihapus.')
+      setError(null)
       load()
-    } catch {
-      setError('Gagal menghapus data struktur.')
+    } catch (err) {
+      setError(getErrorMessage(err, 'Gagal menghapus data struktur.'))
     }
   }
 
@@ -99,8 +106,7 @@ export function StrukturPage() {
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
-    setError(null)
-    setSuccess(null)
+    resetMessages()
 
     try {
       setSaving(true)
@@ -116,8 +122,9 @@ export function StrukturPage() {
 
       setModalOpen(false)
       load()
-    } catch {
-      setError('Gagal menyimpan data struktur.')
+    } catch (err) {
+      setFieldErrors(getErrorFields(err))
+      setError(getErrorMessage(err, 'Gagal menyimpan data struktur.'))
     } finally {
       setSaving(false)
     }
@@ -136,7 +143,7 @@ export function StrukturPage() {
       </div>
 
       <Alert variant="success" message={success} />
-      <Alert variant="error" message={error} />
+      {!modalOpen && <Alert variant="error" message={error} />}
 
       {loading ? (
         <div className="flex justify-center py-16">
@@ -192,11 +199,13 @@ export function StrukturPage() {
         onClose={() => setModalOpen(false)}
       >
         <form onSubmit={handleSubmit} className="space-y-4">
+          <Alert variant="error" message={error} />
           <Input
             id="nama"
             label="Nama"
             value={form.nama}
             onChange={(e) => updateField('nama', e.target.value)}
+            error={fieldErrors.nama?.[0]}
             required
           />
           <Input
@@ -204,6 +213,7 @@ export function StrukturPage() {
             label="Jabatan"
             value={form.jabatan}
             onChange={(e) => updateField('jabatan', e.target.value)}
+            error={fieldErrors.jabatan?.[0]}
             required
           />
           <Input
@@ -213,6 +223,7 @@ export function StrukturPage() {
             placeholder="nama@uksw.edu"
             value={form.email}
             onChange={(e) => updateField('email', e.target.value)}
+            error={fieldErrors.email?.[0]}
           />
           <Input
             id="foto"
@@ -220,6 +231,7 @@ export function StrukturPage() {
             type="file"
             accept="image/jpeg,image/png"
             onChange={(e) => updateField('foto', e.target.files?.[0] ?? null)}
+            error={fieldErrors.foto?.[0]}
           />
 
           <div className="pt-2">
