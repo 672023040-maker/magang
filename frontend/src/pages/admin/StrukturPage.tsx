@@ -29,6 +29,7 @@ export function StrukturPage() {
   const [editing, setEditing] = useState<Struktur | null>(null)
   const [form, setForm] = useState<StrukturForm>(emptyForm)
   const [saving, setSaving] = useState(false)
+  const [deletingId, setDeletingId] = useState<number | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({})
   const [success, setSuccess] = useState<string | null>(null)
@@ -74,7 +75,12 @@ export function StrukturPage() {
   }
 
   const handleDelete = async (item: Struktur) => {
+    if (deletingId !== null) return
+
     if (!window.confirm(`Hapus "${item.nama}"?`)) return
+
+    resetMessages()
+    setDeletingId(item.id)
 
     try {
       await struktur.remove(item.id)
@@ -83,6 +89,8 @@ export function StrukturPage() {
       load()
     } catch (err) {
       setError(getErrorMessage(err, 'Gagal menghapus data struktur.'))
+    } finally {
+      setDeletingId(null)
     }
   }
 
@@ -181,9 +189,10 @@ export function StrukturPage() {
                     <button
                       type="button"
                       onClick={() => handleDelete(item)}
-                      className="text-xs font-medium text-red-600 hover:text-red-700"
+                      disabled={deletingId !== null}
+                      className="text-xs font-medium text-red-600 hover:text-red-700 disabled:cursor-not-allowed disabled:opacity-40"
                     >
-                      Hapus
+                      {deletingId === item.id ? 'Menghapus…' : 'Hapus'}
                     </button>
                   </td>
                 </tr>

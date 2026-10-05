@@ -37,6 +37,7 @@ export function ProjectPage() {
   const [editing, setEditing] = useState<Project | null>(null)
   const [form, setForm] = useState<ProjectForm>(emptyForm)
   const [saving, setSaving] = useState(false)
+  const [deletingId, setDeletingId] = useState<number | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({})
   const [success, setSuccess] = useState<string | null>(null)
@@ -98,7 +99,12 @@ export function ProjectPage() {
   }
 
   const handleDelete = async (item: Project) => {
+    if (deletingId !== null) return
+
     if (!window.confirm(`Hapus project "${item.nama_project}"?`)) return
+
+    resetMessages()
+    setDeletingId(item.id)
 
     try {
       await project.remove(item.id)
@@ -107,6 +113,8 @@ export function ProjectPage() {
       load()
     } catch (err) {
       setError(getErrorMessage(err, 'Gagal menghapus project.'))
+    } finally {
+      setDeletingId(null)
     }
   }
 
@@ -244,9 +252,10 @@ export function ProjectPage() {
                     <button
                       type="button"
                       onClick={() => handleDelete(item)}
-                      className="text-xs font-medium text-red-600 hover:text-red-700"
+                      disabled={deletingId !== null}
+                      className="text-xs font-medium text-red-600 hover:text-red-700 disabled:cursor-not-allowed disabled:opacity-40"
                     >
-                      Hapus
+                      {deletingId === item.id ? 'Menghapus…' : 'Hapus'}
                     </button>
                   </td>
                 </tr>
