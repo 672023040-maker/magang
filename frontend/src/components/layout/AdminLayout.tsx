@@ -6,7 +6,7 @@ export function AdminLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
-    <div className="min-h-screen bg-stone-50">
+    <div className="min-h-screen bg-[#F7F3ED]">
       <header className="sticky top-0 z-40 flex h-14 items-center justify-between border-b border-stone-200 bg-white px-4 lg:hidden">
         <button
           type="button"
@@ -21,6 +21,7 @@ export function AdminLayout() {
             stroke="currentColor"
             strokeWidth="2"
             strokeLinecap="round"
+            strokeLinejoin="round"
           >
             <path d="M4 7h16M4 12h16M4 17h16" />
           </svg>
@@ -33,22 +34,22 @@ export function AdminLayout() {
         <span className="w-8" aria-hidden />
       </header>
 
-      <div className="flex">
-        {sidebarOpen && (
-          <div
-            aria-hidden
-            onClick={() => setSidebarOpen(false)}
-            className="fixed inset-0 z-40 bg-stone-900/50 lg:hidden"
-          />
-        )}
+      <div className="flex min-h-screen">
+          {sidebarOpen && (
+            <div
+              aria-hidden
+              onClick={() => setSidebarOpen(false)}
+              className="fixed inset-0 z-40 bg-stone-900/50 lg:hidden"
+            />
+          )}
 
-        <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+          <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-        <main className="min-w-0 flex-1 p-4 sm:p-6 lg:p-10">
-          <div className="mx-auto max-w-4xl">
-            <Outlet />
-          </div>
-        </main>
+          <main className="min-w-0 flex-1 p-4 sm:p-6 lg:p-10 overflow-y-auto">
+            <div className="mx-auto max-w-4xl">
+              <Outlet />
+            </div>
+          </main>
       </div>
     </div>
   )

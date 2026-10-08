@@ -39,7 +39,7 @@ function InfoCard({ label, number, text, bullet = false }: InfoCardProps) {
 
   const body =
     bullet && items.length > 0 ? (
-      <ul className="mt-4 list-disc space-y-2.5 pl-5 text-center text-[18px] leading-relaxed text-stone-600 marker:text-brand-600">
+      <ul className="mt-4 list-disc space-y-2.5 pl-5 text-center text-[18px] leading-relaxed text-stone-600 marker:text-[#dbba99]">
         {items.map((item, index) => (
           <li key={`${label}-${index}`}>{item}</li>
         ))}

@@ -71,7 +71,7 @@ export function ChangePasswordPage() {
 
       <form
         onSubmit={handleSubmit}
-        className="space-y-4 rounded-xl border border-stone-200 bg-white p-6"
+        className="space-y-4 rounded-xl border border-stone-300 bg-white p-6"
       >
         <Input
           id="current_password"

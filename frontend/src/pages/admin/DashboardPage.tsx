@@ -47,19 +47,19 @@ export function DashboardPage() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <div className="rounded-xl border border-stone-200 border-t-4 border-t-brand-500 bg-white p-5">
+        <div className="rounded-xl border border-stone-300 border-t-4 border-t-brand-500 bg-white p-5">
           <p className="text-sm font-medium text-stone-500">Struktur Organisasi</p>
           <p className="mt-1 text-3xl font-bold text-stone-900">
             {stats.struktur}
           </p>
         </div>
-        <div className="rounded-xl border border-stone-200 border-t-4 border-t-accent-500 bg-white p-5">
+        <div className="rounded-xl border border-stone-300 border-t-4 border-t-[#dbba99] bg-white p-5">
           <p className="text-sm font-medium text-stone-500">Project</p>
           <p className="mt-1 text-3xl font-bold text-stone-900">{stats.project}</p>
         </div>
       </div>
 
-      <div className="rounded-xl border border-stone-200 bg-white p-6">
+      <div className="rounded-xl border border-stone-300 bg-white p-6">
         <h2 className="font-display text-lg font-medium text-stone-900">
           Project Terbaru
         </h2>

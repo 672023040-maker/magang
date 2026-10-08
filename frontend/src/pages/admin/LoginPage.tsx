@@ -40,7 +40,7 @@ export function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-stone-50 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-[#F7F3ED] px-4">
       <div className="w-full max-w-sm">
         <div className="mb-6 text-center">
           <p className="font-display text-3xl font-semibold text-stone-900">
@@ -53,7 +53,7 @@ export function LoginPage() {
 
         <form
           onSubmit={handleSubmit}
-          className="space-y-4 rounded-xl border border-stone-200 bg-white p-6 shadow-sm"
+          className="space-y-4 rounded-xl border border-stone-300 bg-white p-6 shadow-sm"
         >
           <Input
             id="username"

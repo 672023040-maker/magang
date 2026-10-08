@@ -187,16 +187,16 @@ export function StrukturPage() {
           Belum ada data struktur.
         </p>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-stone-200 bg-white">
+        <div className="overflow-x-auto rounded-xl border border-stone-300 bg-white">
           <table className="w-full min-w-[560px] text-left text-sm">
-            <thead className="border-b border-stone-200 bg-stone-50 text-xs uppercase text-stone-500">
+            <thead className="border-b border-stone-300 bg-[#F3EAE1] text-xs uppercase text-stone-500">
               <tr>
                 <th className="px-4 py-3">Nama</th>
                 <th className="px-4 py-3">Jabatan</th>
                 <th className="px-4 py-3 text-right">Aksi</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-stone-100">
+            <tbody className="divide-y divide-stone-200">
               {items.map((item) => (
                 <tr key={item.id}>
                   <td className="px-4 py-3 font-medium text-stone-800">
@@ -272,7 +272,7 @@ export function StrukturPage() {
           />
 
           {fotoSrc && (
-            <div className="rounded-lg border border-stone-200 p-2">
+            <div className="rounded-lg border border-stone-300 p-2">
               <img
                 src={fotoSrc}
                 alt={editing ? 'Foto anggota saat ini' : 'Pratinjau foto'}

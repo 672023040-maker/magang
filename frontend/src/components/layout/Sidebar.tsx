@@ -21,11 +21,11 @@ export function Sidebar({ open, onClose }: SidebarProps) {
 
   return (
     <aside
-      className={`fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-stone-200 bg-white transition-transform duration-300 lg:static lg:z-auto lg:translate-x-0 lg:transition-none ${
+      className={`fixed inset-0 left-0 z-50 flex w-64 flex-col border-r border-stone-300 bg-white transition-transform duration-300 lg:sticky lg:top-0 lg:h-screen lg:z-auto lg:translate-x-0 lg:transition-none lg:inset-auto ${
         open ? 'translate-x-0' : '-translate-x-full'
       }`}
     >
-      <div className="flex h-16 shrink-0 items-center border-b border-stone-200 px-5">
+      <div className="flex h-16 shrink-0 items-center border-b border-stone-300 px-5 lg:hidden">
         <span className="font-display text-lg font-semibold text-stone-900">
           DIGFIN<span className="text-brand-600">.</span>
         </span>
@@ -54,7 +54,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
         ))}
       </nav>
 
-      <div className="shrink-0 border-t border-stone-200 p-3">
+      <div className="shrink-0 border-t border-stone-300 p-3">
         <p className="truncate px-3 text-sm font-medium text-stone-800">
           {admin?.nama}
         </p>
@@ -62,7 +62,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
         <button
           type="button"
           onClick={logout}
-          className="mt-3 w-full rounded-lg border border-stone-200 px-3 py-2 text-sm font-medium text-stone-600 transition hover:bg-stone-50"
+          className="mt-3 w-full rounded-lg border border-stone-300 px-3 py-2 text-sm font-medium text-stone-600 transition hover:bg-stone-50"
         >
           Keluar
         </button>
