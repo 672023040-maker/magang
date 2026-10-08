@@ -33,12 +33,26 @@ export function StrukturPage() {
   const [error, setError] = useState<string | null>(null)
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({})
   const [success, setSuccess] = useState<string | null>(null)
+  const [existingFoto, setExistingFoto] = useState<string | null>(null)
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
 
   const resetMessages = () => {
     setError(null)
     setFieldErrors({})
     setSuccess(null)
   }
+
+  const resetFoto = () => {
+    if (previewUrl) URL.revokeObjectURL(previewUrl)
+    setPreviewUrl(null)
+    setExistingFoto(null)
+  }
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl)
+    }
+  }, [previewUrl])
 
   const load = () => {
     struktur
@@ -58,6 +72,7 @@ export function StrukturPage() {
   const openCreate = () => {
     setEditing(null)
     setForm(emptyForm)
+    resetFoto()
     resetMessages()
     setModalOpen(true)
   }
@@ -70,6 +85,8 @@ export function StrukturPage() {
       email: item.email ?? '',
       foto: null,
     })
+    resetFoto()
+    setExistingFoto(item.foto_url ?? null)
     resetMessages()
     setModalOpen(true)
   }
@@ -96,6 +113,12 @@ export function StrukturPage() {
 
   const updateField = (name: keyof StrukturForm, value: string | File | null) => {
     setForm((prev) => ({ ...prev, [name]: value }))
+  }
+
+  const handleFotoChange = (file: File | null) => {
+    if (previewUrl) URL.revokeObjectURL(previewUrl)
+    setPreviewUrl(file ? URL.createObjectURL(file) : null)
+    updateField('foto', file)
   }
 
   const buildFormData = (): FormData => {
@@ -137,6 +160,8 @@ export function StrukturPage() {
       setSaving(false)
     }
   }
+
+  const fotoSrc = previewUrl ?? existingFoto
 
   return (
     <div className="space-y-6">
@@ -205,7 +230,10 @@ export function StrukturPage() {
       <Modal
         open={modalOpen}
         title={editing ? 'Edit Struktur' : 'Tambah Struktur'}
-        onClose={() => setModalOpen(false)}
+        onClose={() => {
+          resetFoto()
+          setModalOpen(false)
+        }}
       >
         <form onSubmit={handleSubmit} className="space-y-4">
           <Alert variant="error" message={error} />
@@ -239,9 +267,24 @@ export function StrukturPage() {
             label="Foto"
             type="file"
             accept="image/jpeg,image/png"
-            onChange={(e) => updateField('foto', e.target.files?.[0] ?? null)}
+            onChange={(e) => handleFotoChange(e.target.files?.[0] ?? null)}
             error={fieldErrors.foto?.[0]}
           />
+
+          {fotoSrc && (
+            <div className="rounded-lg border border-stone-200 p-2">
+              <img
+                src={fotoSrc}
+                alt={editing ? 'Foto anggota saat ini' : 'Pratinjau foto'}
+                className="mx-auto h-28 w-full rounded object-cover"
+              />
+              {!previewUrl && existingFoto && (
+                <p className="mt-1 text-xs text-stone-500">
+                  Foto saat ini. Pilih file baru untuk menggantinya.
+                </p>
+              )}
+            </div>
+          )}
 
           <div className="pt-2">
             <Button type="submit" loading={saving}>

@@ -12,6 +12,7 @@ use App\Services\Upload\SecureImageService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class ProjectController extends Controller
@@ -30,20 +31,36 @@ class ProjectController extends Controller
 
     public function store(ProjectRequest $request): JsonResponse
     {
-        $project = Project::create($request->only([
+        $attributes = $request->only([
             'nama_project',
             'deskripsi',
             'status',
             'tgl_dibuat',
             'author_id',
-        ]));
+        ]);
+
+        // Simpan file terlebih dahulu. Bila ada yang ditolak, request gagal
+        // sebelum project sempat dibuat (tidak ada state setengah jadi).
+        try {
+            $paths = $this->storeAllFiles($request);
+        } catch (UploadRejectedException $e) {
+            return response()->json(['message' => $e->getMessage()], 422);
+        }
 
         try {
-            $this->syncDokumentasi($project, $request);
-        } catch (UploadRejectedException $e) {
-            $project->delete();
+            $project = DB::transaction(function () use ($attributes, $paths): Project {
+                $project = Project::create($attributes);
 
-            return response()->json(['message' => $e->getMessage()], 422);
+                foreach ($paths as $path) {
+                    $project->dokumentasi()->create(['file_gambar' => $path]);
+                }
+
+                return $project;
+            });
+        } catch (\Throwable $e) {
+            $this->deletePaths($paths);
+
+            throw $e;
         }
 
         return response()->json([
@@ -57,20 +74,52 @@ class ProjectController extends Controller
     public function update(ProjectRequest $request, int $id): JsonResponse
     {
         $project = Project::findOrFail($id);
-
-        $project->update($request->only([
+        $attributes = $request->only([
             'nama_project',
             'deskripsi',
             'status',
             'tgl_dibuat',
             'author_id',
-        ]));
+        ]);
 
+        // File baru dijajal & disimpan ke disk dulu. Kalau ada yang ditolak,
+        // kembali 422 tanpa mengubah DB satupun (aturan lama tetap utuh).
         try {
-            $this->syncCover($project, $request);
+            $paths = $this->storeAllFiles($request);
         } catch (UploadRejectedException $e) {
             return response()->json(['message' => $e->getMessage()], 422);
         }
+
+        $oldPaths = [];
+
+        try {
+            DB::transaction(function () use ($project, $attributes, $paths, &$oldPaths): void {
+                $project->update($attributes);
+
+                // Tanpa file baru, dokumentasi lama dibiarkan apa adanya.
+                if ($paths === []) {
+                    return;
+                }
+
+                $oldPaths = $project->dokumentasi()
+                    ->pluck('file_gambar')
+                    ->filter()
+                    ->all();
+
+                $project->dokumentasi()->delete();
+
+                foreach ($paths as $path) {
+                    $project->dokumentasi()->create(['file_gambar' => $path]);
+                }
+            });
+        } catch (\Throwable $e) {
+            $this->deletePaths($paths);
+
+            throw $e;
+        }
+
+        // Transaksi sukses — baru hapus file fisik yang digantikan.
+        $this->deletePaths($oldPaths);
 
         return response()->json([
             'message' => 'Project berhasil diperbarui',
@@ -84,13 +133,11 @@ class ProjectController extends Controller
     {
         $project = Project::findOrFail($id);
 
-        foreach ($project->dokumentasi()->pluck('file_gambar') as $path) {
-            if ($path) {
-                Storage::disk('public')->delete($path);
-            }
-        }
+        $oldPaths = $project->dokumentasi()->pluck('file_gambar')->filter()->all();
 
         $project->delete();
+
+        $this->deletePaths($oldPaths);
 
         $this->logger->log('PROJECT_DELETED', request(), ['project_id' => $id]);
 
@@ -100,73 +147,67 @@ class ProjectController extends Controller
     }
 
     /**
-     * Sinkronkan gambar sampul. Jika ada file baru, dokumentasi dibuat ulang.
-     * Jika tidak ada file baru, sampul lama dipertahankan apa adanya.
+     * Simpan semua file dokumentasi ke disk. Bila salah satu ditolak, seluruh
+     * file yang sudah tersimpan dibersihkan lalu UploadRejectedException dilepas.
+     *
+     * @return list<string>
      */
-    private function syncCover(Project $project, ProjectRequest $request): void
+    private function storeAllFiles(ProjectRequest $request): array
     {
-        $files = $request->file('dokumentasi', []);
+        $paths = [];
 
-        if (! isset($files[0]['file_gambar']) || ! $files[0]['file_gambar'] instanceof UploadedFile) {
-            return;
+        foreach ($this->filesFromRequest($request) as $file) {
+            try {
+                $storedPath = $this->images->sanitizeAndStore($file, 'dokumentasi', 'public');
+            } catch (UploadRejectedException $e) {
+                $this->deletePaths($paths);
+
+                $this->logger->log('UPLOAD_REJECTED', $request, [
+                    'resource' => 'project_dokumentasi',
+                    'reason' => $e->getMessage(),
+                ]);
+
+                throw $e;
+            }
+
+            $paths[] = $storedPath;
+
+            $this->logger->log('UPLOAD_SUCCESS', $request, [
+                'resource' => 'project_dokumentasi',
+                'stored' => $storedPath,
+            ]);
         }
 
-        $this->syncDokumentasi($project, $request);
+        return $paths;
     }
 
-    private function syncDokumentasi(Project $project, ProjectRequest $request): void
+    /**
+     * @return list<UploadedFile>
+     */
+    private function filesFromRequest(ProjectRequest $request): array
     {
-        // Hapus file fisik lama sebelum membuang record.
-        foreach ($project->dokumentasi()->pluck('file_gambar') as $path) {
-            if ($path) {
-                Storage::disk('public')->delete($path);
+        $files = [];
+
+        foreach ($request->file('dokumentasi', []) as $fileGroup) {
+            $file = $fileGroup['file_gambar'] ?? null;
+
+            if ($file instanceof UploadedFile) {
+                $files[] = $file;
             }
         }
 
-        $project->dokumentasi()->delete();
+        return $files;
+    }
 
-        $createdPaths = [];
+    /**
+     * @param list<string|null> $paths
+     */
+    private function deletePaths(array $paths): void
+    {
+        $disk = Storage::disk('public');
 
-        try {
-            // File multipart tinggal di file bag (bukan input).
-            $files = $request->file('dokumentasi', []);
-
-            foreach ($files as $fileGroup) {
-                $file = $fileGroup['file_gambar'] ?? null;
-
-                if (! $file instanceof UploadedFile) {
-                    continue;
-                }
-
-                try {
-                    $storedPath = $this->images->sanitizeAndStore($file, 'dokumentasi', 'public');
-                } catch (UploadRejectedException $e) {
-                    $this->logger->log('UPLOAD_REJECTED', $request, [
-                        'resource' => 'project_dokumentasi',
-                        'reason' => $e->getMessage(),
-                    ]);
-
-                    throw $e;
-                }
-
-                $createdPaths[] = $storedPath;
-
-                $this->logger->log('UPLOAD_SUCCESS', $request, [
-                    'resource' => 'project_dokumentasi',
-                    'stored' => $storedPath,
-                ]);
-
-                $project->dokumentasi()->create([
-                    'file_gambar' => $storedPath,
-                ]);
-            }
-        } catch (UploadRejectedException $e) {
-            foreach (array_unique($createdPaths) as $path) {
-                Storage::disk('public')->delete($path);
-            }
-            $project->dokumentasi()->delete();
-
-            throw $e;
+        foreach (array_unique(array_filter($paths)) as $path) {
+            $disk->delete($path);
         }
     }
 }

@@ -26,11 +26,13 @@ class TrackAdminSession
         $sessionId = Session::getId();
 
         // Session tidak lagi tercatat sebagai device aktif (mis. sudah di-revoke
-        // dari "logout semua device") -> paksa keluar.
+        // dari "logout semua device", atau expired_at/last_activity_at lewat) ->
+        // paksa keluar dan ragam baris tracking-nya agar tidak dicek ulang.
         if (! $this->devices->isCurrentSessionActive($admin, $sessionId)) {
+            $this->devices->revokeCurrent($admin, $sessionId);
+
             Auth::guard('admin')->logout();
             $request->session()->invalidate();
-            $request->session()->regenerateToken();
 
             return response()->json(['message' => 'Unauthenticated.'], 401);
         }

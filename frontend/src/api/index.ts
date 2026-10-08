@@ -11,7 +11,9 @@ import type {
   Struktur,
 } from '../types'
 
-const adminPath = `/digfin-secure-panel`
+// Bisa dioverride via VITE_ADMIN_PATH agar senada dengan ADMIN_PATH backend.
+const adminPath =
+  (import.meta.env.VITE_ADMIN_PATH as string | undefined) ?? '/digfin-secure-panel'
 
 export const auth = {
   login: async (username: string, password: string) => {
@@ -67,6 +69,10 @@ export const project = {
   get: () =>
     client
       .get<ApiResponse<Project[]>>('/project')
+      .then((res) => res.data.data),
+  list: () =>
+    client
+      .get<ApiResponse<Project[]>>(`${adminPath}/project`)
       .then((res) => res.data.data),
   create: (data: FormData) =>
     client

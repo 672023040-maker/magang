@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Admin;
 use App\Models\Kontak;
+use App\Models\Profil;
 use App\Models\Project;
 use App\Models\StrukturOrganisasi;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -54,6 +55,127 @@ class ApiTest extends TestCase
         $this->getJson('/api/struktur')->assertOk();
         $this->getJson('/api/project')->assertOk();
         $this->getJson('/api/kontak')->assertOk();
+    }
+
+    public function test_endpoint_publik_hanya_menampilkan_project_publish(): void
+    {
+        $publish = Project::query()->create([
+            'nama_project' => 'Tampil',
+            'deskripsi' => 'Project publish.',
+            'status' => 'publish',
+        ]);
+
+        Project::query()->create([
+            'nama_project' => 'Draft',
+            'deskripsi' => 'Project unpublish — draft internal.',
+            'status' => 'unpublish',
+        ]);
+
+        // Landing page TIDAK boleh membocorkan draft (unpublish).
+        $this->getJson('/api/project')
+            ->assertOk()
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.nama_project', $publish->nama_project);
+    }
+
+    public function test_endpoint_admin_menampilkan_seluruh_project_termasuk_draft(): void
+    {
+        $this->createAdmin();
+        $path = trim((string) config('security.admin_path'), '/');
+
+        Project::query()->create([
+            'nama_project' => 'Draft A',
+            'deskripsi' => 'Draft.',
+            'status' => 'unpublish',
+        ]);
+        Project::query()->create([
+            'nama_project' => 'Publish B',
+            'deskripsi' => 'Publish.',
+            'status' => 'publish',
+        ]);
+
+        $this->login();
+        $sessionId = $this->app['session']->getId();
+
+        // Panel admin butuh melihat draft juga (tolak ukur CRUD).
+        $this->from(config('app.url'))
+            ->withCredentials()
+            ->withCookie(config('session.cookie'), $sessionId)
+            ->getJson("/api/{$path}/project")
+            ->assertOk()
+            ->assertJsonCount(2, 'data');
+    }
+
+    public function test_flag_bulat_profil_tersimpan_dan_tampil_di_endpoint_publik(): void
+    {
+        $this->createAdmin();
+        $path = trim((string) config('security.admin_path'), '/');
+
+        Profil::query()->create([
+            'visi' => 'Visi kami.',
+            'misi' => "Misi satu\nMisi dua.",
+            'tujuan' => 'Tujuan kami.',
+        ]);
+
+        $this->login();
+        $sessionId = $this->app['session']->getId();
+
+        $this->from(config('app.url'))
+            ->withCredentials()
+            ->withCookie(config('session.cookie'), $sessionId)
+            ->putJson("/api/{$path}/profil", [
+                'visi' => 'Visi kami.',
+                'misi' => "Misi satu\nMisi dua.",
+                'tujuan' => 'Tujuan kami.',
+                'visi_bulat' => false,
+                'misi_bulat' => true,
+                'tujuan_bulat' => true,
+            ])
+            ->assertOk()
+            ->assertJsonPath('data.visi_bulat', false)
+            ->assertJsonPath('data.misi_bulat', true)
+            ->assertJsonPath('data.tujuan_bulat', true);
+
+        $this->assertDatabaseHas('profil', [
+            'misi_bulat' => true,
+            'tujuan_bulat' => true,
+        ]);
+
+        // Landing page membaca endpoint yang sama — flag harus ikut tersedia.
+        $this->getJson('/api/profil')
+            ->assertOk()
+            ->assertJsonPath('data.misi_bulat', true);
+    }
+
+    public function test_update_project_tanpa_file_baru_menjaga_dokumentasi_lama(): void
+    {
+        $this->createAdmin();
+        $path = trim((string) config('security.admin_path'), '/');
+        $project = Project::query()->create([
+            'nama_project' => 'Awal',
+            'deskripsi' => 'Deskripsi awal.',
+            'status' => 'publish',
+        ]);
+        $project->dokumentasi()->create(['file_gambar' => 'dokumentasi/lama.jpg']);
+
+        $this->login();
+        $sessionId = $this->app['session']->getId();
+
+        // Update hanya teks — dokumentasi lama harus tetap utuh.
+        $this->from(config('app.url'))
+            ->withCredentials()
+            ->withCookie(config('session.cookie'), $sessionId)
+            ->putJson("/api/{$path}/project/{$project->id}", [
+                'nama_project' => 'Awal (diubah)',
+                'deskripsi' => 'Deskripsi baru.',
+                'status' => 'publish',
+            ])
+            ->assertOk();
+
+        $this->assertDatabaseHas('dokumentasi_project', [
+            'project_id' => $project->id,
+            'file_gambar' => 'dokumentasi/lama.jpg',
+        ]);
     }
 
     public function test_endpoint_kontak_tidak_lagi_mengekspos_sosial_media(): void

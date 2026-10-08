@@ -9,6 +9,13 @@ export interface LandingData {
   kontak: Kontak | null
 }
 
+export interface LandingErrors {
+  profil: boolean
+  struktur: boolean
+  project: boolean
+  kontak: boolean
+}
+
 const emptyData: LandingData = {
   profil: null,
   struktur: [],
@@ -16,24 +23,59 @@ const emptyData: LandingData = {
   kontak: null,
 }
 
+const emptyErrors: LandingErrors = {
+  profil: false,
+  struktur: false,
+  project: false,
+  kontak: false,
+}
+
 export function useLandingData() {
   const [data, setData] = useState<LandingData>(emptyData)
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(false)
+  const [errors, setErrors] = useState<LandingErrors>(emptyErrors)
 
   useEffect(() => {
-    Promise.all([
+    let mounted = true
+
+    // allSettled: kalau satu endpoint gagal, bagian lain tetap tampil
+    // (graceful degradation), bukan menjatuhkan seluruh landing page.
+    Promise.allSettled([
       profil.get(),
       struktur.get(),
       project.get(),
       kontak.get(),
-    ])
-      .then(([p, s, pr, k]) => {
-        setData({ profil: p, struktur: s, project: pr, kontak: k })
-      })
-      .catch(() => setError(true))
-      .finally(() => setLoading(false))
+    ]).then((results) => {
+      if (!mounted) return
+
+      const next: LandingData = { ...emptyData }
+      const nextErrors = { ...emptyErrors }
+
+      const [p, s, pr, k] = results
+
+      if (p.status === 'fulfilled') next.profil = p.value
+      else nextErrors.profil = true
+
+      if (s.status === 'fulfilled') next.struktur = s.value
+      else nextErrors.struktur = true
+
+      if (pr.status === 'fulfilled') next.project = pr.value
+      else nextErrors.project = true
+
+      if (k.status === 'fulfilled') next.kontak = k.value
+      else nextErrors.kontak = true
+
+      setData(next)
+      setErrors(nextErrors)
+      setLoading(false)
+    })
+
+    return () => {
+      mounted = false
+    }
   }, [])
 
-  return { data, loading, error }
+  const hasError = errors.profil || errors.struktur || errors.project || errors.kontak
+
+  return { data, loading, errors, hasError }
 }

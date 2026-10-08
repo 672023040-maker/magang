@@ -9,6 +9,7 @@ interface InfoCardProps {
   label: string
   number: string
   text: string
+  bullet?: boolean
 }
 
 const PLACEHOLDER =
@@ -24,7 +25,31 @@ function extractPlainLines(value: string | null | undefined): string {
     .join('\n')
 }
 
-function InfoCard({ label, number, text }: InfoCardProps) {
+function toBulletItems(value: string | null | undefined): string[] {
+  if (!value) return []
+
+  return value
+    .split(/\r?\n+/)
+    .map((line) => line.replace(/^\s*(?:[-•*–]\s+)?(?:\d+[.)]\s+)?/, '').trim())
+    .filter(Boolean)
+}
+
+function InfoCard({ label, number, text, bullet = false }: InfoCardProps) {
+  const items = bullet ? toBulletItems(text) : []
+
+  const body =
+    bullet && items.length > 0 ? (
+      <ul className="mt-4 list-disc space-y-2.5 pl-5 text-center text-[18px] leading-relaxed text-stone-600 marker:text-brand-600">
+        {items.map((item, index) => (
+          <li key={`${label}-${index}`}>{item}</li>
+        ))}
+      </ul>
+    ) : (
+      <p className="mt-4 whitespace-pre-line text-center text-[18px] leading-relaxed text-stone-600 [text-wrap:pretty]">
+        {text}
+      </p>
+    )
+
   return (
     <article className="group relative mx-auto w-full max-w-xs">
       <div className="rounded-2xl border border-stone-300 bg-white px-6 py-12 text-center shadow-lg shadow-stone-400/30 transition-all duration-300 ease-out group-hover:-translate-y-1.5 group-hover:scale-[1.02] group-hover:border-stone-400 group-hover:bg-stone-100 group-hover:shadow-[0_14px_30px_rgba(0,0,0,0.15)]">
@@ -32,9 +57,7 @@ function InfoCard({ label, number, text }: InfoCardProps) {
           {label}
         </h3>
         <span aria-hidden className="mx-auto mt-2.5 h-px w-8 bg-stone-300" />
-        <p className="mt-4 whitespace-pre-line text-[18px] leading-relaxed text-stone-600">
-          {text}
-        </p>
+        {body}
       </div>
 
       <div
@@ -80,16 +103,19 @@ export function ProfilSection({ profil }: ProfilSectionProps) {
       label: 'VISI',
       number: '1.',
       text: profil?.visi?.trim() || PLACEHOLDER,
+      bullet: Boolean(profil?.visi?.trim()) && profil?.visi_bulat,
     },
     {
       label: 'MISI',
       number: '2.',
       text: misiText || PLACEHOLDER,
+      bullet: misiText !== '' && profil?.misi_bulat,
     },
     {
       label: 'TUJUAN',
       number: '3.',
       text: profil?.tujuan?.trim() || PLACEHOLDER,
+      bullet: Boolean(profil?.tujuan?.trim()) && profil?.tujuan_bulat,
     },
   ]
 

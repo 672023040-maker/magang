@@ -1,4 +1,8 @@
+import { Link, useNavigate } from 'react-router-dom'
+
 export function NotFoundPage() {
+  const navigate = useNavigate()
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#dbba99] px-5">
       <div className="w-full max-w-xl text-center">
@@ -14,6 +18,22 @@ export function NotFoundPage() {
           Alamat halaman mungkin salah, sudah dipindah, atau tidak lagi tersedia.
           Silakan kembali ke beranda atau ke halaman sebelumnya untuk melanjutkan.
         </p>
+
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
+            className="rounded-full bg-[#000000] px-6 py-2.5 text-sm font-semibold text-white transition hover:opacity-85"
+          >
+            Kembali
+          </button>
+          <Link
+            to="/"
+            className="rounded-full border border-stone-900 px-6 py-2.5 text-sm font-semibold text-stone-900 transition hover:bg-stone-900 hover:text-white"
+          >
+            Ke Beranda
+          </Link>
+        </div>
       </div>
     </div>
   )

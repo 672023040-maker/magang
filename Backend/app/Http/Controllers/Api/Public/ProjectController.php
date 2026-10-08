@@ -11,7 +11,10 @@ class ProjectController extends Controller
 {
     public function index(): AnonymousResourceCollection
     {
-        $projects = Project::with('dokumentasi', 'author')->latest()->get();
+        $projects = Project::with('dokumentasi', 'author')
+            ->where('status', 'publish')
+            ->latest()
+            ->get();
 
         return ProjectResource::collection($projects);
     }

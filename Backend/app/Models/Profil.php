@@ -12,5 +12,14 @@ class Profil extends Model
         'visi',
         'misi',
         'tujuan',
+        'visi_bulat',
+        'misi_bulat',
+        'tujuan_bulat',
+    ];
+
+    protected $casts = [
+        'visi_bulat' => 'boolean',
+        'misi_bulat' => 'boolean',
+        'tujuan_bulat' => 'boolean',
     ];
 }

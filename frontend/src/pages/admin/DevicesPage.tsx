@@ -54,6 +54,33 @@ function platformDariUA(userAgent: string | null): string {
   return platform
 }
 
+function DeviceIcon({ current }: { current: boolean }) {
+  return (
+    <svg
+      className="h-5 w-5"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.8}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      {current ? (
+        <>
+          <rect x="2" y="3" width="20" height="14" rx="2" />
+          <path d="M8 21h8M12 17v4" />
+        </>
+      ) : (
+        <>
+          <rect x="5" y="4" width="14" height="11" rx="2" />
+          <path d="M9 19h6M11 15v4M7 15v4" />
+        </>
+      )}
+    </svg>
+  )
+}
+
 export function DevicesPage() {
   const [sessions, setSessions] = useState<AdminSessions[]>([])
   const [loading, setLoading] = useState(true)
@@ -174,8 +201,8 @@ export function DevicesPage() {
               className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between"
             >
               <div className="flex items-start gap-3">
-                <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-stone-100 text-lg text-stone-500">
-                  {session.current ? '🖥️' : '💻'}
+                <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-stone-100 text-stone-500">
+                  <DeviceIcon current={session.current} />
                 </div>
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2">

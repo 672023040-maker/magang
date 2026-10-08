@@ -26,6 +26,11 @@ class ChangePasswordRequest extends FormRequest
             $passwordRule->mixedCase();
         }
 
+        if ($policy['require_lowercase']) {
+            // Kata sandi minimal mengandung satu huruf kecil (class \p{Ll}).
+            $passwordRule->rules(['regex:/\p{Ll}/u']);
+        }
+
         if ($policy['require_digit']) {
             $passwordRule->numbers();
         }

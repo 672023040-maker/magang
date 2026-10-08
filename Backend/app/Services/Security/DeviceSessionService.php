@@ -41,10 +41,19 @@ class DeviceSessionService
      */
     public function isCurrentSessionActive(Admin $admin, string $sessionId): bool
     {
+        $lifetimeMinutes = max((int) config('security.session_lifetime'), 1);
+        $cutoff = now()->subMinutes($lifetimeMinutes);
+
         $row = AdminUserSession::query()
             ->where('admin_id', $admin->id)
             ->where('session_id', $sessionId)
             ->whereNull('revoked_at')
+            ->where(function ($q) {
+                $q->whereNull('expires_at')->orWhere('expires_at', '>', now());
+            })
+            ->where(function ($q) use ($cutoff) {
+                $q->whereNull('last_activity_at')->orWhere('last_activity_at', '>=', $cutoff);
+            })
             ->first();
 
         if (! $row) {

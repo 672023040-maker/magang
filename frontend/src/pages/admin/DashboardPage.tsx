@@ -12,6 +12,8 @@ export function DashboardPage() {
 
   const [projectTerbaru, setProjectTerbaru] = useState<Project[]>([])
   const [strukturLoading, setStrukturLoading] = useState(true)
+  const [projectLoading, setProjectLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     struktur
@@ -19,12 +21,19 @@ export function DashboardPage() {
       .then((data: Struktur[]) =>
         setStats((prev) => ({ ...prev, struktur: data.length })),
       )
+      .catch(() =>
+        setError('Gagal memuat data struktur organisasi.'),
+      )
       .finally(() => setStrukturLoading(false))
 
-    project.get().then((data: Project[]) => {
-      setProjectTerbaru(data.slice(0, 3))
-      setStats((prev) => ({ ...prev, project: data.length }))
-    })
+    project
+      .list()
+      .then((data: Project[]) => {
+        setProjectTerbaru(data.slice(0, 3))
+        setStats((prev) => ({ ...prev, project: data.length }))
+      })
+      .catch(() => setError('Gagal memuat data project.'))
+      .finally(() => setProjectLoading(false))
   }, [])
 
   return (
@@ -34,6 +43,7 @@ export function DashboardPage() {
         <p className="mt-1 text-sm text-stone-500">
           Ringkasan konten website DIGFIN yang sudah masuk.
         </p>
+        {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
@@ -53,7 +63,7 @@ export function DashboardPage() {
         <h2 className="font-display text-lg font-medium text-stone-900">
           Project Terbaru
         </h2>
-        {strukturLoading ? (
+        {strukturLoading || projectLoading ? (
           <div className="mt-4 flex justify-center">
             <Spinner />
           </div>

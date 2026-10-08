@@ -40,16 +40,22 @@ class LoginBruteForceService
     {
         $attemptKey = $this->attemptKey($username, $ip);
         $count = ((int) $this->cache->get($attemptKey, 0)) + 1;
-        $this->cache->put($attemptKey, $count, $this->cooldownFor($count) + 1);
 
         $cooldown = $this->cooldownFor($count);
 
-        if ($cooldown > 0) {
-            $this->cache->put($this->lockKey($username, $ip), now()->addMinutes($cooldown)->getTimestamp(), $cooldown + 1);
-        }
+        // Laravel Cache::put menerima TTL dalam DETIK, sedangkan cooldown di
+        // config dinyatakan dalam MENIT. Jendela bawah 5 menit dibuat agar
+        // percobaan "lambat" tidak lolos hanya karena counter kedaluwarsa.
+        $attemptTtlSeconds = max($cooldown * 60, 300);
+        $this->cache->put($attemptKey, $count, $attemptTtlSeconds);
 
-        $attemptsWindow = max($this->config['max_attempts'], 1);
-        $this->cache->put($this->attemptTimestampsKey($username, $ip), $count, $attemptsWindow);
+        if ($cooldown > 0) {
+            $this->cache->put(
+                $this->lockKey($username, $ip),
+                now()->addMinutes($cooldown)->getTimestamp(),
+                $cooldown * 60,
+            );
+        }
 
         $this->logger->log('LOGIN_FAILED', request(), [
             'username' => $username,
@@ -67,7 +73,6 @@ class LoginBruteForceService
     {
         $this->cache->forget($this->attemptKey($username, $ip));
         $this->cache->forget($this->lockKey($username, $ip));
-        $this->cache->forget($this->attemptTimestampsKey($username, $ip));
     }
 
     public function cooldownFor(int $count): int
@@ -149,10 +154,5 @@ class LoginBruteForceService
     private function lockKey(string $username, string $ip): string
     {
         return 'security.login.lock_until:'.md5($ip.'|'.$username);
-    }
-
-    private function attemptTimestampsKey(string $username, string $ip): string
-    {
-        return 'security.login.timestamps:'.md5($ip.'|'.$username);
     }
 }

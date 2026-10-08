@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { password } from '../../api'
-import { getErrorMessage } from '../../api/client'
+import { getErrorFields, getErrorMessage } from '../../api/client'
 import { useAuth } from '../../hooks/useAuth'
 import { Alert } from '../../components/ui/Alert'
 import { Button } from '../../components/ui/Button'
@@ -20,12 +20,14 @@ export function ChangePasswordPage() {
   const [newPassword, setNewPassword] = useState('')
   const [confirm, setConfirm] = useState('')
   const [error, setError] = useState<string | null>(null)
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({})
   const [success, setSuccess] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
     setError(null)
+    setFieldErrors({})
     setSuccess(null)
 
     if (newPassword !== confirm) {
@@ -48,6 +50,7 @@ export function ChangePasswordPage() {
       await refresh()
       navigate('/admin', { replace: true })
     } catch (err) {
+      setFieldErrors(getErrorFields(err))
       setError(getErrorMessage(err, 'Gagal mengganti password. Silakan coba lagi.'))
     } finally {
       setSubmitting(false)
@@ -77,6 +80,7 @@ export function ChangePasswordPage() {
           value={currentPassword}
           onChange={(e) => setCurrentPassword(e.target.value)}
           autoComplete="current-password"
+          error={fieldErrors.current_password?.[0]}
           required
         />
         <Input
@@ -86,6 +90,7 @@ export function ChangePasswordPage() {
           value={newPassword}
           onChange={(e) => setNewPassword(e.target.value)}
           autoComplete="new-password"
+          error={fieldErrors.new_password?.[0]}
           required
         />
         <Input

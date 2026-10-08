@@ -21,15 +21,28 @@ class ProfilController extends Controller
 
     public function update(ProfilRequest $request): JsonResponse
     {
-        $profil = Profil::updateOrCreate(['id' => 1], $request->only([
+        $data = $request->only([
             'visi',
             'misi',
             'tujuan',
-        ]));
+            'visi_bulat',
+            'misi_bulat',
+            'tujuan_bulat',
+        ]);
+
+        // Baris tunggal (baca publik memakai `first()`), jadi jangan
+        // meng-hardcode id=1 — pakai baris yang ada atau buat baru.
+        $profil = Profil::first();
+
+        if ($profil) {
+            $profil->update($data);
+        } else {
+            $profil = Profil::create($data);
+        }
 
         return response()->json([
             'message' => 'Profil berhasil diperbarui',
-            'data' => new ProfilResource($profil),
+            'data' => new ProfilResource($profil->refresh()),
         ]);
     }
 }

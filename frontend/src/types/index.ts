@@ -3,6 +3,9 @@ export interface Profil {
   visi: string
   misi: string
   tujuan: string
+  visi_bulat: boolean
+  misi_bulat: boolean
+  tujuan_bulat: boolean
 }
 
 export interface Struktur {
@@ -40,7 +43,6 @@ export interface Admin {
   id: number
   username: string
   nama: string
-  role: string
   must_change_password: boolean
 }
 

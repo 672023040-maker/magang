@@ -20,6 +20,9 @@ class ProfilRequest extends FormRequest
             'visi' => ['required', 'string'],
             'misi' => ['required', 'string'],
             'tujuan' => ['required', 'string'],
+            'visi_bulat' => ['sometimes', 'boolean'],
+            'misi_bulat' => ['sometimes', 'boolean'],
+            'tujuan_bulat' => ['sometimes', 'boolean'],
         ];
     }
 }

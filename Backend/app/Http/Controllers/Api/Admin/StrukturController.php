@@ -39,7 +39,14 @@ class StrukturController extends Controller
             }
         }
 
-        $struktur = StrukturOrganisasi::create($data);
+        try {
+            $struktur = StrukturOrganisasi::create($data);
+        } catch (\Throwable $e) {
+            // Batal simpan — jangan tinggalkan file yatim di disk.
+            $this->deleteFoto($data['foto'] ?? null);
+
+            throw $e;
+        }
 
         return response()->json([
             'message' => 'Data struktur berhasil ditambahkan',
@@ -53,19 +60,34 @@ class StrukturController extends Controller
 
         $data = $request->only(['nama', 'jabatan', 'email']);
 
+        // File baru dijajal & disimpan dulu. Kalau ditolak, 422 tanpa merubah
+        // apa pun di DB (file/foto lama tetap utuh).
+        $newFoto = null;
+
         if ($request->hasFile('foto')) {
             try {
-                $data['foto'] = $this->storeFoto($request);
+                $newFoto = $this->storeFoto($request);
             } catch (UploadRejectedException $e) {
                 return response()->json(['message' => $e->getMessage()], 422);
             }
-
-            if ($struktur->foto) {
-                Storage::disk('public')->delete($struktur->foto);
-            }
         }
 
-        $struktur->update($data);
+        $oldFoto = $struktur->foto;
+
+        try {
+            if ($newFoto) {
+                $data['foto'] = $newFoto;
+            }
+
+            $struktur->update($data);
+        } catch (\Throwable $e) {
+            $this->deleteFoto($newFoto);
+
+            throw $e;
+        }
+
+        // DB sukses — baru hapus foto lama yang digantikan.
+        $this->deleteFoto($oldFoto);
 
         return response()->json([
             'message' => 'Data struktur berhasil diperbarui',
@@ -86,6 +108,13 @@ class StrukturController extends Controller
         return response()->json([
             'message' => 'Data struktur berhasil dihapus',
         ]);
+    }
+
+    private function deleteFoto(?string $path): void
+    {
+        if ($path) {
+            Storage::disk('public')->delete($path);
+        }
     }
 
     private function storeFoto(StrukturRequest $request): string

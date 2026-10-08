@@ -12,6 +12,7 @@ use App\Services\Security\SecurityLogger;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -52,11 +53,32 @@ class AuthController extends Controller
         $this->bruteForce->registerSuccess($username, $ip);
 
         $maxDevices = max((int) config('security.max_devices'), 1);
-        $activeDevices = $this->devices->activeDeviceCount($admin);
 
-        if ($activeDevices >= $maxDevices) {
+        // Lock baris admin agar dua login paralel dari device berbeda tidak
+        // bisa sama-sama lolos melewati batas perangkat. (SQLite mengabaikan
+        // FOR UPDATE, namun tetap aman karena menulis serial.)
+        $result = DB::transaction(function () use ($admin, $maxDevices, $request): array {
+            Admin::whereKey($admin->getKey())->lockForUpdate()->first();
+
+            $activeDevices = $this->devices->activeDeviceCount($admin);
+
+            if ($activeDevices >= $maxDevices) {
+                return ['allowed' => false, 'active_devices' => $activeDevices];
+            }
+
+            Auth::guard('admin')->login($admin);
+            $request->session()->regenerate();
+
+            $this->devices->createForSession($admin, $request->session()->getId(), $request);
+
+            return ['allowed' => true, 'active_devices' => $activeDevices];
+        });
+
+        // Counter brute-force baru dibersihkan setelah semua gate lolos —
+        // admin yang terkunci karena batas perangkat bukan "login sukses".
+        if (! $result['allowed']) {
             $this->logger->log('DEVICE_LIMIT_REACHED', $request, [
-                'active_devices' => $activeDevices,
+                'active_devices' => $result['active_devices'],
                 'max_devices' => $maxDevices,
             ], $admin->id);
 
@@ -64,11 +86,6 @@ class AuthController extends Controller
                 'message' => 'Jumlah perangkat aktif telah mencapai batas maksimum.',
             ], 403);
         }
-
-        Auth::guard('admin')->login($admin);
-        $request->session()->regenerate();
-
-        $this->devices->createForSession($admin, $request->session()->getId(), $request);
 
         $admin->forceFill([
             'last_login_at' => now(),

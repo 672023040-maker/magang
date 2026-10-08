@@ -21,11 +21,19 @@ class KontakController extends Controller
 
     public function store(KontakRequest $request): JsonResponse
     {
-        $kontak = Kontak::create($request->only(['email']));
+        // Kontak adalah data singleton (baca publik memakai `first()`).
+        // Simpan selalu ke satu baris yang sama, jangan menumpuk baris baru.
+        $kontak = Kontak::first();
+
+        if ($kontak) {
+            $kontak->update($request->only(['email']));
+        } else {
+            $kontak = Kontak::create($request->only(['email']));
+        }
 
         return response()->json([
             'message' => 'Kontak berhasil disimpan',
-            'data' => new KontakResource($kontak),
+            'data' => new KontakResource($kontak->refresh()),
         ], 201);
     }
 

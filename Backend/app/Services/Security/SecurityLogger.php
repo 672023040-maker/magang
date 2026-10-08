@@ -39,13 +39,18 @@ class SecurityLogger
             ]);
         }
 
-        Log::channel('security')->info($eventType, [
-            'user_id' => $userId,
-            'ip' => $ip,
-            'user_agent' => $userAgent,
-            'details' => $safeDetails,
-            'timestamp' => now()->toDateTimeString(),
-        ]);
+        try {
+            Log::channel('security')->info($eventType, [
+                'user_id' => $userId,
+                'ip' => $ip,
+                'user_agent' => $userAgent,
+                'details' => $safeDetails,
+                'timestamp' => now()->toDateTimeString(),
+            ]);
+        } catch (\Throwable) {
+            // Kegagalan menulis ke file log (disk penuh, permission) tidak
+            // boleh membatalkan request yang sedang berjalan.
+        }
     }
 
     /**

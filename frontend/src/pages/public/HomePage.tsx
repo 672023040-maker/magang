@@ -7,11 +7,8 @@ import { PublicLayout } from '../../components/layout/PublicLayout'
 import { Spinner } from '../../components/ui/Spinner'
 import { useLandingData } from '../../hooks/useLandingData'
 
-const placeholderText =
-  'DIGFIN — Digital Fintech UKSW, unit pengembangan aplikasi yang mengurus seluruh pengembangan aplikasi di lingkungan UKSW.'
-
 export function HomePage() {
-  const { data, loading, error } = useLandingData()
+  const { data, loading, hasError } = useLandingData()
 
   if (loading) {
     return (
@@ -21,20 +18,17 @@ export function HomePage() {
     )
   }
 
-  if (error) {
-    return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-4 px-4 text-center">
-        <p className="max-w-md text-sm leading-relaxed text-stone-600">
-          Gagal terhubung ke server. Data ditampilkan dari contoh statis untuk
-          saat ini.
-        </p>
-        <span className="text-xs text-stone-400">{placeholderText}</span>
-      </div>
-    )
-  }
-
   return (
     <PublicLayout kontak={data.kontak}>
+      {hasError && (
+        <div
+          role="alert"
+          className="bg-red-100/80 px-4 py-2 text-center text-xs text-red-700"
+        >
+          Sebagian data gagal dimuat. Bagian yang tersedia tetap ditampilkan —
+          muat ulang halaman untuk mencoba kembali.
+        </div>
+      )}
       <Hero />
       <div className="h-[0.5px] bg-[#F3EAE1] shadow-none" />
       <ProfilSection profil={data.profil} />

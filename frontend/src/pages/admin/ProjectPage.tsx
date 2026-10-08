@@ -52,14 +52,14 @@ export function ProjectPage() {
 
   const load = () => {
     project
-      .get()
+      .list()
       .then(setItems)
       .catch((err) => setError(getErrorMessage(err, 'Gagal memuat data project.')))
   }
 
   useEffect(() => {
     // Daftar anggota dimuat bersamaan karena form author butuh pilihan.
-    Promise.all([project.get(), struktur.get()])
+    Promise.all([project.list(), struktur.get()])
       .then(([data, memberData]) => {
         setItems(data)
         setMembers(memberData)
@@ -67,6 +67,12 @@ export function ProjectPage() {
       .catch((err) => setError(getErrorMessage(err, 'Gagal memuat data project.')))
       .finally(() => setLoading(false))
   }, [])
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl)
+    }
+  }, [previewUrl])
 
   const resetCover = () => {
     if (previewUrl) URL.revokeObjectURL(previewUrl)

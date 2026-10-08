@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { kontak } from '../../api'
-import { getErrorMessage } from '../../api/client'
+import { getErrorFields, getErrorMessage } from '../../api/client'
 import type { Kontak } from '../../types'
 import { Alert } from '../../components/ui/Alert'
 import { Button } from '../../components/ui/Button'
@@ -21,6 +21,7 @@ export function KontakPage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({})
   const [success, setSuccess] = useState<string | null>(null)
 
   useEffect(() => {
@@ -40,6 +41,7 @@ export function KontakPage() {
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
     setError(null)
+    setFieldErrors({})
     setSuccess(null)
 
     try {
@@ -53,6 +55,7 @@ export function KontakPage() {
         setSuccess('Kontak berhasil disimpan.')
       }
     } catch (err) {
+      setFieldErrors(getErrorFields(err))
       setError(getErrorMessage(err, 'Gagal menyimpan kontak.'))
     } finally {
       setSaving(false)
@@ -86,6 +89,7 @@ export function KontakPage() {
           type="email"
           value={form.email}
           onChange={(e) => setForm({ email: e.target.value })}
+          error={fieldErrors.email?.[0]}
           required
         />
 
