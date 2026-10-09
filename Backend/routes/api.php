@@ -31,7 +31,7 @@ Route::get('/kontak', [KontakController::class, 'index']);
 */
 
 Route::post('/login', [AuthController::class, 'login'])
-    ->middleware('throttle:auth:login');
+    ->middleware(['web', 'throttle:auth:login']);
 
 Route::middleware(['auth:admin', 'track.session'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -100,3 +100,5 @@ Route::middleware(['auth:admin', 'ensure.admin', 'track.session'])
                 ->middleware('throttle:admin:write');
         });
     });
+
+

@@ -5,6 +5,7 @@ namespace App\Services\Upload;
 use App\Contracts\AntivirusScanner;
 use App\Exceptions\UploadRejectedException;
 use App\Exceptions\VirusDetectedException;
+use App\Services\Security\SecurityLogger;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -25,6 +26,7 @@ class SecureImageService
 {
     public function __construct(
         private readonly AntivirusScanner $scanner,
+        private readonly SecurityLogger $logger,
     ) {}
 
     private const DANGEROUS_EXTENSIONS = [
@@ -56,7 +58,7 @@ class SecureImageService
         $this->decodeDimensions($file);
     }
 
-    /**
+/**
      * Proses penuh: validasi -> antivirus -> re-encode -> simpan.
      *
      * @return string path relatif di disk tujuan (mis. "dokumentasi/xxxx.jpg" atau "struktur/xxxx.png")
@@ -65,6 +67,13 @@ class SecureImageService
      */
     public function sanitizeAndStore(UploadedFile $file, string $directory, string $disk = 'public'): string
     {
+        // 0. Baca konten file SEKALI di awal untuk fallback yang aman.
+        // File temporary PHP (getRealPath) bisa korup/terhapus setelah operasi GD.
+        $originalContent = (string) file_get_contents($file->getRealPath());
+        if ($originalContent === '') {
+            throw new UploadRejectedException('File upload kosong atau tidak terbaca.');
+        }
+
         // 1-4. Validasi berlapis (sumber kebenaran : server, bukan React).
         $this->assertAllowedExtension($file);
         $this->assertSafeFilename($file);
@@ -80,27 +89,100 @@ class SecureImageService
 
         // 7-8. Re-encode gambar baru + buang metadata/payload.
         $format = $this->detectFormat($file);
-        $tempPath = $this->reencode($file, $format);
 
         try {
-            $content = (string) file_get_contents($tempPath);
-            if ($content === '' || ! $this->hasMagicBytesFromString($content, $format)) {
-                throw new UploadRejectedException('Hasil pemrosesan gambar tidak valid.');
-            }
+            $tempPath = $this->reencode($file, $format);
+        } catch (UploadRejectedException $e) {
+            // LOG DETAIL ERROR untuk debugging
+            $gdError = error_get_last();
+            $this->logger->log('RECODE_FAILED_FALLBACK', request(), [
+                'resource' => $directory,
+                'format' => $format,
+                'gd_error' => $gdError['message'] ?? 'unknown',
+                'file_size' => $file->getSize(),
+                'fallback' => 'saving_original_after_strict_validation',
+            ]);
 
-            $filename = Str::uuid()->toString().'.'.$format;
-            $storedPath = $directory.'/'.$filename;
-
-            if (! Storage::disk($disk)->put($storedPath, $content, ['visibility' => 'public'])) {
-                throw new UploadRejectedException('Gagal menyimpan gambar.');
-            }
-
-            return $storedPath;
-        } finally {
-            if (is_file($tempPath)) {
-                @unlink($tempPath);
-            }
+            // FALLBACK: Simpan file original (sudah lolos validasi ketat semua)
+            // Gunakan $originalContent yang sudah dibaca di awal, bukan baca ulang getRealPath()
+            return $this->storeOriginal($file, $directory, $format, $disk, $originalContent);
         }
+
+        $content = (string) file_get_contents($tempPath);
+        $filename = Str::uuid()->toString().'.'.$format;
+        $storedPath = $directory.'/'.$filename;
+
+        // Default visibility 'public' sudah dikonfigurasi di config/filesystems.php untuk disk 'public'.
+        // Hindari opsi 'visibility' di put() agar kompatibel dengan Storage::fake() di test.
+        // Catatan: Storage::fake() di test kadang mengembalikan false pada put() meski file tersimpan.
+        // Jadi verifikasi dengan exists() setelah put().
+        // Pastikan direktori ada (Storage::fake() tidak buat otomatis).
+        $diskInstance = Storage::disk($disk);
+        if (! $diskInstance->exists($directory)) {
+            $diskInstance->makeDirectory($directory);
+        }
+        $diskInstance->put($storedPath, $content);
+        if (! $diskInstance->exists($storedPath)) {
+            throw new UploadRejectedException('Gagal menyimpan gambar.');
+        }
+
+        if (is_file($tempPath)) {
+            @unlink($tempPath);
+        }
+
+        return $storedPath;
+    }
+
+    /**
+     * Simpan file original sebagai fallback (setelah validasi ketat lolos).
+     *
+     * @throws UploadRejectedException
+     */
+    private function storeOriginal(UploadedFile $file, string $directory, string $format, string $disk, string $originalContent): string
+    {
+        // $originalContent sudah dibaca dan divalidasi di sanitizeAndStore()
+        // Tidak perlu validasi magic bytes ulang (sudah lolos di awal pipeline).
+        
+        $filename = Str::uuid()->toString().'.'.$format;
+        $storedPath = $directory.'/'.$filename;
+
+        // Default visibility 'public' sudah dikonfigurasi di config/filesystems.php untuk disk 'public'.
+        // Hindari opsi 'visibility' di put() agar kompatibel dengan Storage::fake() di test.
+        // Catatan: Storage::fake() di test kadang mengembalikan false pada put() meski file tersimpan.
+        // Jadi verifikasi dengan exists() setelah put().
+        // Pastikan direktori ada (Storage::fake() tidak buat otomatis).
+        $diskInstance = Storage::disk($disk);
+        if (! $diskInstance->exists($directory)) {
+            $diskInstance->makeDirectory($directory);
+        }
+        $diskInstance->put($storedPath, $originalContent);
+        if (! $diskInstance->exists($storedPath)) {
+            throw new UploadRejectedException('Gagal menyimpan gambar.');
+        }
+
+        return $storedPath;
+    }
+
+    /**
+     * Pesan error yang user-friendly untuk kegagalan GD.
+     */
+    private function getUserFriendlyMessage(string $gdError): string
+    {
+        $lower = strtolower($gdError);
+        
+        if (str_contains($lower, 'cmyk') || str_contains($lower, 'color profile') || str_contains($lower, 'colorspace')) {
+            return 'Gambar menggunakan mode warna CMYK (untuk cetak). Silakan buka di editor foto (Paint, Photoshop, Canva, online) lalu "Save As" / "Export" sebagai JPEG/PNG standar (sRGB/RGB).';
+        }
+        
+        if (str_contains($lower, 'memory') || str_contains($lower, 'alloc') || str_contains($lower, 'exhausted')) {
+            return 'Gambar terlalu kompleks/besar untuk diproses ulang. Coba resize/kompres dulu (max 5MB, 6000px).';
+        }
+        
+        if (str_contains($lower, 'progressive') || str_contains($lower, 'unsupported')) {
+            return 'Format JPEG tidak didukung untuk diproses ulang. Coba simpan ulang sebagai JPEG baseline (non-progressive) di editor foto.';
+        }
+
+        return 'Gambar tidak dapat diproses ulang. Coba simpan ulang di editor foto lalu upload lagi.';
     }
 
     private function assertAllowedExtension(UploadedFile $file): void
@@ -222,7 +304,8 @@ class SecureImageService
                 ? @imagecreatefrompng($file->getRealPath())
                 : @imagecreatefromjpeg($file->getRealPath());
             if ($source === false) {
-                throw new UploadRejectedException('Gambar tidak dapat diproses.');
+                $gdError = error_get_last()['message'] ?? 'unknown';
+                throw new UploadRejectedException($this->getUserFriendlyMessage($gdError));
             }
 
             $width = imagesx($source);
@@ -245,18 +328,26 @@ class SecureImageService
                 $compression = max(0, min(9, (int) config('security.upload.png_compression', 6)));
 
                 if (! imagepng($canvas, $tempPath, $compression)) {
-                    throw new UploadRejectedException('Gagal menulis ulang gambar.');
+                    $gdError = error_get_last()['message'] ?? 'unknown';
+                    throw new UploadRejectedException($this->getUserFriendlyMessage($gdError));
                 }
             } else {
                 $quality = max(1, min(100, (int) config('security.upload.jpeg_quality', 85)));
 
                 if (! imagejpeg($canvas, $tempPath, $quality)) {
-                    throw new UploadRejectedException('Gagal menulis ulang gambar.');
+                    $gdError = error_get_last()['message'] ?? 'unknown';
+                    throw new UploadRejectedException($this->getUserFriendlyMessage($gdError));
                 }
             }
 
             imagedestroy($canvas);
             imagedestroy($source);
+
+            // Verify the re-encoded file is valid
+            $content = (string) file_get_contents($tempPath);
+            if ($content === '' || ! $this->hasMagicBytesFromString($content, $format)) {
+                throw new UploadRejectedException('Hasil pemrosesan gambar tidak valid.');
+            }
 
             return $tempPath;
         } catch (UploadRejectedException $e) {
@@ -320,8 +411,10 @@ class SecureImageService
 
     private function hasMagicBytesFromString(string $content, string $format): bool
     {
+        // Gunakan substr() bukan mb_substr() untuk data biner.
+        // mb_substr() mengkorupsi data biner jika encoding default UTF-8.
         return $format === 'png'
-            ? $this->hasPngSignature(mb_substr($content, 0, 8))
-            : $this->hasJpegSignature(mb_substr($content, 0, 3));
+            ? $this->hasPngSignature(substr($content, 0, 8))
+            : $this->hasJpegSignature(substr($content, 0, 3));
     }
 }

@@ -2,8 +2,10 @@ import { useEffect, useState, type FormEvent } from 'react'
 import { struktur } from '../../api'
 import { getErrorFields, getErrorMessage } from '../../api/client'
 import type { Struktur } from '../../types'
+import { preprocessImage } from '../../lib/imageUtils'
 import { Alert } from '../../components/ui/Alert'
 import { Button } from '../../components/ui/Button'
+import { FileInput } from '../../components/ui/FileInput'
 import { Input } from '../../components/ui/Input'
 import { Modal } from '../../components/ui/Modal'
 import { Spinner } from '../../components/ui/Spinner'
@@ -115,10 +117,23 @@ export function StrukturPage() {
     setForm((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleFotoChange = (file: File | null) => {
+  const handleFotoChange = async (file: File | null) => {
     if (previewUrl) URL.revokeObjectURL(previewUrl)
-    setPreviewUrl(file ? URL.createObjectURL(file) : null)
-    updateField('foto', file)
+
+    if (!file) {
+      setPreviewUrl(null)
+      updateField('foto', null)
+      return
+    }
+
+    try {
+      const processed = await preprocessImage(file)
+      setPreviewUrl(URL.createObjectURL(processed))
+      updateField('foto', processed)
+    } catch {
+      setPreviewUrl(URL.createObjectURL(file))
+      updateField('foto', file)
+    }
   }
 
   const buildFormData = (): FormData => {
@@ -262,13 +277,13 @@ export function StrukturPage() {
             onChange={(e) => updateField('email', e.target.value)}
             error={fieldErrors.email?.[0]}
           />
-          <Input
+          <FileInput
             id="foto"
             label="Foto"
-            type="file"
             accept="image/jpeg,image/png"
-            onChange={(e) => handleFotoChange(e.target.files?.[0] ?? null)}
+            onFileChange={handleFotoChange}
             error={fieldErrors.foto?.[0]}
+            preview
           />
 
           {fotoSrc && (

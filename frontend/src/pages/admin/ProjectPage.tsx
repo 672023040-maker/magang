@@ -2,9 +2,11 @@ import { useEffect, useState, type FormEvent } from 'react'
 import { project, struktur } from '../../api'
 import { getErrorFields, getErrorMessage } from '../../api/client'
 import type { Project, StatusProject, Struktur } from '../../types'
+import { preprocessImage } from '../../lib/imageUtils'
 import { Badge } from '../../components/ui/Badge'
 import { Alert } from '../../components/ui/Alert'
 import { Button } from '../../components/ui/Button'
+import { FileInput } from '../../components/ui/FileInput'
 import { Input } from '../../components/ui/Input'
 import { Modal } from '../../components/ui/Modal'
 import { Select } from '../../components/ui/Select'
@@ -128,10 +130,23 @@ export function ProjectPage() {
     setForm((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleCoverChange = (file: File | null) => {
+  const handleCoverChange = async (file: File | null) => {
     if (previewUrl) URL.revokeObjectURL(previewUrl)
-    setPreviewUrl(file ? URL.createObjectURL(file) : null)
-    setForm((prev) => ({ ...prev, file_gambar: file }))
+
+    if (!file) {
+      setPreviewUrl(null)
+      setForm((prev) => ({ ...prev, file_gambar: null }))
+      return
+    }
+
+    try {
+      const processed = await preprocessImage(file)
+      setPreviewUrl(URL.createObjectURL(processed))
+      setForm((prev) => ({ ...prev, file_gambar: processed }))
+    } catch {
+      setPreviewUrl(URL.createObjectURL(file))
+      setForm((prev) => ({ ...prev, file_gambar: file }))
+    }
   }
 
   const buildFormData = (): FormData => {
@@ -332,13 +347,13 @@ export function ProjectPage() {
             error={fieldErrors.tgl_dibuat?.[0]}
           />
 
-          <Input
+          <FileInput
             id="file_gambar"
             label="Gambar Sampul"
-            type="file"
             accept="image/jpeg,image/png"
-            onChange={(e) => handleCoverChange(e.target.files?.[0] ?? null)}
+            onFileChange={handleCoverChange}
             error={fieldErrors['dokumentasi.0.file_gambar']?.[0]}
+            preview
           />
 
           {coverSrc && (

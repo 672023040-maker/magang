@@ -44,7 +44,10 @@ class ProjectController extends Controller
         try {
             $paths = $this->storeAllFiles($request);
         } catch (UploadRejectedException $e) {
-            return response()->json(['message' => $e->getMessage()], 422);
+            return response()->json([
+                'message' => $e->getMessage(),
+                'errors' => ['dokumentasi.0.file_gambar' => [$e->getMessage()]],
+            ], 422);
         }
 
         try {
@@ -87,7 +90,10 @@ class ProjectController extends Controller
         try {
             $paths = $this->storeAllFiles($request);
         } catch (UploadRejectedException $e) {
-            return response()->json(['message' => $e->getMessage()], 422);
+            return response()->json([
+                'message' => $e->getMessage(),
+                'errors' => ['dokumentasi.0.file_gambar' => [$e->getMessage()]],
+            ], 422);
         }
 
         $oldPaths = [];

@@ -35,7 +35,10 @@ class StrukturController extends Controller
             try {
                 $data['foto'] = $this->storeFoto($request);
             } catch (UploadRejectedException $e) {
-                return response()->json(['message' => $e->getMessage()], 422);
+                return response()->json([
+                    'message' => $e->getMessage(),
+                    'errors' => ['foto' => [$e->getMessage()]],
+                ], 422);
             }
         }
 
@@ -68,7 +71,10 @@ class StrukturController extends Controller
             try {
                 $newFoto = $this->storeFoto($request);
             } catch (UploadRejectedException $e) {
-                return response()->json(['message' => $e->getMessage()], 422);
+                return response()->json([
+                    'message' => $e->getMessage(),
+                    'errors' => ['foto' => [$e->getMessage()]],
+                ], 422);
             }
         }
 
