@@ -12,7 +12,7 @@ return new class extends Migration
 
         if ($driver === 'pgsql') {
             DB::statement('ALTER TABLE project DROP CONSTRAINT IF EXISTS project_status_check');
-            DB::statement("ALTER TABLE project ALTER COLUMN status TYPE varchar(255)");
+            DB::statement('ALTER TABLE project ALTER COLUMN status TYPE varchar(255)');
         }
 
         // Migrasi data lama: berjalan -> unpublish, selesai -> publish

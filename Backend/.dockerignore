@@ -1,0 +1,30 @@
+.git
+.github
+.gitignore
+.gitattributes
+
+.env
+.env.*
+!.env.example
+
+vendor
+node_modules
+
+storage/logs/*
+storage/framework/cache/data/*
+storage/framework/sessions/*
+storage/framework/views/*
+!storage/logs/.gitignore
+!storage/framework/cache/.gitignore
+!storage/framework/sessions/.gitignore
+!storage/framework/views/.gitignore
+
+tests
+.phpunit.result.cache
+.phpunit.cache
+
+# Catatan: folder docker/ dan Dockerfile tetap harus ikut konteks build karena
+# Dockerfile menyalin docker/entrypoint.sh.
+.dockerignore
+
+*.md

@@ -28,9 +28,11 @@ export function DashboardPage() {
 
     project
       .list()
-      .then((data: Project[]) => {
-        setProjectTerbaru(data.slice(0, 3))
-        setStats((prev) => ({ ...prev, project: data.length }))
+      .then((res) => {
+        // Halaman 1 sudah urut terbaru; total diambil dari meta agar tetap
+        // akurat walau daftar admin dibatasi per halaman.
+        setProjectTerbaru(res.data.slice(0, 3))
+        setStats((prev) => ({ ...prev, project: res.meta.total }))
       })
       .catch(() => setError('Gagal memuat data project.'))
       .finally(() => setProjectLoading(false))

@@ -1,12 +1,13 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { project, struktur } from '../../api'
 import { getErrorFields, getErrorMessage } from '../../api/client'
-import type { Project, StatusProject, Struktur } from '../../types'
+import type { PaginationMeta, Project, StatusProject, Struktur } from '../../types'
 import { Badge } from '../../components/ui/Badge'
 import { Alert } from '../../components/ui/Alert'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
 import { Modal } from '../../components/ui/Modal'
+import { Pagination } from '../../components/ui/Pagination'
 import { Select } from '../../components/ui/Select'
 import { Spinner } from '../../components/ui/Spinner'
 import { Textarea } from '../../components/ui/Textarea'
@@ -31,6 +32,7 @@ const emptyForm: ProjectForm = {
 
 export function ProjectPage() {
   const [items, setItems] = useState<Project[]>([])
+  const [meta, setMeta] = useState<PaginationMeta | null>(null)
   const [members, setMembers] = useState<Struktur[]>([])
   const [loading, setLoading] = useState(true)
   const [modalOpen, setModalOpen] = useState(false)
@@ -50,18 +52,30 @@ export function ProjectPage() {
     setSuccess(null)
   }
 
-  const load = () => {
-    project
-      .list()
-      .then(setItems)
+  const load = (targetPage = meta?.current_page ?? 1) => {
+    setLoading(true)
+    return project
+      .list(targetPage)
+      .then((res) => {
+        setItems(res.data)
+        setMeta(res.meta)
+      })
       .catch((err) => setError(getErrorMessage(err, 'Gagal memuat data project.')))
+      .finally(() => setLoading(false))
+  }
+
+  const handlePageChange = (page: number) => {
+    if (page === (meta?.current_page ?? 1)) return
+    resetMessages()
+    load(page)
   }
 
   useEffect(() => {
     // Daftar anggota dimuat bersamaan karena form author butuh pilihan.
-    Promise.all([project.list(), struktur.get()])
+    Promise.all([project.list(1), struktur.get()])
       .then(([data, memberData]) => {
-        setItems(data)
+        setItems(data.data)
+        setMeta(data.meta)
         setMembers(memberData)
       })
       .catch((err) => setError(getErrorMessage(err, 'Gagal memuat data project.')))
@@ -116,7 +130,9 @@ export function ProjectPage() {
       await project.remove(item.id)
       setSuccess('Project berhasil dihapus.')
       setError(null)
-      load()
+      // Bila baris terakhir di halaman ini dihapus, mundur satu halaman.
+      const currentPage = meta?.current_page ?? 1
+      load(items.length === 1 && currentPage > 1 ? currentPage - 1 : currentPage)
     } catch (err) {
       setError(getErrorMessage(err, 'Gagal menghapus project.'))
     } finally {
@@ -269,6 +285,14 @@ export function ProjectPage() {
             </tbody>
           </table>
         </div>
+      )}
+
+      {!loading && meta && (
+        <Pagination
+          meta={meta}
+          onPageChange={handlePageChange}
+          disabled={deletingId !== null}
+        />
       )}
 
       <Modal

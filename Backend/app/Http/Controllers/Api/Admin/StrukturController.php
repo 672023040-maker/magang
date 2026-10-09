@@ -22,8 +22,10 @@ class StrukturController extends Controller
 
     public function index(): AnonymousResourceCollection
     {
+        $perPage = max((int) config('security.admin_list_per_page', 15), 1);
+
         return StrukturResource::collection(
-            StrukturOrganisasi::latest()->get()
+            StrukturOrganisasi::latest()->paginate($perPage)
         );
     }
 

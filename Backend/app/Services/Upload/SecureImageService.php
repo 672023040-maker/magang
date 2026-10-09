@@ -34,6 +34,7 @@ class SecureImageService
     ];
 
     private const PNG_SIGNATURE = "\x89PNG\r\n\x1a\n";
+
     private const JPEG_SIGNATURE = "\xFF\xD8\xFF";
 
     private const FORMAT_EXTENSION = [

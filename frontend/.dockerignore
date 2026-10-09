@@ -1,0 +1,13 @@
+.git
+.gitignore
+
+node_modules
+dist
+
+.vite
+vite.log
+
+# Catatan: nginx.conf harus ikut konteks build karena tahap akhir menyalinnya.
+.dockerignore
+
+*.md

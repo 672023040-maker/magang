@@ -72,3 +72,29 @@ export interface ApiResponse<T> {
   message?: string
   data: T
 }
+
+export interface PaginationLink {
+  url: string | null
+  label: string
+  active: boolean
+}
+
+export interface PaginationMeta {
+  current_page: number
+  from: number | null
+  last_page: number
+  per_page: number
+  to: number | null
+  total: number
+}
+
+export interface Paginated<T> {
+  data: T[]
+  links: {
+    first: string | null
+    last: string | null
+    prev: string | null
+    next: string | null
+  }
+  meta: PaginationMeta
+}

@@ -24,8 +24,10 @@ class ProjectController extends Controller
 
     public function index(): AnonymousResourceCollection
     {
+        $perPage = max((int) config('security.admin_list_per_page', 15), 1);
+
         return ProjectResource::collection(
-            Project::with('dokumentasi', 'author')->latest()->get()
+            Project::with('dokumentasi', 'author')->latest()->paginate($perPage)
         );
     }
 
@@ -200,7 +202,7 @@ class ProjectController extends Controller
     }
 
     /**
-     * @param list<string|null> $paths
+     * @param  list<string|null>  $paths
      */
     private function deletePaths(array $paths): void
     {

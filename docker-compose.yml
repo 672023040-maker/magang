@@ -1,0 +1,80 @@
+# Stack produksi mandiri untuk DIGFIN (backend Laravel + SPA React).
+#
+# Jalankan:
+#   1) copy .env.docker.example ke .env.docker lalu isi rahasianya
+#   2) docker compose --env-file .env.docker up -d --build
+#   3) sekali saja (buat admin awal):
+#      docker compose --env-file .env.docker run --rm app php artisan digfin:init-admin
+#
+# Frontend diakses di http://localhost:8080 (port bisa diubah via WEB_PORT).
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-digfin}
+      POSTGRES_USER: ${DB_USERNAME:-digfin}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-secret}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-digfin} -d ${DB_DATABASE:-digfin}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  app:
+    build:
+      context: ./Backend
+    # Semua variabel aplikasi (APP_KEY, DB_*, REDIS_*, dll.) dibaca dari sini.
+    env_file: .env.docker
+    volumes:
+      - backend_storage:/var/www/html/storage
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "php -r \"exit(@fsockopen('127.0.0.1', 9000) ? 0 : 1);\""]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build:
+      context: ./frontend
+      args:
+        VITE_ADMIN_PATH: ${VITE_ADMIN_PATH:-/digfin-secure-panel}
+    ports:
+      - "${WEB_PORT:-8080}:80"
+    volumes:
+      # Read-only: nginx hanya membaca file upload untuk melayani /storage/.
+      - backend_storage:/var/www/html/storage:ro
+    depends_on:
+      - app
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost/up"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  db_data:
+  redis_data:
+  backend_storage:

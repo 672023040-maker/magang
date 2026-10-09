@@ -1,11 +1,12 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { struktur } from '../../api'
 import { getErrorFields, getErrorMessage } from '../../api/client'
-import type { Struktur } from '../../types'
+import type { PaginationMeta, Struktur } from '../../types'
 import { Alert } from '../../components/ui/Alert'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
 import { Modal } from '../../components/ui/Modal'
+import { Pagination } from '../../components/ui/Pagination'
 import { Spinner } from '../../components/ui/Spinner'
 
 interface StrukturForm {
@@ -24,6 +25,7 @@ const emptyForm: StrukturForm = {
 
 export function StrukturPage() {
   const [items, setItems] = useState<Struktur[]>([])
+  const [meta, setMeta] = useState<PaginationMeta | null>(null)
   const [loading, setLoading] = useState(true)
   const [modalOpen, setModalOpen] = useState(false)
   const [editing, setEditing] = useState<Struktur | null>(null)
@@ -54,17 +56,31 @@ export function StrukturPage() {
     }
   }, [previewUrl])
 
-  const load = () => {
-    struktur
-      .get()
-      .then(setItems)
+  const load = (targetPage = meta?.current_page ?? 1) => {
+    setLoading(true)
+    return struktur
+      .list(targetPage)
+      .then((res) => {
+        setItems(res.data)
+        setMeta(res.meta)
+      })
       .catch((err) => setError(getErrorMessage(err, 'Gagal memuat data struktur.')))
+      .finally(() => setLoading(false))
+  }
+
+  const handlePageChange = (page: number) => {
+    if (page === (meta?.current_page ?? 1)) return
+    resetMessages()
+    load(page)
   }
 
   useEffect(() => {
     struktur
-      .get()
-      .then(setItems)
+      .list(1)
+      .then((res) => {
+        setItems(res.data)
+        setMeta(res.meta)
+      })
       .catch((err) => setError(getErrorMessage(err, 'Gagal memuat data struktur.')))
       .finally(() => setLoading(false))
   }, [])
@@ -103,7 +119,9 @@ export function StrukturPage() {
       await struktur.remove(item.id)
       setSuccess('Data struktur berhasil dihapus.')
       setError(null)
-      load()
+      // Bila baris terakhir di halaman ini dihapus, mundur satu halaman.
+      const currentPage = meta?.current_page ?? 1
+      load(items.length === 1 && currentPage > 1 ? currentPage - 1 : currentPage)
     } catch (err) {
       setError(getErrorMessage(err, 'Gagal menghapus data struktur.'))
     } finally {
@@ -225,6 +243,14 @@ export function StrukturPage() {
             </tbody>
           </table>
         </div>
+      )}
+
+      {!loading && meta && (
+        <Pagination
+          meta={meta}
+          onPageChange={handlePageChange}
+          disabled={deletingId !== null}
+        />
       )}
 
       <Modal

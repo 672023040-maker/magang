@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\Admin\ProfilController as AdminProfilController;
 use App\Http\Controllers\Api\Admin\ProjectController as AdminProjectController;
 use App\Http\Controllers\Api\Admin\StrukturController as AdminStrukturController;
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\HealthController;
 use App\Http\Controllers\Api\Public\KontakController;
 use App\Http\Controllers\Api\Public\ProfilController;
 use App\Http\Controllers\Api\Public\ProjectController;
@@ -23,6 +24,11 @@ Route::get('/profil', [ProfilController::class, 'index']);
 Route::get('/struktur', [StrukturController::class, 'index']);
 Route::get('/project', [ProjectController::class, 'index']);
 Route::get('/kontak', [KontakController::class, 'index']);
+
+/*
+ * Readiness probe untuk orkestrator/monitoring (booleans saja, tanpa detail).
+ */
+Route::get('/health', HealthController::class);
 
 /*
 |--------------------------------------------------------------------------

@@ -109,6 +109,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Pagination
+    |--------------------------------------------------------------------------
+    |
+    | Jumlah baris per halaman untuk daftar admin (project & struktur). Batasi
+    | agar endpoint list tidak pernah memuat seluruh tabel sekaligus.
+    |
+    */
+
+    'admin_list_per_page' => (int) env('ADMIN_LIST_PER_PAGE', 15),
+
+    /*
+    |--------------------------------------------------------------------------
     | Rate Limit (request / menit)
     |--------------------------------------------------------------------------
     |

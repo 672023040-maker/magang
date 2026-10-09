@@ -25,7 +25,17 @@ return [
 
     'allowed_headers' => ['Content-Type', 'Accept', 'X-Requested-With', 'X-XSRF-TOKEN', 'X-CSRF-TOKEN', 'Authorization'],
 
-    'exposed_headers' => [],
+    // Tanpa daftar ini, browser menyembunyikan header tersebut dari JS sehingga
+    // frontend tidak bisa menampilkan sisa kuota / waktu tunggu rate limit.
+    'exposed_headers' => [
+        'Retry-After',
+        'X-RateLimit-Limit',
+        'X-RateLimit-Remaining',
+        'X-RateLimit-Reset',
+        'RateLimit-Limit',
+        'RateLimit-Remaining',
+        'RateLimit-Reset',
+    ],
 
     'max_age' => 0,
 

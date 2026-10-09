@@ -7,3 +7,6 @@
 7_dfd_level_1.png
 "flowchart digifin website.png"
 flowchart digifin website.png
+
+# Rahasia konfigurasi Docker (jangan pernah di-commit).
+.env.docker

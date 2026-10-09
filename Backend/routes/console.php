@@ -9,6 +9,13 @@ Schedule::command('sessions:cleanup-history --days=30')
     ->withoutOverlapping()
     ->runInBackground();
 
+Schedule::command('digfin:backup')
+    ->dailyAt('02:30')
+    ->timezone('Asia/Jakarta')
+    ->withoutOverlapping()
+    ->runInBackground()
+    ->onOneServer();
+
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');

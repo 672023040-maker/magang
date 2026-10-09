@@ -3,6 +3,7 @@
 use App\Http\Middleware\EnsureAdminRole;
 use App\Http\Middleware\EnsurePasswordChanged;
 use App\Http\Middleware\SecurityHeaders;
+use App\Http\Middleware\StandardRateLimitHeaders;
 use App\Http\Middleware\TrackAdminSession;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
@@ -21,6 +22,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Global terdepan: memetakan X-RateLimit-* -> RateLimit-* pada respons
+        // setelah middleware throttle selesai.
+        $middleware->prepend(StandardRateLimitHeaders::class);
+
         $middleware->api(prepend: [
             EnsureFrontendRequestsAreStateful::class,
         ]);

@@ -5,6 +5,7 @@ import type {
   ApiResponse,
   Kontak,
   LoginResponse,
+  Paginated,
   PasswordChangePayload,
   Profil,
   Project,
@@ -51,6 +52,10 @@ export const struktur = {
     client
       .get<ApiResponse<Struktur[]>>('/struktur')
       .then((res) => res.data.data),
+  list: (page = 1) =>
+    client
+      .get<Paginated<Struktur>>(`${adminPath}/struktur`, { params: { page } })
+      .then((res) => res.data),
   create: (data: FormData) =>
     client
       .post<ApiResponse<Struktur>>(`${adminPath}/struktur`, data)
@@ -70,10 +75,10 @@ export const project = {
     client
       .get<ApiResponse<Project[]>>('/project')
       .then((res) => res.data.data),
-  list: () =>
+  list: (page = 1) =>
     client
-      .get<ApiResponse<Project[]>>(`${adminPath}/project`)
-      .then((res) => res.data.data),
+      .get<Paginated<Project>>(`${adminPath}/project`, { params: { page } })
+      .then((res) => res.data),
   create: (data: FormData) =>
     client
       .post<ApiResponse<Project>>(`${adminPath}/project`, data)
