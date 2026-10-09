@@ -1,80 +1,66 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import type { Profil } from '../../types'
 
 interface ProfilSectionProps {
   profil: Profil | null
 }
 
-interface InfoCardProps {
-  label: string
-  number: string
-  text: string
-  bullet?: boolean
-}
+const FALLBACK_VISI =
+  'Menjadi penggerak transformasi digital UKSW melalui pengembangan teknologi dan layanan digital yang inovatif, terintegrasi, efektif, dan berkelanjutan.'
 
-const PLACEHOLDER =
-  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pretium tellus duis convallis tempus leo eu aenean.'
+const FALLBACK_MISI = [
+  'Mengembangkan dan mengelola layanan digital yang mendukung kebutuhan akademik, administrasi, dan operasional UKSW.',
+  'Mendorong inovasi teknologi dan digitalisasi untuk meningkatkan kualitas dan efisiensi layanan universitas.',
+  'Mengintegrasikan sistem dan layanan digital agar dapat memberikan pengalaman pengguna yang mudah, cepat, dan optimal.',
+]
 
-function extractPlainLines(value: string | null | undefined): string {
-  if (!value) return ''
+const FALLBACK_TUJUAN = [
+  'Meningkatkan efektivitas dan efisiensi layanan melalui pemanfaatan teknologi digital.',
+  'Mewujudkan layanan digital yang terintegrasi dan mudah diakses oleh seluruh sivitas akademika.',
+  'Mendukung terciptanya inovasi digital yang sesuai dengan kebutuhan perkembangan UKSW.',
+]
 
-  return value
-    .split(/\r?\n+/)
-    .map((line) => line.replace(/^\s*\d+[.)]\s*/, '').trim())
-    .filter(Boolean)
-    .join('\n')
-}
-
-function toBulletItems(value: string | null | undefined): string[] {
+// Pisahkan teks dari backend menjadi poin-poin, sekaligus membuang penomoran/bullet
+// bawaan (mis. "1. Meningkatkan") agar nomor digambar oleh CSS counter.
+function toListItems(value: string | null | undefined): string[] {
   if (!value) return []
 
   return value
     .split(/\r?\n+/)
-    .map((line) => line.replace(/^\s*(?:[-•*–]\s+)?(?:\d+[.)]\s+)?/, '').trim())
+    .map((line) => line.replace(/^\s*(?:[-•*–]\s+)?(?:\d+[.)]\s*)?/, '').trim())
     .filter(Boolean)
 }
 
-function InfoCard({ label, number, text, bullet = false }: InfoCardProps) {
-  const items = bullet ? toBulletItems(text) : []
+interface ProfilCardProps {
+  number: string
+  title: string
+  children: ReactNode
+  className?: string
+}
 
-  const body =
-    bullet && items.length > 0 ? (
-      <ul className="mt-4 list-disc space-y-2.5 pl-5 text-center text-[18px] leading-relaxed text-stone-600 marker:text-[#dbba99]">
-        {items.map((item, index) => (
-          <li key={`${label}-${index}`}>{item}</li>
-        ))}
-      </ul>
-    ) : (
-      <p className="mt-4 whitespace-pre-line text-center text-[18px] leading-relaxed text-stone-600 [text-wrap:pretty]">
-        {text}
-      </p>
-    )
-
+function ProfilCard({ number, title, children, className = '' }: ProfilCardProps) {
   return (
-    <article className="group relative mx-auto w-full max-w-xs">
-      <div className="rounded-2xl border border-stone-300 bg-white px-6 py-12 text-center shadow-lg shadow-stone-400/30 transition-all duration-300 ease-out group-hover:-translate-y-1.5 group-hover:scale-[1.02] group-hover:border-stone-400 group-hover:bg-stone-100 group-hover:shadow-[0_14px_30px_rgba(0,0,0,0.15)]">
-        <h3 className="font-display text-lg font-bold uppercase tracking-widest text-stone-900 md:text-xl">
-          {label}
-        </h3>
-        <span aria-hidden className="mx-auto mt-2.5 h-px w-8 bg-stone-300" />
-        {body}
-      </div>
-
+    <article
+      className={`relative rounded-[14px] border-t-[3px] border-t-[#C9922B] bg-white px-[26px] pb-[26px] pt-[30px] shadow-[0_2px_10px_rgba(80,60,30,0.10)] transition-[transform,box-shadow] duration-200 ease-out hover:-translate-y-1 hover:shadow-[0_10px_24px_rgba(80,60,30,0.18)] ${className}`}
+    >
       <div
         aria-hidden
-        className="hexagon-badge absolute -right-3 -top-3 z-10 flex h-9 w-9 items-center justify-center bg-stone-900 shadow-lg shadow-stone-900/30 md:-right-4 md:-top-4 md:h-11 md:w-11"
+        className="hexagon-badge absolute -top-[17px] left-1/2 flex h-[34px] w-[36px] -translate-x-1/2 items-center justify-center bg-[#1E1A17] font-medium text-[#F2C14E]"
       >
-        <span className="font-display text-sm font-bold text-white md:text-base">
-          {number}
-        </span>
+        <span className="text-sm">{number}</span>
       </div>
+
+      <h3 className="text-center font-display text-lg font-bold uppercase tracking-[0.2em] text-[#1E1A17]">
+        {title}
+      </h3>
+      <span aria-hidden className="mx-auto mt-2 block h-[2px] w-[36px] bg-[#C9922B]" />
+
+      {children}
     </article>
   )
 }
 
 export function ProfilSection({ profil }: ProfilSectionProps) {
-  const misiText = extractPlainLines(profil?.misi)
-
   const gridRef = useRef<HTMLDivElement>(null)
   const [visible, setVisible] = useState(false)
 
@@ -98,31 +84,18 @@ export function ProfilSection({ profil }: ProfilSectionProps) {
     return () => observer.disconnect()
   }, [])
 
-  const cards: InfoCardProps[] = [
-    {
-      label: 'VISI',
-      number: '1.',
-      text: profil?.visi?.trim() || PLACEHOLDER,
-      bullet: Boolean(profil?.visi?.trim()) && profil?.visi_bulat,
-    },
-    {
-      label: 'MISI',
-      number: '2.',
-      text: misiText || PLACEHOLDER,
-      bullet: misiText !== '' && profil?.misi_bulat,
-    },
-    {
-      label: 'TUJUAN',
-      number: '3.',
-      text: profil?.tujuan?.trim() || PLACEHOLDER,
-      bullet: Boolean(profil?.tujuan?.trim()) && profil?.tujuan_bulat,
-    },
-  ]
+  const visiText = profil?.visi?.trim() || FALLBACK_VISI
+
+  const misiFromApi = toListItems(profil?.misi)
+  const misiItems = misiFromApi.length > 0 ? misiFromApi : FALLBACK_MISI
+
+  const tujuanFromApi = toListItems(profil?.tujuan)
+  const tujuanItems = tujuanFromApi.length > 0 ? tujuanFromApi : FALLBACK_TUJUAN
 
   return (
     <section
       id="profil"
-      className="relative flex min-h-screen w-full flex-col items-center overflow-hidden bg-[#F7F3ED] pt-[30px] pb-20 md:pb-28"
+      className="relative flex min-h-screen w-full flex-col items-center overflow-hidden bg-[#F7F2EA] pt-[30px] pb-20 md:pb-28"
     >
       <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col items-center px-5 md:px-10">
         <h2 className={`text-center font-display text-[clamp(2rem,6vw,4rem)] font-bold uppercase leading-none tracking-tight text-stone-900 ${
@@ -132,13 +105,28 @@ export function ProfilSection({ profil }: ProfilSectionProps) {
         </h2>
         <div aria-hidden className="mt-4 h-px w-24 animate-fade-up bg-stone-400/60" />
 
-        <div
-          ref={gridRef}
-          className="mt-12 grid w-full grid-cols-1 gap-x-6 gap-y-14 md:mt-16 md:grid-cols-3 md:gap-x-8 md:gap-y-0"
-        >
-          {cards.map((card) => (
-            <InfoCard key={card.label} {...card} />
-          ))}
+        <div ref={gridRef} className="profil-grid mt-12 w-full md:mt-16">
+          <ProfilCard number="1" title="Visi" className="profil-card-visi">
+            <p className="mx-auto mt-5 max-w-[520px] text-center text-[18px] leading-[1.7] text-[#4A423B]">
+              {visiText}
+            </p>
+          </ProfilCard>
+
+          <ProfilCard number="2" title="Misi">
+            <ol className="profil-numbered mt-5 text-left text-[18px] text-[#4A423B]">
+              {misiItems.map((item, index) => (
+                <li key={`misi-${index}`}>{item}</li>
+              ))}
+            </ol>
+          </ProfilCard>
+
+          <ProfilCard number="3" title="Tujuan">
+            <ol className="profil-numbered mt-5 text-left text-[18px] text-[#4A423B]">
+              {tujuanItems.map((item, index) => (
+                <li key={`tujuan-${index}`}>{item}</li>
+              ))}
+            </ol>
+          </ProfilCard>
         </div>
       </div>
     </section>
