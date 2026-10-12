@@ -1,35 +1,4 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
-import type { Profil } from '../../types'
-
-interface ProfilSectionProps {
-  profil: Profil | null
-}
-
-const FALLBACK_VISI =
-  'Menjadi penggerak transformasi digital UKSW melalui pengembangan teknologi dan layanan digital yang inovatif, terintegrasi, efektif, dan berkelanjutan.'
-
-const FALLBACK_MISI = [
-  'Mengembangkan dan mengelola layanan digital yang mendukung kebutuhan akademik, administrasi, dan operasional UKSW.',
-  'Mendorong inovasi teknologi dan digitalisasi untuk meningkatkan kualitas dan efisiensi layanan universitas.',
-  'Mengintegrasikan sistem dan layanan digital agar dapat memberikan pengalaman pengguna yang mudah, cepat, dan optimal.',
-]
-
-const FALLBACK_TUJUAN = [
-  'Meningkatkan efektivitas dan efisiensi layanan melalui pemanfaatan teknologi digital.',
-  'Mewujudkan layanan digital yang terintegrasi dan mudah diakses oleh seluruh sivitas akademika.',
-  'Mendukung terciptanya inovasi digital yang sesuai dengan kebutuhan perkembangan UKSW.',
-]
-
-// Pisahkan teks dari backend menjadi poin-poin, sekaligus membuang penomoran/bullet
-// bawaan (mis. "1. Meningkatkan") agar nomor digambar oleh CSS counter.
-function toListItems(value: string | null | undefined): string[] {
-  if (!value) return []
-
-  return value
-    .split(/\r?\n+/)
-    .map((line) => line.replace(/^\s*(?:[-•*–]\s+)?(?:\d+[.)]\s*)?/, '').trim())
-    .filter(Boolean)
-}
 
 interface ProfilCardProps {
   number: string
@@ -41,7 +10,7 @@ interface ProfilCardProps {
 function ProfilCard({ number, title, children, className = '' }: ProfilCardProps) {
   return (
     <article
-      className={`relative rounded-[14px] border-t-[3px] border-t-[#C9922B] bg-white px-[26px] pb-[26px] pt-[30px] shadow-[0_2px_10px_rgba(80,60,30,0.10)] transition-[transform,box-shadow] duration-200 ease-out hover:-translate-y-1 hover:shadow-[0_10px_24px_rgba(80,60,30,0.18)] ${className}`}
+      className={`relative rounded-[14px] border-t-[3px] border-t-[#C9922B] bg-white p-[26px] pt-[30px] shadow-[0_2px_10px_rgba(80,60,30,0.10)] transition-[transform,box-shadow] duration-200 ease-out hover:-translate-y-1 hover:shadow-[0_10px_24px_rgba(80,60,30,0.18)] ${className}`}
     >
       <div
         aria-hidden
@@ -60,7 +29,7 @@ function ProfilCard({ number, title, children, className = '' }: ProfilCardProps
   )
 }
 
-export function ProfilSection({ profil }: ProfilSectionProps) {
+export function ProfilSection() {
   const gridRef = useRef<HTMLDivElement>(null)
   const [visible, setVisible] = useState(false)
 
@@ -84,14 +53,6 @@ export function ProfilSection({ profil }: ProfilSectionProps) {
     return () => observer.disconnect()
   }, [])
 
-  const visiText = profil?.visi?.trim() || FALLBACK_VISI
-
-  const misiFromApi = toListItems(profil?.misi)
-  const misiItems = misiFromApi.length > 0 ? misiFromApi : FALLBACK_MISI
-
-  const tujuanFromApi = toListItems(profil?.tujuan)
-  const tujuanItems = tujuanFromApi.length > 0 ? tujuanFromApi : FALLBACK_TUJUAN
-
   return (
     <section
       id="profil"
@@ -106,39 +67,42 @@ export function ProfilSection({ profil }: ProfilSectionProps) {
         <div aria-hidden className="mt-4 h-px w-24 animate-fade-up bg-stone-400/60" />
 
         <div ref={gridRef} className="profil-grid mt-12 w-full md:mt-16">
+          {/* VISI - Full width card on top */}
           <div
             className={`profil-card-wrapper ${visible ? 'animate-fade-in-down' : 'opacity-0'}`}
             style={{ animationDelay: '0ms' }}
           >
             <ProfilCard number="1" title="Visi" className="profil-card-visi">
               <p className="mx-auto mt-5 max-w-[520px] text-center text-[18px] leading-[1.7] text-[#4A423B]">
-                {visiText}
+                Menjadi penggerak transformasi digital UKSW melalui pengembangan teknologi dan layanan digital yang inovatif, terintegrasi, efektif, dan berkelanjutan.
               </p>
             </ProfilCard>
           </div>
 
+          {/* MISI */}
           <div
             className={`profil-card-wrapper ${visible ? 'animate-fade-in-down' : 'opacity-0'}`}
             style={{ animationDelay: '150ms' }}
           >
             <ProfilCard number="2" title="Misi">
-              <ol className="profil-numbered mt-5 text-left text-[18px] text-[#4A423B]">
-                {misiItems.map((item, index) => (
-                  <li key={`misi-${index}`}>{item}</li>
-                ))}
+              <ol className="profil-numbered mt-5 text-left text-[18px] leading-[1.6] text-[#4A423B] space-y-[11px]">
+                <li>Mengembangkan dan mengelola layanan digital yang mendukung kebutuhan akademik, administrasi, dan operasional UKSW.</li>
+                <li>Mendorong inovasi teknologi dan digitalisasi untuk meningkatkan kualitas dan efisiensi layanan universitas.</li>
+                <li>Mengintegrasikan sistem dan layanan digital agar dapat memberikan pengalaman pengguna yang mudah, cepat, dan optimal.</li>
               </ol>
             </ProfilCard>
           </div>
 
+          {/* TUJUAN */}
           <div
             className={`profil-card-wrapper ${visible ? 'animate-fade-in-down' : 'opacity-0'}`}
             style={{ animationDelay: '300ms' }}
           >
             <ProfilCard number="3" title="Tujuan">
-              <ol className="profil-numbered mt-5 text-left text-[18px] text-[#4A423B]">
-                {tujuanItems.map((item, index) => (
-                  <li key={`tujuan-${index}`}>{item}</li>
-                ))}
+              <ol className="profil-numbered mt-5 text-left text-[18px] leading-[1.6] text-[#4A423B] space-y-[11px]">
+                <li>Meningkatkan efektivitas dan efisiensi layanan melalui pemanfaatan teknologi digital.</li>
+                <li>Mewujudkan layanan digital yang terintegrasi dan mudah diakses oleh seluruh sivitas akademika.</li>
+                <li>Mendukung terciptanya inovasi digital yang sesuai dengan kebutuhan perkembangan UKSW.</li>
               </ol>
             </ProfilCard>
           </div>

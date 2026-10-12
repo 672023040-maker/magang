@@ -85,6 +85,17 @@ section {
   }
 }
 
+/* Wrapper untuk animasi card */
+.profil-card-wrapper {
+  display: contents;
+}
+
+@media (max-width: 768px) {
+  .profil-card-wrapper {
+    display: block;
+  }
+}
+
 /* Daftar bernomor Misi/Tujuan memakai CSS counter di lingkaran kecil. */
 .profil-numbered {
   counter-reset: profil-item;
