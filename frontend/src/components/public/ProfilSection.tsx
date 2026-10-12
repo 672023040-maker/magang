@@ -106,27 +106,42 @@ export function ProfilSection({ profil }: ProfilSectionProps) {
         <div aria-hidden className="mt-4 h-px w-24 animate-fade-up bg-stone-400/60" />
 
         <div ref={gridRef} className="profil-grid mt-12 w-full md:mt-16">
-          <ProfilCard number="1" title="Visi" className="profil-card-visi">
-            <p className="mx-auto mt-5 max-w-[520px] text-center text-[18px] leading-[1.7] text-[#4A423B]">
-              {visiText}
-            </p>
-          </ProfilCard>
+          <div
+            className={`profil-card-wrapper ${visible ? 'animate-fade-in-down' : 'opacity-0'}`}
+            style={{ animationDelay: '0ms' }}
+          >
+            <ProfilCard number="1" title="Visi" className="profil-card-visi">
+              <p className="mx-auto mt-5 max-w-[520px] text-center text-[18px] leading-[1.7] text-[#4A423B]">
+                {visiText}
+              </p>
+            </ProfilCard>
+          </div>
 
-          <ProfilCard number="2" title="Misi">
-            <ol className="profil-numbered mt-5 text-left text-[18px] text-[#4A423B]">
-              {misiItems.map((item, index) => (
-                <li key={`misi-${index}`}>{item}</li>
-              ))}
-            </ol>
-          </ProfilCard>
+          <div
+            className={`profil-card-wrapper ${visible ? 'animate-fade-in-down' : 'opacity-0'}`}
+            style={{ animationDelay: '150ms' }}
+          >
+            <ProfilCard number="2" title="Misi">
+              <ol className="profil-numbered mt-5 text-left text-[18px] text-[#4A423B]">
+                {misiItems.map((item, index) => (
+                  <li key={`misi-${index}`}>{item}</li>
+                ))}
+              </ol>
+            </ProfilCard>
+          </div>
 
-          <ProfilCard number="3" title="Tujuan">
-            <ol className="profil-numbered mt-5 text-left text-[18px] text-[#4A423B]">
-              {tujuanItems.map((item, index) => (
-                <li key={`tujuan-${index}`}>{item}</li>
-              ))}
-            </ol>
-          </ProfilCard>
+          <div
+            className={`profil-card-wrapper ${visible ? 'animate-fade-in-down' : 'opacity-0'}`}
+            style={{ animationDelay: '300ms' }}
+          >
+            <ProfilCard number="3" title="Tujuan">
+              <ol className="profil-numbered mt-5 text-left text-[18px] text-[#4A423B]">
+                {tujuanItems.map((item, index) => (
+                  <li key={`tujuan-${index}`}>{item}</li>
+                ))}
+              </ol>
+            </ProfilCard>
+          </div>
         </div>
       </div>
     </section>
