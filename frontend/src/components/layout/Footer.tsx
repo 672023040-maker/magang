@@ -1,16 +1,7 @@
-import { mailtoHref, resolveContactEmail } from '../../constants/contact'
-import type { Kontak } from '../../types'
-
-interface FooterProps {
-  kontak: Kontak | null
-}
-
-export function Footer({ kontak }: FooterProps) {
-  const email = resolveContactEmail(kontak)
-
+export function Footer() {
   return (
     <footer className="bg-[#F3EAE1] text-stone-700">
-      <div className="grid items-start gap-10 py-8 px-5 lg:grid-cols-[auto_auto_auto] lg:justify-center">
+      <div className="grid items-start gap-10 py-8 px-5 lg:grid-cols-[auto_auto] lg:justify-center">
         <div>
           <div className="-mt-2.5 -ml-5 flex items-center gap-3">
             <img
@@ -19,10 +10,8 @@ export function Footer({ kontak }: FooterProps) {
               className="h-[175px] w-auto object-contain"
             />
           </div>
-        </div>
 
-        <div className="gap-8 lg:flex lg:gap-12">
-          <div className="text-left">
+          <div className="mt-10">
             <div className="flex items-center gap-2">
               <svg
                 className="h-5 w-5 text-stone-900"
@@ -44,7 +33,9 @@ export function Footer({ kontak }: FooterProps) {
             <p className="mt-3 text-sm text-stone-600">Senin - Jumat</p>
             <p className="mt-1 text-sm text-stone-600">07.30 - 16.00</p>
           </div>
+        </div>
 
+        <div className="gap-8 lg:flex lg:gap-12">
           <div className="text-left">
             <div className="flex items-center gap-2">
               <svg
@@ -74,22 +65,8 @@ export function Footer({ kontak }: FooterProps) {
               Jl. Diponegoro No. 52 - 60, Salatiga, Indonesia
             </p>
           </div>
-        </div>
 
-        <div>
-          <p className="text-sm font-semibold uppercase tracking-wide text-stone-500">
-            Email
-          </p>
-          <a
-            href={mailtoHref(email)}
-            target="_blank"
-            rel="noreferrer"
-            className="mt-3 inline-block text-sm font-medium text-stone-900 underline decoration-stone-400 underline-offset-4 transition hover:text-stone-900"
-          >
-            {email}
-          </a>
-
-          <div className="mt-6">
+          <div className="mt-10 lg:mt-0">
             <p className="text-sm font-semibold uppercase tracking-wide text-stone-500">
               Sosial Media
             </p>

@@ -1,6 +1,4 @@
 import { useEffect, useState } from 'react'
-import { mailtoHref, resolveContactEmail } from '../../constants/contact'
-import type { Kontak } from '../../types'
 
 const links = [
   { href: '#hero', label: 'BERANDA' },
@@ -10,15 +8,9 @@ const links = [
   { href: '#kontak', label: 'KONTAK' },
 ]
 
-interface NavbarProps {
-  kontak: Kontak | null
-}
-
-export function Navbar({ kontak }: NavbarProps) {
+export function Navbar() {
   const [active, setActive] = useState('#hero')
   const [menuOpen, setMenuOpen] = useState(false)
-
-  const email = resolveContactEmail(kontak)
 
   useEffect(() => {
     const onScroll = () => {
@@ -70,50 +62,6 @@ export function Navbar({ kontak }: NavbarProps) {
         </ul>
 
         <div className="ml-auto flex items-center gap-2.5 md:ml-0 md:justify-self-auto">
-          <div className="hidden items-center gap-[20px] md:ml-[40px] md:flex lg:ml-[320px]">
-            <a
-              href="https://www.instagram.com/did_uksw"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Instagram DID UKSW"
-              className="transition hover:opacity-75"
-            >
-              <svg
-                className="h-[19px] w-[19px] text-stone-900"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
-              </svg>
-            </a>
-            <a
-              href={mailtoHref(email)}
-              target="_blank"
-              rel="noreferrer"
-              aria-label={`Email ${email}`}
-              className="transition hover:opacity-75"
-            >
-              <svg
-                className="h-[19px] w-[19px] text-stone-900"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" />
-                <path d="M22 6l-10 7L2 6" />
-              </svg>
-            </a>
-          </div>
-
           <button
             type="button"
             onClick={() => setMenuOpen((open) => !open)}
@@ -167,52 +115,6 @@ export function Navbar({ kontak }: NavbarProps) {
               </li>
             ))}
           </ul>
-
-          <div className="mt-4 ml-[30px] flex items-center gap-3 border-t border-black/10 pt-4">
-            <a
-              href="https://www.instagram.com/did_uksw"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Instagram DID UKSW"
-              onClick={() => setMenuOpen(false)}
-              className="transition hover:opacity-75"
-            >
-              <svg
-                className="h-[19px] w-[19px] text-stone-900"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
-              </svg>
-            </a>
-            <a
-              href={mailtoHref(email)}
-              target="_blank"
-              rel="noreferrer"
-              aria-label={`Email ${email}`}
-              onClick={() => setMenuOpen(false)}
-              className="transition hover:opacity-75"
-            >
-              <svg
-                className="h-[19px] w-[19px] text-stone-900"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" />
-                <path d="M22 6l-10 7L2 6" />
-              </svg>
-            </a>
-          </div>
         </div>
       )}
     </header>
