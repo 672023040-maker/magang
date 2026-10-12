@@ -10,6 +10,7 @@ use App\Models\Project;
 use App\Services\Security\SecurityLogger;
 use App\Services\Upload\SecureImageService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -22,12 +23,23 @@ class ProjectController extends Controller
         private readonly SecurityLogger $logger,
     ) {}
 
-    public function index(): AnonymousResourceCollection
+    public function index(Request $request): AnonymousResourceCollection
     {
         $perPage = max((int) config('security.admin_list_per_page', 15), 1);
+        $search = $request->get('search');
+
+        $query = Project::with('dokumentasi', 'author');
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('nama_project', 'ILIKE', "%{$search}%")
+                    ->orWhere('deskripsi', 'ILIKE', "%{$search}%")
+                    ->orWhereHas('author', fn ($q2) => $q2->where('nama', 'ILIKE', "%{$search}%"));
+            });
+        }
 
         return ProjectResource::collection(
-            Project::with('dokumentasi', 'author')->latest()->paginate($perPage)
+            $query->latest()->paginate($perPage)->appends($request->query())
         );
     }
 

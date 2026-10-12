@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from 'react'
+import { useEffect, useState, useCallback, type FormEvent } from 'react'
 import { struktur } from '../../api'
 import { getErrorFields, getErrorMessage } from '../../api/client'
 import type { PaginationMeta, Struktur } from '../../types'
@@ -37,6 +37,8 @@ export function StrukturPage() {
   const [success, setSuccess] = useState<string | null>(null)
   const [existingFoto, setExistingFoto] = useState<string | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+  const [search, setSearch] = useState('')
+  const [debouncedSearch, setDebouncedSearch] = useState('')
 
   const resetMessages = () => {
     setError(null)
@@ -50,40 +52,38 @@ export function StrukturPage() {
     setExistingFoto(null)
   }
 
-  useEffect(() => {
-    return () => {
-      if (previewUrl) URL.revokeObjectURL(previewUrl)
-    }
-  }, [previewUrl])
-
-  const load = (targetPage = meta?.current_page ?? 1) => {
-    setLoading(true)
-    return struktur
-      .list(targetPage)
-      .then((res) => {
-        setItems(res.data)
-        setMeta(res.meta)
-      })
-      .catch((err) => setError(getErrorMessage(err, 'Gagal memuat data struktur.')))
-      .finally(() => setLoading(false))
-  }
-
   const handlePageChange = (page: number) => {
     if (page === (meta?.current_page ?? 1)) return
     resetMessages()
     load(page)
   }
 
-  useEffect(() => {
-    struktur
-      .list(1)
+  const load = useCallback((targetPage = meta?.current_page ?? 1) => {
+    setLoading(true)
+    return struktur
+      .list(targetPage, debouncedSearch)
       .then((res) => {
         setItems(res.data)
         setMeta(res.meta)
       })
       .catch((err) => setError(getErrorMessage(err, 'Gagal memuat data struktur.')))
       .finally(() => setLoading(false))
-  }, [])
+  }, [debouncedSearch, meta?.current_page])
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl)
+    }
+  }, [previewUrl])
+
+  useEffect(() => {
+    const id = setTimeout(() => setDebouncedSearch(search), 300)
+    return () => clearTimeout(id)
+  }, [search])
+
+  useEffect(() => {
+    load(1)
+  }, [load])
 
   const openCreate = () => {
     setEditing(null)
@@ -183,14 +183,26 @@ export function StrukturPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex-1">
           <h1 className="font-display text-2xl font-medium text-stone-900">Struktur Organisasi</h1>
           <p className="mt-1 text-sm text-stone-500">
             Kelola pimpinan organisasi.
           </p>
         </div>
-        <Button onClick={openCreate}>Tambah</Button>
+        <div className="flex items-center gap-3">
+          <div className="w-full max-w-md">
+            <Input
+              id="search"
+              label="Cari struktur"
+              placeholder="Nama, jabatan, email..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="max-w-xs"
+            />
+          </div>
+          <Button onClick={openCreate}>Tambah</Button>
+        </div>
       </div>
 
       <Alert variant="success" message={success} />

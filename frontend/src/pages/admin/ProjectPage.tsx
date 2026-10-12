@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from 'react'
+import { useEffect, useState, useCallback, type FormEvent } from 'react'
 import { project, struktur } from '../../api'
 import { getErrorFields, getErrorMessage } from '../../api/client'
 import type { PaginationMeta, Project, StatusProject, Struktur } from '../../types'
@@ -45,23 +45,13 @@ export function ProjectPage() {
   const [success, setSuccess] = useState<string | null>(null)
   const [existingCover, setExistingCover] = useState<string | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+  const [search, setSearch] = useState('')
+  const [debouncedSearch, setDebouncedSearch] = useState('')
 
   const resetMessages = () => {
     setError(null)
     setFieldErrors({})
     setSuccess(null)
-  }
-
-  const load = (targetPage = meta?.current_page ?? 1) => {
-    setLoading(true)
-    return project
-      .list(targetPage)
-      .then((res) => {
-        setItems(res.data)
-        setMeta(res.meta)
-      })
-      .catch((err) => setError(getErrorMessage(err, 'Gagal memuat data project.')))
-      .finally(() => setLoading(false))
   }
 
   const handlePageChange = (page: number) => {
@@ -70,9 +60,21 @@ export function ProjectPage() {
     load(page)
   }
 
+  const load = useCallback((targetPage = meta?.current_page ?? 1) => {
+    setLoading(true)
+    return project
+      .list(targetPage, debouncedSearch)
+      .then((res) => {
+        setItems(res.data)
+        setMeta(res.meta)
+      })
+      .catch((err) => setError(getErrorMessage(err, 'Gagal memuat data project.')))
+      .finally(() => setLoading(false))
+  }, [debouncedSearch, meta?.current_page])
+
   useEffect(() => {
     // Daftar anggota dimuat bersamaan karena form author butuh pilihan.
-    Promise.all([project.list(1), struktur.get()])
+    Promise.all([project.list(1, debouncedSearch), struktur.get()])
       .then(([data, memberData]) => {
         setItems(data.data)
         setMeta(data.meta)
@@ -80,13 +82,18 @@ export function ProjectPage() {
       })
       .catch((err) => setError(getErrorMessage(err, 'Gagal memuat data project.')))
       .finally(() => setLoading(false))
-  }, [])
+  }, [debouncedSearch])
 
   useEffect(() => {
     return () => {
       if (previewUrl) URL.revokeObjectURL(previewUrl)
     }
   }, [previewUrl])
+
+  useEffect(() => {
+    const id = setTimeout(() => setDebouncedSearch(search), 300)
+    return () => clearTimeout(id)
+  }, [search])
 
   const resetCover = () => {
     if (previewUrl) URL.revokeObjectURL(previewUrl)
@@ -199,14 +206,26 @@ export function ProjectPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex-1">
           <h1 className="font-display text-2xl font-medium text-stone-900">Project</h1>
           <p className="mt-1 text-sm text-stone-500">
             Kelola project beserta sampul dan detailnya.
           </p>
         </div>
-        <Button onClick={openCreate}>Tambah</Button>
+        <div className="flex items-center gap-3">
+          <div className="w-full max-w-md">
+            <Input
+              id="search"
+              label="Cari project"
+              placeholder="Nama project, deskripsi, author..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="max-w-xs"
+            />
+          </div>
+          <Button onClick={openCreate}>Tambah</Button>
+        </div>
       </div>
 
       <Alert variant="success" message={success} />

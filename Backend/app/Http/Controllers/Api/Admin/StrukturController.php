@@ -10,6 +10,7 @@ use App\Models\StrukturOrganisasi;
 use App\Services\Security\SecurityLogger;
 use App\Services\Upload\SecureImageService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Storage;
 
@@ -20,12 +21,23 @@ class StrukturController extends Controller
         private readonly SecurityLogger $logger,
     ) {}
 
-    public function index(): AnonymousResourceCollection
+    public function index(Request $request): AnonymousResourceCollection
     {
         $perPage = max((int) config('security.admin_list_per_page', 15), 1);
+        $search = $request->get('search');
+
+        $query = StrukturOrganisasi::query();
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('nama', 'ILIKE', "%{$search}%")
+                    ->orWhere('jabatan', 'ILIKE', "%{$search}%")
+                    ->orWhere('email', 'ILIKE', "%{$search}%");
+            });
+        }
 
         return StrukturResource::collection(
-            StrukturOrganisasi::latest()->paginate($perPage)
+            $query->latest()->paginate($perPage)->appends($request->query())
         );
     }
 

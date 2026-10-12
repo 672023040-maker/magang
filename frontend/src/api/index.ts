@@ -52,9 +52,9 @@ export const struktur = {
     client
       .get<ApiResponse<Struktur[]>>('/struktur')
       .then((res) => res.data.data),
-  list: (page = 1) =>
+  list: (page = 1, search = '') =>
     client
-      .get<Paginated<Struktur>>(`${adminPath}/struktur`, { params: { page } })
+      .get<Paginated<Struktur>>(`${adminPath}/struktur`, { params: { page, ...(search ? { search } : {}) } })
       .then((res) => res.data),
   create: (data: FormData) =>
     client
@@ -75,9 +75,9 @@ export const project = {
     client
       .get<ApiResponse<Project[]>>('/project')
       .then((res) => res.data.data),
-  list: (page = 1) =>
+  list: (page = 1, search = '') =>
     client
-      .get<Paginated<Project>>(`${adminPath}/project`, { params: { page } })
+      .get<Paginated<Project>>(`${adminPath}/project`, { params: { page, ...(search ? { search } : {}) } })
       .then((res) => res.data),
   create: (data: FormData) =>
     client
