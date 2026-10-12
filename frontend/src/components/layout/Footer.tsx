@@ -1,36 +1,13 @@
 export function Footer() {
   return (
     <footer className="bg-[#F3EAE1] text-stone-700">
-      <div className="grid gap-2.5 lg:grid-cols-4 py-8 px-5">
+      <div className="grid gap-2.5 lg:grid-cols-3 py-8 px-5">
         <div className="flex items-center justify-center lg:justify-start">
           <img
             src="/digfin logo.png"
             alt="DIGFIN"
             className="h-[120px] w-auto object-contain"
           />
-        </div>
-
-        <div className="text-center lg:text-left">
-          <div className="flex items-center justify-center lg:justify-start gap-2">
-            <svg
-              className="h-5 w-5 text-stone-900"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden
-            >
-              <circle cx="12" cy="12" r="10" />
-              <path d="M12 6v6l4 2" />
-            </svg>
-            <p className="text-sm font-semibold uppercase tracking-wide text-stone-500">
-              Jam Pelayanan
-            </p>
-          </div>
-          <p className="mt-3 text-sm text-stone-600">Senin - Jumat</p>
-          <p className="mt-1 text-sm text-stone-600">07.30 - 16.00</p>
         </div>
 
         <div className="text-center lg:text-left">
@@ -63,31 +40,56 @@ export function Footer() {
           </p>
         </div>
 
-        <div className="flex flex-col items-center justify-center lg:items-end lg:justify-start text-center lg:text-right">
-          <p className="text-sm font-semibold uppercase tracking-wide text-stone-500">
-            Sosial Media
-          </p>
-          <a
-            href="https://www.instagram.com/did_uksw"
-            target="_blank"
-            rel="noreferrer"
-            aria-label="Instagram DID UKSW"
-            className="mt-3 inline-block opacity-80 transition hover:opacity-100"
-          >
-            <svg
-              className="h-6 w-6 text-stone-900"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+        <div className="flex flex-col gap-6 text-center lg:text-left">
+          <div>
+            <div className="flex items-center justify-center lg:justify-start gap-2">
+              <svg
+                className="h-5 w-5 text-stone-900"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 6v6l4 2" />
+              </svg>
+              <p className="text-sm font-semibold uppercase tracking-wide text-stone-500">
+                Jam Operasional
+              </p>
+            </div>
+            <p className="mt-3 text-sm text-stone-600">Senin - Jumat</p>
+            <p className="mt-1 text-sm text-stone-600">07.30 - 16.00</p>
+          </div>
+
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-wide text-stone-500">
+              Sosial Media
+            </p>
+            <a
+              href="https://www.instagram.com/did_uksw"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Instagram DID UKSW"
+              className="mt-3 inline-block opacity-80 transition hover:opacity-100"
             >
-              <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
-            </svg>
-          </a>
+              <svg
+                className="h-6 w-6 text-stone-900"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+              </svg>
+            </a>
+          </div>
         </div>
       </div>
 
