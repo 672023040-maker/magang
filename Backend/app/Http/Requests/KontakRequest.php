@@ -18,6 +18,10 @@ class KontakRequest extends FormRequest
     {
         return [
             'email' => ['required', 'email', 'max:255'],
+            'jam_buka' => ['nullable', 'string', 'max:10'],
+            'jam_tutup' => ['nullable', 'string', 'max:10'],
+            'hari_operasional' => ['nullable', 'string', 'max:50'],
+            'lokasi' => ['nullable', 'string', 'max:1000'],
         ];
     }
 }

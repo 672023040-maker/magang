@@ -37,6 +37,10 @@ export interface Project {
 export interface Kontak {
   id: number
   email: string
+  jam_buka: string | null
+  jam_tutup: string | null
+  hari_operasional: string | null
+  lokasi: string | null
 }
 
 export interface Admin {

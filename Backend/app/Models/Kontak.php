@@ -10,5 +10,9 @@ class Kontak extends Model
 
     protected $fillable = [
         'email',
+        'jam_buka',
+        'jam_tutup',
+        'hari_operasional',
+        'lokasi',
     ];
 }

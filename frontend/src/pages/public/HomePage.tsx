@@ -19,7 +19,7 @@ export function HomePage() {
   }
 
   return (
-    <PublicLayout>
+    <PublicLayout kontak={data.kontak}>
       {hasError && (
         <div
           role="alert"

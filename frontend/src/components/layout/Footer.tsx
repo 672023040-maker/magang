@@ -1,4 +1,21 @@
-export function Footer() {
+import type { Kontak } from '../../types'
+
+interface FooterProps {
+  kontak: Kontak | null
+}
+
+export function Footer({ kontak }: FooterProps) {
+  const jamBuka = kontak?.jam_buka ?? '07.30'
+  const jamTutup = kontak?.jam_tutup ?? '16.00'
+  const hariOperasional = kontak?.hari_operasional ?? 'Senin - Jumat'
+  const lokasiLines = kontak?.lokasi
+    ? kontak.lokasi.split('\n').filter(Boolean)
+    : [
+        'Kampus Diponegoro',
+        'Belakang Gedung F',
+        'Jl. Diponegoro No. 52 - 60, Salatiga, Indonesia',
+      ]
+
   return (
     <footer className="bg-[#F3EAE1] text-stone-700">
       <div className="grid gap-2.5 lg:grid-cols-[1fr_auto_1fr] py-8 px-5">
@@ -29,15 +46,11 @@ export function Footer() {
               Lokasi
             </p>
           </div>
-          <p className="mt-3 max-w-[260px] text-sm leading-relaxed text-stone-600">
-            Kampus Diponegoro
-          </p>
-          <p className="max-w-[260px] text-sm leading-relaxed text-stone-600">
-            Belakang Gedung F
-          </p>
-          <p className="max-w-[260px] text-sm leading-relaxed text-stone-600">
-            Jl. Diponegoro No. 52 - 60, Salatiga, Indonesia
-          </p>
+          {lokasiLines.map((line: string, i: number) => (
+            <p key={i} className="mt-3 max-w-[260px] text-sm leading-relaxed text-stone-600">
+              {line}
+            </p>
+          ))}
         </div>
 
         <div className="flex flex-col gap-6 text-center lg:text-left">
@@ -60,8 +73,10 @@ export function Footer() {
                 Jam Operasional
               </p>
             </div>
-            <p className="mt-3 text-sm text-stone-600">Senin - Jumat</p>
-            <p className="mt-1 text-sm text-stone-600">07.30 - 16.00</p>
+            <p className="mt-3 text-sm text-stone-600">{hariOperasional}</p>
+            <p className="mt-1 text-sm text-stone-600">
+              {jamBuka} - {jamTutup}
+            </p>
           </div>
 
           <div>

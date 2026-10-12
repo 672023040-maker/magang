@@ -12,6 +12,10 @@ class KontakResource extends JsonResource
         return [
             'id' => $this->id,
             'email' => $this->email,
+            'jam_buka' => $this->jam_buka,
+            'jam_tutup' => $this->jam_tutup,
+            'hari_operasional' => $this->hari_operasional,
+            'lokasi' => $this->lokasi,
         ];
     }
 }
