@@ -124,14 +124,17 @@ export function StrukturSection({ struktur }: StrukturSectionProps) {
                 className="flex items-start transition-transform duration-[400ms] ease-in-out"
                 style={{ transform: `translateX(-${effectiveIndex * slideWidth}px)` }}
               >
-                {struktur.map((orang) => {
-                  const isActive = activeId === orang.id
+{struktur.map((orang, index) => {
+                    const isActive = activeId === orang.id
 
-                  return (
-                    <div
-                      key={orang.id}
-                      className="w-full shrink-0 basis-full px-3 sm:basis-1/2 lg:basis-1/4 lg:px-2"
-                    >
+                    return (
+                      <div
+                        key={orang.id}
+                        className={`w-full shrink-0 basis-full px-3 sm:basis-1/2 lg:basis-1/4 lg:px-2 ${
+                          visible ? 'animate-fade-in-down' : 'opacity-0'
+                        }`}
+                        style={{ animationDelay: `${index * 150}ms` }}
+                      >
                       <div
                         onClick={(e) => {
                           e.stopPropagation()
