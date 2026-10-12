@@ -217,11 +217,27 @@ export function ProjectPage() {
           <div className="w-full max-w-md">
             <Input
               id="search"
-              label="Cari project"
               placeholder="Nama project, deskripsi, author..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="max-w-xs"
+              aria-label="Cari project"
+              trailingIcon={
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+              }
             />
           </div>
           <Button onClick={openCreate}>Tambah</Button>

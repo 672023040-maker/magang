@@ -3,6 +3,7 @@ import { struktur } from '../../api'
 import { getErrorFields, getErrorMessage } from '../../api/client'
 import type { PaginationMeta, Struktur } from '../../types'
 import { Alert } from '../../components/ui/Alert'
+import { Avatar } from '../../components/ui/Avatar'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
 import { Modal } from '../../components/ui/Modal'
@@ -194,11 +195,27 @@ export function StrukturPage() {
           <div className="w-full max-w-md">
             <Input
               id="search"
-              label="Cari struktur"
               placeholder="Nama, jabatan, email..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="max-w-xs"
+              aria-label="Cari struktur"
+              trailingIcon={
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+              }
             />
           </div>
           <Button onClick={openCreate}>Tambah</Button>
@@ -221,6 +238,7 @@ export function StrukturPage() {
           <table className="w-full min-w-[560px] text-left text-sm">
             <thead className="border-b border-stone-300 bg-[#F3EAE1] text-xs uppercase text-stone-500">
               <tr>
+                <th className="px-4 py-3 w-12">Foto</th>
                 <th className="px-4 py-3">Nama</th>
                 <th className="px-4 py-3">Jabatan</th>
                 <th className="px-4 py-3 text-right">Aksi</th>
@@ -229,6 +247,9 @@ export function StrukturPage() {
             <tbody className="divide-y divide-stone-200">
               {items.map((item) => (
                 <tr key={item.id}>
+                  <td className="px-4 py-3 text-center">
+                    <Avatar src={item.foto_url} name={item.nama} size="sm" />
+                  </td>
                   <td className="px-4 py-3 font-medium text-stone-800">
                     {item.nama}
                   </td>
@@ -309,20 +330,29 @@ export function StrukturPage() {
             error={fieldErrors.foto?.[0]}
           />
 
-          {fotoSrc && (
-            <div className="rounded-lg border border-stone-300 p-2">
-              <img
-                src={fotoSrc}
-                alt={editing ? 'Foto anggota saat ini' : 'Pratinjau foto'}
-                className="mx-auto h-28 w-full rounded object-cover"
-              />
-              {!previewUrl && existingFoto && (
-                <p className="mt-1 text-xs text-stone-500">
-                  Foto saat ini. Pilih file baru untuk menggantinya.
-                </p>
-              )}
-            </div>
-          )}
+          <div className="rounded-lg border border-stone-300 p-2">
+            <Avatar
+              src={fotoSrc}
+              name={form.nama || (editing && items.find(i => i.id === editing.id)?.nama) || 'Anggota'}
+              size="lg"
+              className="mx-auto"
+            />
+            {!previewUrl && existingFoto && (
+              <p className="mt-1 text-xs text-stone-500 text-center">
+                Foto saat ini. Pilih file baru untuk menggantinya.
+              </p>
+            )}
+            {previewUrl && (
+              <p className="mt-1 text-xs text-stone-500 text-center">
+                Pratinjau foto. Simpan untuk menerapkan.
+              </p>
+            )}
+            {!fotoSrc && !previewUrl && (
+              <p className="mt-1 text-xs text-stone-500 text-center">
+                Belum ada foto. Pilih file untuk mengunggah.
+              </p>
+            )}
+          </div>
 
           <div className="pt-2">
             <Button type="submit" loading={saving}>
