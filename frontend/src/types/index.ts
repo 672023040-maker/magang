@@ -12,7 +12,6 @@ export interface Struktur {
   id: number
   nama: string
   jabatan: string
-  email: string | null
   foto_url: string | null
 }
 

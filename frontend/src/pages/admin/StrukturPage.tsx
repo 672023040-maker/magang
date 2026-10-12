@@ -13,14 +13,12 @@ import { Spinner } from '../../components/ui/Spinner'
 interface StrukturForm {
   nama: string
   jabatan: string
-  email: string
   foto: File | null
 }
 
 const emptyForm: StrukturForm = {
   nama: '',
   jabatan: '',
-  email: '',
   foto: null,
 }
 
@@ -99,7 +97,6 @@ export function StrukturPage() {
     setForm({
       nama: item.nama,
       jabatan: item.jabatan,
-      email: item.email ?? '',
       foto: null,
     })
     resetFoto()
@@ -145,7 +142,6 @@ export function StrukturPage() {
 
     data.append('nama', form.nama)
     data.append('jabatan', form.jabatan)
-    data.append('email', form.email)
 
     if (form.foto) {
       data.append('foto', form.foto)
@@ -195,7 +191,7 @@ export function StrukturPage() {
           <div className="w-full max-w-md">
             <Input
               id="search"
-              placeholder="Nama, jabatan, email..."
+              placeholder="Nama, jabatan..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="max-w-xs"
@@ -311,15 +307,6 @@ export function StrukturPage() {
             onChange={(e) => updateField('jabatan', e.target.value)}
             error={fieldErrors.jabatan?.[0]}
             required
-          />
-          <Input
-            id="email"
-            label="Email"
-            type="email"
-            placeholder="nama@uksw.edu"
-            value={form.email}
-            onChange={(e) => updateField('email', e.target.value)}
-            error={fieldErrors.email?.[0]}
           />
           <Input
             id="foto"

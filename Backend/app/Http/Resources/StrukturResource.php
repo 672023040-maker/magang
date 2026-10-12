@@ -13,7 +13,6 @@ class StrukturResource extends JsonResource
             'id' => $this->id,
             'nama' => $this->nama,
             'jabatan' => $this->jabatan,
-            'email' => $this->email,
             'foto_url' => $this->foto
                 ? url('storage/'.$this->foto)
                 : null,

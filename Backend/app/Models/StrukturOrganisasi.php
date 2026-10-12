@@ -12,6 +12,5 @@ class StrukturOrganisasi extends Model
         'nama',
         'jabatan',
         'foto',
-        'email',
     ];
 }

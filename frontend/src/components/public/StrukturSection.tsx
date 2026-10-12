@@ -164,33 +164,6 @@ export function StrukturSection({ struktur }: StrukturSectionProps) {
                           <p className="font-semibold text-stone-900">{orang.nama}</p>
                           <p className="mt-0.5 text-[18px] text-stone-600">{orang.jabatan}</p>
                         </div>
-
-                        <div
-                          className={`overflow-hidden transition-[max-height,opacity,transform] duration-[350ms] ease-out ${
-                            isActive
-                              ? 'max-h-[64px] translate-y-0 opacity-100'
-                              : 'max-h-0 translate-y-2 opacity-0'
-                          }`}
-                        >
-                          {orang.email && (
-                            <div className="flex items-center justify-center pt-5 pb-2">
-                              <a
-                                href={`https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(orang.email)}`}
-                                target="_blank"
-                                rel="noreferrer"
-                                aria-label={`Email ${orang.nama}`}
-                                onClick={(e) => e.stopPropagation()}
-                                className="flex h-[42px] w-[42px] items-center justify-center rounded-full bg-stone-900 ring-1 ring-stone-700 transition hover:scale-[1.05] hover:bg-stone-700 hover:ring-stone-500"
-                              >
-                                <img
-                                  src="/email white.png"
-                                  alt=""
-                                  className="h-[18px] w-auto object-contain"
-                                />
-                              </a>
-                            </div>
-                          )}
-                        </div>
                       </div>
                     </div>
                   )
