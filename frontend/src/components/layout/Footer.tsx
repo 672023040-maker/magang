@@ -1,7 +1,7 @@
 export function Footer() {
   return (
     <footer className="bg-[#F3EAE1] text-stone-700">
-      <div className="grid gap-8 lg:grid-cols-4 lg:gap-12 py-8 px-5">
+      <div className="grid gap-2.5 lg:grid-cols-4 py-8 px-5">
         <div className="flex items-center justify-center lg:justify-start">
           <img
             src="/digfin logo.png"
