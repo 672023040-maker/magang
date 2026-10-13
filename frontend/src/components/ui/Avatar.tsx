@@ -30,12 +30,12 @@ const COLORS = [
 ]
 
 const PERSONA_COLORS = [
-  { skin: '#FDD6B5', hair: '#8B5E3C', shirt: '#4A6FA5' },
-  { skin: '#E8B8A0', hair: '#5D4037', shirt: '#2E7D32' },
-  { skin: '#D4A574', hair: '#3E2723', shirt: '#C62828' },
-  { skin: '#F5C6A5', hair: '#4E342E', shirt: '#5C6BC0' },
-  { skin: '#E0AC8C', hair: '#263238', shirt: '#00897B' },
-  { skin: '#F8D4B8', hair: '#1B1B1B', shirt: '#6A1B9A' },
+  { skin: '#F3F4F6', hair: '#111827', shirt: '#374151' },
+  { skin: '#E5E7EB', hair: '#1F2937', shirt: '#4B5563' },
+  { skin: '#F3F4F6', hair: '#374151', shirt: '#6B7280' },
+  { skin: '#E5E7EB', hair: '#111827', shirt: '#9CA3AF' },
+  { skin: '#D1D5DB', hair: '#1F2937', shirt: '#4B5563' },
+  { skin: '#E5E7EB', hair: '#111827', shirt: '#6B7280' },
 ]
 
 function getInitials(name: string): string {
