@@ -10,7 +10,7 @@ export function Hero() {
       >
         <div
           aria-hidden
-          className="absolute inset-0 bg-contain bg-center md:bg-cover md:bg-top"
+          className="absolute inset-0 bg-contain bg-center"
           style={{ backgroundImage: 'var(--hero-background, none)' }}
         />
         <div className="relative z-10 px-5 pb-20 pt-[165px] text-center">
