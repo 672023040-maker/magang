@@ -25,7 +25,7 @@ export function FloatingSocial() {
     <a
       href={INSTAGRAM_URL}
       target="_blank"
-      rel="noreferrer"
+      rel="noopener noreferrer"
       aria-label="Instagram DID UKSW"
       aria-hidden={hidden ? true : undefined}
       tabIndex={hidden ? -1 : undefined}

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import type { Project } from '../../types'
+import { safeExternalUrl } from '../../lib/safeUrl'
 import { Badge } from '../ui/Badge'
 
 interface ProjectDetailModalProps {
@@ -59,6 +60,7 @@ export function ProjectDetailModal({ project, onClose }: ProjectDetailModalProps
   const coverDok = project.dokumentasi.find((d) => d.file_gambar_url)
   const cover = coverDok?.file_gambar_url
   const dibuat = formatDate(project.tgl_dibuat)
+  const websiteUrl = safeExternalUrl(project.link_project)
 
   useEffect(() => {
     const raf = window.requestAnimationFrame(() => setShown(true))
@@ -160,12 +162,12 @@ export function ProjectDetailModal({ project, onClose }: ProjectDetailModalProps
               </p>
             </div>
 
-            {project.link_project && (
+            {websiteUrl && (
               <div className="mt-5 border-t border-stone-200 pt-5">
                 <a
-                  href={project.link_project}
+                  href={websiteUrl}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[#C49A45] px-4 py-2.5 text-sm font-semibold text-[#101820] transition hover:bg-[#A87F35] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C49A45]/70"
                 >
                   Kunjungi Website

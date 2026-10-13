@@ -1,9 +1,11 @@
 import { useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { PublicLayout } from '../../components/layout/PublicLayout'
 import { ProjectDetailModal } from '../../components/public/ProjectDetailModal'
 import { Input } from '../../components/ui/Input'
 import { Spinner } from '../../components/ui/Spinner'
 import { useLandingData } from '../../hooks/useLandingData'
+import { safeExternalUrl } from '../../lib/safeUrl'
 import type { Project } from '../../types'
 
 const statusLabel: Record<Project['status'], string> = {
@@ -20,7 +22,7 @@ function AllProjectCard({
 }) {
   const coverDok = project.dokumentasi.find((d) => d.file_gambar_url)
   const cover = coverDok?.file_gambar_url
-  const link = project.link_project?.trim()
+  const link = safeExternalUrl(project.link_project)
 
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-stone-300 bg-white shadow-lg shadow-stone-400/30 transition-all duration-300 ease-out hover:-translate-y-1.5 hover:border-stone-400 hover:shadow-[0_24px_50px_-16px_rgba(0,0,0,0.25)] focus-within:border-stone-900">
@@ -99,7 +101,7 @@ function AllProjectCard({
             <a
               href={link}
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[#C49A45] px-4 py-2.5 text-sm font-semibold text-[#101820] transition hover:bg-[#A87F35] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C49A45]/70"
             >
               KUNJUNGI WEBSITE
@@ -129,6 +131,17 @@ export function AllProjectsPage() {
   const { data, loading, hasError } = useLandingData()
   const [search, setSearch] = useState('')
   const [selected, setSelected] = useState<Project | null>(null)
+  const navigate = useNavigate()
+
+  const goBack = () => {
+    // react-router menyimpan index riwayat di history state; idx > 0 berarti
+    // ada halaman sebelumnya. Jika tidak (mis. dibuka langsung/refresh),
+    // kembali ke beranda.
+    const idx = (window.history.state as { idx?: number } | null)?.idx ?? 0
+
+    if (idx > 0) navigate(-1)
+    else navigate('/')
+  }
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase()
@@ -146,8 +159,29 @@ export function AllProjectsPage() {
 
   return (
     <PublicLayout kontak={data.kontak}>
-      <section className="min-h-screen w-full bg-[#101820] px-5 pb-20 pt-[120px] md:px-10 md:pt-[150px]">
+      <section className="min-h-screen w-full bg-[#101820] px-5 pb-20 pt-[110px] md:px-10 md:pt-[130px]">
         <div className="mx-auto w-full max-w-7xl">
+          <button
+            type="button"
+            onClick={goBack}
+            aria-label="Kembali"
+            className="mb-6 inline-flex items-center gap-2 rounded-lg border border-white/20 px-4 py-2 text-sm font-semibold text-stone-200 transition hover:border-[#C49A45] hover:text-[#C49A45] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C49A45]/70"
+          >
+            <svg
+              className="h-4 w-4"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden
+            >
+              <path d="M19 12H5M12 19l-7-7 7-7" />
+            </svg>
+            KEMBALI
+          </button>
+
           <div className="text-center">
             <h1 className="font-display text-[clamp(2rem,6vw,4rem)] font-bold uppercase leading-tight tracking-tight text-stone-50">
               Semua Project

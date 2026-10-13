@@ -335,6 +335,66 @@ class ApiTest extends TestCase
             ->assertJsonValidationErrors('link_project');
     }
 
+    public function test_link_project_dengan_url_tidak_aman_ditolak(): void
+    {
+        $this->createAdmin();
+        $path = trim((string) config('security.admin_path'), '/');
+
+        $this->login();
+        $sessionId = $this->app['session']->getId();
+
+        // Termasuk payload yang lolos rule `url` bawaan Laravel (javascript://%0A...).
+        $payloads = [
+            'javascript://%0Aalert(1)',
+            'javascript:alert(1)',
+            'data:text/html,<script>alert(1)</script>',
+            'vbscript:msgbox(1)',
+            'ftp://example.com',
+            'mailto:admin@example.com',
+            'http://user@evil.com',
+            'http://user:pass@example.com',
+            'http:///tanpa-host',
+            '//evil.com',
+        ];
+
+        foreach ($payloads as $payload) {
+            $this->from(config('app.url'))
+                ->withCredentials()
+                ->withCookie(config('session.cookie'), $sessionId)
+                ->postJson("/api/{$path}/project", [
+                    'nama_project' => 'Uji link',
+                    'deskripsi' => 'Uji skema tidak aman.',
+                    'status' => 'publish',
+                    'link_project' => $payload,
+                ])
+                ->assertStatus(422)
+                ->assertJsonValidationErrors('link_project');
+        }
+    }
+
+    public function test_link_project_http_dan_https_diterima(): void
+    {
+        $this->createAdmin();
+        $path = trim((string) config('security.admin_path'), '/');
+
+        $this->login();
+        $sessionId = $this->app['session']->getId();
+
+        foreach (['http://example.com', 'https://example.com/proyek?a=1'] as $index => $url) {
+            $this->from(config('app.url'))
+                ->withCredentials()
+                ->withCookie(config('session.cookie'), $sessionId)
+                ->postJson("/api/{$path}/project", [
+                    'nama_project' => "Project Aman {$index}",
+                    'deskripsi' => 'Link web biasa.',
+                    'status' => 'publish',
+                    'link_project' => $url,
+                ])
+                ->assertStatus(201)
+                ->assertJsonPath('data.link_project', $url);
+        }
+    }
+
     public function test_link_project_dapat_dikosongkan_saat_update(): void
     {
         $this->createAdmin();

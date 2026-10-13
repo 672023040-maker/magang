@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\SafeExternalUrl;
 use App\Rules\SecureImage;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -28,7 +29,7 @@ class ProjectRequest extends FormRequest
             // mengedit project tersebut, jadi author hanya divalidasi bila dikirim.
             'author_id' => ['nullable', 'integer', Rule::exists('struktur_organisasi', 'id')],
             'deskripsi' => ['required', 'string'],
-            'link_project' => ['nullable', 'url', 'max:2048'],
+            'link_project' => ['nullable', 'url', 'max:2048', new SafeExternalUrl],
             'status' => ['required', 'in:publish,unpublish'],
             'tgl_dibuat' => ['nullable', 'date'],
             'dokumentasi' => ['nullable', 'array', 'max:'.$maxFiles],

@@ -53,7 +53,7 @@ export function KontakSection({ kontak }: KontakSectionProps) {
         <a
           href={mailtoHref(email)}
           target="_blank"
-          rel="noreferrer"
+          rel="noopener noreferrer"
           className="mt-8 inline-flex items-center gap-3 rounded-xl border border-stone-400 bg-white px-6 py-4 text-sm font-medium text-stone-900 shadow-lg shadow-stone-400/30 transition-all duration-300 ease-out hover:-translate-y-1.5 hover:scale-[1.02] hover:border-stone-500 hover:bg-stone-100 hover:shadow-[0_14px_30px_rgba(0,0,0,0.15)]"
         >
           <svg

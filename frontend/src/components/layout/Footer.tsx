@@ -86,7 +86,7 @@ export function Footer({ kontak }: FooterProps) {
             <a
               href="https://www.instagram.com/did_uksw"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               aria-label="Instagram DID UKSW"
               className="mt-3 inline-block opacity-80 transition hover:opacity-100"
             >
