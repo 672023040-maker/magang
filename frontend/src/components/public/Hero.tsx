@@ -13,7 +13,7 @@ export function Hero() {
         <div
           aria-hidden
           className="absolute inset-0 hidden bg-contain bg-center md:block"
-          style={{ backgroundImage: 'url(/hero4.jpg)' }}
+          style={{ backgroundImage: 'url(/hero4dekstop.jpg)' }}
         />
         <div className="relative z-10 px-5 pb-20 pt-[165px] text-center">
           <p className="mb-3 font-inter text-[30px] font-semibold text-white">
