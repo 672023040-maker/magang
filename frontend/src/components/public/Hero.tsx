@@ -15,7 +15,8 @@ export function Hero() {
         src="/hero4dekstop.jpg"
         alt=""
         aria-hidden
-        className="absolute inset-0 hidden h-full w-full object-cover object-top md:block"
+        className="absolute inset-0 mx-auto hidden h-full w-full object-cover object-center md:block"
+        style={{ maxWidth: 'calc((100svh - 84px) * 1.5)' }}
       />
 
       {/* Overlay agar teks tetap terbaca dan gambar tidak "ramai" */}
