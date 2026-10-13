@@ -183,7 +183,7 @@ export function ProjectSection({ project }: ProjectSectionProps) {
       <div className="relative z-10 mx-auto w-full max-w-7xl px-5 md:px-10">
         <div className={`text-center ${visible ? 'animate-fade-in-down' : 'opacity-0'}`}>
           <h2 className="font-display text-[clamp(2rem,6vw,4rem)] font-bold uppercase leading-tight tracking-tight text-stone-50">
-            Projek DIGFIN
+            Inovasi DIGFIN
           </h2>
 
           <div aria-hidden className="mx-auto mt-4 h-px w-24 bg-stone-400" />
