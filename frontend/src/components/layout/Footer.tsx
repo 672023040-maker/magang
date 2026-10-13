@@ -18,12 +18,12 @@ export function Footer({ kontak }: FooterProps) {
 
   return (
     <footer className="bg-[#0D151C] text-stone-200">
-      <div className="grid gap-2.5 lg:grid-cols-[1fr_auto_1fr] py-8 px-5">
-        <div className="flex items-center justify-center lg:justify-start lg:ml-[300px]">
+      <div className="grid grid-cols-1 gap-10 px-5 py-10 md:grid-cols-2 lg:grid-cols-[1fr_auto_1fr] lg:gap-2.5 lg:py-8">
+        <div className="flex items-center justify-center md:col-span-2 lg:col-span-1 lg:justify-start lg:ml-[300px]">
           <img
             src="/digfin logo.png"
             alt="DIGFIN"
-            className="h-[120px] w-auto object-contain"
+            className="h-[96px] w-auto object-contain md:h-[120px]"
           />
         </div>
 
@@ -47,7 +47,7 @@ export function Footer({ kontak }: FooterProps) {
             </p>
           </div>
           {lokasiLines.map((line: string, i: number) => (
-            <p key={i} className="mt-3 max-w-[260px] text-sm leading-relaxed text-stone-300">
+            <p key={i} className="mx-auto mt-3 max-w-[280px] text-sm leading-relaxed text-stone-300 lg:mx-0">
               {line}
             </p>
           ))}
