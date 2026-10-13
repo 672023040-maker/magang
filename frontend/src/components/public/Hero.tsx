@@ -1,17 +1,19 @@
-import type { CSSProperties } from 'react'
-
 export function Hero() {
   return (
     <>
       <section
         id="hero"
         className="relative min-h-[600px] overflow-visible bg-[#101820] md:min-h-[740px]"
-        style={{ '--hero-background': 'url(/hero4.jpg)' } as CSSProperties}
       >
         <div
           aria-hidden
-          className="absolute inset-0 bg-contain bg-center"
-          style={{ backgroundImage: 'var(--hero-background, none)' }}
+          className="absolute inset-0 bg-cover bg-center md:hidden"
+          style={{ backgroundImage: 'url(/hero4-mobile.jpg)' }}
+        />
+        <div
+          aria-hidden
+          className="absolute inset-0 hidden bg-contain bg-center md:block"
+          style={{ backgroundImage: 'url(/hero4.jpg)' }}
         />
         <div className="relative z-10 px-5 pb-20 pt-[165px] text-center">
           <p className="mb-3 font-inter text-[30px] font-semibold text-white">
