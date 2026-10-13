@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 
 const links = [
@@ -12,6 +12,10 @@ const links = [
 export function Navbar() {
   const [active, setActive] = useState('#hero')
   const [menuOpen, setMenuOpen] = useState(false)
+  const [indicator, setIndicator] = useState({ left: 0, width: 0, visible: false })
+  const listRef = useRef<HTMLUListElement>(null)
+  const itemRefs = useRef<Record<string, HTMLAnchorElement | null>>({})
+
   const { pathname } = useLocation()
   const isHome = pathname === '/'
 
@@ -21,25 +25,77 @@ export function Navbar() {
   // Hanya sorot menu aktif saat berada di beranda (section-nya memang ada di sana).
   const current = isHome ? active : ''
 
+  // Deteksi section aktif memakai IntersectionObserver (pita tipis di tengah viewport).
   useEffect(() => {
     if (!isHome) return
 
-    const onScroll = () => {
-      const next = links
-        .filter((link) => {
-          const el = document.querySelector(link.href)
-          return el instanceof HTMLElement && el.offsetTop - 100 <= window.scrollY
-        })
-        .map((link) => link.href)
-        .pop()
+    const sections = links
+      .map((link) => document.querySelector<HTMLElement>(link.href))
+      .filter((el): el is HTMLElement => el !== null)
 
-      if (next) setActive(next)
+    if (sections.length === 0) return
+
+    const visible = new Set<string>()
+
+    const sync = () => {
+      const atBottom =
+        window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2
+
+      // Di dasar halaman, section terakhir (KONTAK) selalu dianggap aktif.
+      if (atBottom) {
+        setActive(links[links.length - 1].href)
+        return
+      }
+
+      const next = [...links].reverse().find((link) => visible.has(link.href))
+      if (next) setActive(next.href)
     }
 
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const id = `#${(entry.target as HTMLElement).id}`
+          if (entry.isIntersecting) visible.add(id)
+          else visible.delete(id)
+        })
+        sync()
+      },
+      { rootMargin: '-45% 0px -45% 0px', threshold: 0 },
+    )
+
+    sections.forEach((section) => observer.observe(section))
+
+    const onScroll = () => sync()
     window.addEventListener('scroll', onScroll, { passive: true })
 
-    return () => window.removeEventListener('scroll', onScroll)
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('scroll', onScroll)
+    }
   }, [isHome])
+
+  // Hitung posisi garis indikator mengikuti tautan aktif (desktop).
+  useLayoutEffect(() => {
+    const update = () => {
+      const anchor = current ? itemRefs.current[current] : null
+
+      if (!anchor || anchor.offsetWidth === 0) {
+        setIndicator((prev) => ({ ...prev, visible: false }))
+        return
+      }
+
+      setIndicator({ left: anchor.offsetLeft, width: anchor.offsetWidth, visible: true })
+    }
+
+    update()
+    window.addEventListener('resize', update)
+
+    if (document.fonts) {
+      void document.fonts.ready.then(update)
+    }
+
+    return () => window.removeEventListener('resize', update)
+  }, [current])
 
   return (
     <header className="fixed inset-x-0 top-0 z-40 border border-white/10 bg-[#101820]">
@@ -55,21 +111,36 @@ export function Navbar() {
           />
         </a>
 
-        <ul className="hidden items-center gap-[40px] md:flex">
-          {links.map((link) => (
-            <li key={link.href}>
-              <a
-                href={to(link.href)}
-                className={`text-sm font-medium transition ${
-                  current === link.href
-                    ? 'text-[#168c8c]'
-                    : 'text-stone-300 hover:text-white'
-                }`}
-              >
-                {link.label}
-              </a>
-            </li>
-          ))}
+        <ul ref={listRef} className="relative hidden items-center gap-[40px] md:flex">
+          {links.map((link) => {
+            const isActive = current === link.href
+
+            return (
+              <li key={link.href}>
+                <a
+                  ref={(node) => {
+                    itemRefs.current[link.href] = node
+                  }}
+                  href={to(link.href)}
+                  aria-current={isActive ? 'true' : undefined}
+                  className={`relative text-sm font-medium transition-colors after:absolute after:-bottom-1.5 after:left-0 after:h-[2px] after:w-full after:origin-center after:scale-x-0 after:rounded-full after:bg-[#168c8c]/60 after:transition-transform after:duration-300 after:ease-out after:content-[''] hover:after:scale-x-100 motion-reduce:after:transition-none ${
+                    isActive ? 'text-[#168c8c]' : 'text-stone-300 hover:text-white'
+                  }`}
+                >
+                  {link.label}
+                </a>
+              </li>
+            )
+          })}
+
+          {/* Indikator meluncur — hanya aktif di desktop */}
+          <span
+            aria-hidden
+            className={`pointer-events-none absolute -bottom-1.5 left-0 h-[2px] rounded-full bg-[#168c8c] shadow-[0_0_10px_rgba(22,140,140,0.7)] transition-[transform,width,opacity] duration-300 ease-out motion-reduce:transition-none ${
+              indicator.visible ? 'opacity-100' : 'opacity-0'
+            }`}
+            style={{ width: indicator.width, transform: `translateX(${indicator.left}px)` }}
+          />
         </ul>
 
         <div className="ml-auto flex items-center gap-2.5 md:ml-0 md:justify-self-auto">
