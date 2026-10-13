@@ -41,8 +41,8 @@ export function DashboardPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="font-display text-2xl font-medium text-stone-900">Dashboard</h1>
-        <p className="mt-1 text-sm text-stone-500">
+        <h1 className="font-display text-2xl font-medium text-stone-50">Dashboard</h1>
+        <p className="mt-1 text-sm text-stone-400">
           Ringkasan konten website DIGFIN yang sudah masuk.
         </p>
         {error && <p className="mt-2 text-sm text-red-600">{error}</p>}

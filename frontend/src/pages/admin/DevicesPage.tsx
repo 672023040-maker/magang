@@ -237,10 +237,10 @@ export function DevicesPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="font-display text-2xl font-medium text-stone-900">
+          <h1 className="font-display text-2xl font-medium text-stone-50">
             Perangkat & Sesi
           </h1>
-          <p className="mt-1 text-sm text-stone-500">
+          <p className="mt-1 text-sm text-stone-400">
             Kelola perangkat yang sedang login ke panel. Sesi dengan IP sama
             digabungkan. Cabut sesi yang tidak Anda kenali.
           </p>

@@ -182,8 +182,8 @@ export function StrukturPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-4">
         <div className="flex-1">
-          <h1 className="font-display text-2xl font-medium text-stone-900">Struktur Organisasi</h1>
-          <p className="mt-1 text-sm text-stone-500">
+          <h1 className="font-display text-2xl font-medium text-stone-50">Struktur Organisasi</h1>
+          <p className="mt-1 text-sm text-stone-400">
             Kelola pimpinan organisasi.
           </p>
         </div>
@@ -226,7 +226,7 @@ export function StrukturPage() {
           <Spinner size="lg" />
         </div>
       ) : items.length === 0 ? (
-        <p className="py-10 text-center text-sm text-stone-500">
+        <p className="py-10 text-center text-sm text-stone-400">
           Belum ada data struktur.
         </p>
       ) : (

@@ -83,8 +83,8 @@ export function ProfilPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-2xl font-medium text-stone-900">Halaman Profil</h1>
-        <p className="mt-1 text-sm text-stone-500">
+        <h1 className="font-display text-2xl font-medium text-stone-50">Halaman Profil</h1>
+        <p className="mt-1 text-sm text-stone-400">
           Kelola konten Visi, Misi, dan Tujuan.
         </p>
       </div>

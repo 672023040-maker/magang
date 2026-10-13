@@ -60,10 +60,10 @@ export function ChangePasswordPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-2xl font-medium text-stone-900">
+        <h1 className="font-display text-2xl font-medium text-stone-50">
           Ganti Password
         </h1>
-        <p className="mt-1 text-sm text-stone-500">
+        <p className="mt-1 text-sm text-stone-400">
           Minimal 12 karakter dengan huruf besar, huruf kecil, angka, dan
           simbol. Password lama tidak boleh digunakan kembali.
         </p>

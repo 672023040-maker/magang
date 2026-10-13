@@ -85,8 +85,8 @@ export function KontakPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-2xl font-medium text-stone-900">Kontak</h1>
-        <p className="mt-1 text-sm text-stone-500">
+        <h1 className="font-display text-2xl font-medium text-stone-50">Kontak</h1>
+        <p className="mt-1 text-sm text-stone-400">
           Kelola informasi kontak.
         </p>
       </div>
