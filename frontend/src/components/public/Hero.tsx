@@ -12,7 +12,7 @@ export function Hero() {
         className="absolute inset-0 h-full w-full object-cover object-center md:hidden"
       />
       <img
-        src="/hero6.jpg"
+        src="/hero7.png"
         alt=""
         aria-hidden
         className="absolute inset-0 hidden h-full w-full object-cover object-top md:block"
