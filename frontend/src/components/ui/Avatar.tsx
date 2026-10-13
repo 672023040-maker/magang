@@ -139,7 +139,7 @@ function PersonaAvatar({ name, size = 'md', className = '' }: { name: string; si
       />
 
       {/* Face features */}
-      <g clip-path={`url(#head-clip-${hash})`}>
+      <g clipPath={`url(#head-clip-${hash})`}>
         {/* Eyes */}
         {eyeType === 0 && (
           <>
