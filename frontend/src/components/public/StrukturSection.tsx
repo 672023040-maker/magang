@@ -78,7 +78,7 @@ export function StrukturSection({ struktur }: StrukturSectionProps) {
     <section
       id="struktur"
       onClick={() => setActiveId(null)}
-      className="relative flex min-h-screen w-full overflow-hidden bg-[#dbba99] pt-20 md:pt-[50px]"
+      className="relative flex min-h-screen w-full overflow-hidden bg-[#C49A45] pt-20 md:pt-[50px]"
     >
       <div className="relative z-10 mx-auto w-full max-w-[1400px] px-5 pb-16 md:px-10 md:pb-20">
         <div className="text-center">

@@ -4,7 +4,7 @@ export function NotFoundPage() {
   const navigate = useNavigate()
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#dbba99] px-5">
+    <div className="flex min-h-screen items-center justify-center bg-[#C49A45] px-5">
       <div className="w-full max-w-xl text-center">
         <p className="font-display text-[clamp(5rem,20vw,9rem)] font-bold leading-none text-[#000000]">
           404

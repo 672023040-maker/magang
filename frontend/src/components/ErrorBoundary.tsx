@@ -22,7 +22,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   render() {
     if (this.state.hasError) {
       return (
-        <div className="flex min-h-screen items-center justify-center bg-[#dbba99] px-5">
+        <div className="flex min-h-screen items-center justify-center bg-[#C49A45] px-5">
           <div className="w-full max-w-xl text-center">
             <p className="font-display text-[clamp(4rem,16vw,7rem)] font-bold leading-none text-black">
               Ups

@@ -178,11 +178,11 @@ export function ProjectSection({ project }: ProjectSectionProps) {
   return (
     <section
       id="project"
-      className="relative flex min-h-screen w-full items-start justify-center overflow-hidden bg-[#F7F3ED] pt-20 pb-20 md:pt-[50px]"
+      className="relative flex min-h-screen w-full items-start justify-center overflow-hidden bg-[#101820] pt-20 pb-20 md:pt-[50px]"
     >
       <div className="relative z-10 mx-auto w-full max-w-7xl px-5 md:px-10">
         <div className={`text-center ${visible ? 'animate-fade-in-down' : 'opacity-0'}`}>
-          <h2 className="font-display text-[clamp(2rem,6vw,4rem)] font-bold uppercase leading-tight tracking-tight text-stone-900">
+          <h2 className="font-display text-[clamp(2rem,6vw,4rem)] font-bold uppercase leading-tight tracking-tight text-stone-50">
             Projek DIGFIN
           </h2>
 
@@ -190,7 +190,7 @@ export function ProjectSection({ project }: ProjectSectionProps) {
         </div>
 
         {project.length === 0 ? (
-          <p className="mt-16 animate-fade-up text-center text-[18px] text-stone-500">
+          <p className="mt-16 animate-fade-up text-center text-[18px] text-stone-400">
             Belum ada project.
           </p>
         ) : (

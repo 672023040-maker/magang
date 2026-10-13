@@ -40,13 +40,13 @@ export function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#F7F3ED] px-4">
+    <div className="flex min-h-screen items-center justify-center bg-[#101820] px-4">
       <div className="w-full max-w-sm">
         <div className="mb-6 text-center">
-          <p className="font-display text-3xl font-semibold text-stone-900">
+          <p className="font-display text-3xl font-semibold text-stone-50">
             DIGFIN<span className="text-brand-600">.</span>
           </p>
-          <p className="mt-1 text-sm text-stone-500">
+          <p className="mt-1 text-sm text-stone-400">
             Masuk dulu, ya. Baru bisa kelola konten.
           </p>
         </div>
