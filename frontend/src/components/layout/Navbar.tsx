@@ -31,11 +31,11 @@ export function Navbar() {
   }, [])
 
   return (
-    <header className="fixed inset-x-0 top-0 z-40 border border-slate-300 bg-[#F3EAE1]">
+    <header className="fixed inset-x-0 top-0 z-40 border border-white/10 bg-[#0D151C]">
       <nav className="flex h-[84px] items-center pl-2.5 pr-4 md:grid md:grid-cols-[1fr_auto_1fr]">
         <a
           href="#hero"
-          className="flex items-center gap-2.5 font-display text-xl font-semibold text-stone-900 md:ml-[150px] md:mr-[60px] md:justify-self-start"
+          className="flex items-center gap-2.5 font-display text-xl font-semibold text-stone-100 md:ml-[150px] md:mr-[60px] md:justify-self-start"
         >
           <img
             src="/digfin logo.png"
@@ -51,8 +51,8 @@ export function Navbar() {
                 href={link.href}
                 className={`text-sm font-medium transition ${
                   active === link.href
-                    ? 'text-stone-900'
-                    : 'text-stone-600 hover:text-stone-900'
+                    ? 'text-[#C49A45]'
+                    : 'text-stone-300 hover:text-white'
                 }`}
               >
                 {link.label}
@@ -65,7 +65,7 @@ export function Navbar() {
           <button
             type="button"
             onClick={() => setMenuOpen((open) => !open)}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-stone-900 transition hover:bg-black/5 md:hidden"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-stone-100 transition hover:bg-white/10 md:hidden"
             aria-label={menuOpen ? 'Tutup menu' : 'Buka menu'}
             aria-expanded={menuOpen}
           >
@@ -97,7 +97,7 @@ export function Navbar() {
       </nav>
 
       {menuOpen && (
-        <div className="border-t border-black/10 bg-[#F3EAE1] px-4 pb-6 pt-2 md:hidden">
+        <div className="border-t border-white/10 bg-[#0D151C] px-4 pb-6 pt-2 md:hidden">
           <ul className="space-y-1">
             {links.map((link) => (
               <li key={link.href}>
@@ -106,8 +106,8 @@ export function Navbar() {
                   onClick={() => setMenuOpen(false)}
                   className={`block rounded-lg px-3 py-2 text-sm font-medium transition ${
                     active === link.href
-                      ? 'bg-black/10 text-stone-900'
-                      : 'text-stone-600 hover:bg-black/10 hover:text-stone-900'
+                      ? 'bg-white/10 text-[#C49A45]'
+                      : 'text-stone-300 hover:bg-white/10 hover:text-white'
                   }`}
                 >
                   {link.label}

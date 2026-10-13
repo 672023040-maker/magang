@@ -258,7 +258,7 @@ export function ProjectPage() {
       ) : (
         <div className="overflow-x-auto rounded-xl border border-stone-300 bg-white">
           <table className="w-full min-w-[760px] text-left text-sm">
-            <thead className="border-b border-stone-300 bg-[#F3EAE1] text-xs uppercase text-stone-500">
+            <thead className="border-b border-stone-300 bg-[#101820] text-xs uppercase text-stone-200">
               <tr>
                 <th className="px-4 py-3">Sampul</th>
                 <th className="px-4 py-3">Nama Project</th>

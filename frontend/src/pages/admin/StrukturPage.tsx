@@ -232,7 +232,7 @@ export function StrukturPage() {
       ) : (
         <div className="overflow-x-auto rounded-xl border border-stone-300 bg-white">
           <table className="w-full min-w-[560px] text-left text-sm">
-            <thead className="border-b border-stone-300 bg-[#F3EAE1] text-xs uppercase text-stone-500">
+            <thead className="border-b border-stone-300 bg-[#101820] text-xs uppercase text-stone-200">
               <tr>
                 <th className="px-4 py-3 w-12">Foto</th>
                 <th className="px-4 py-3">Nama</th>

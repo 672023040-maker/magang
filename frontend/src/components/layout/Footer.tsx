@@ -17,7 +17,7 @@ export function Footer({ kontak }: FooterProps) {
       ]
 
   return (
-    <footer className="bg-[#F3EAE1] text-stone-700">
+    <footer className="bg-[#0D151C] text-stone-200">
       <div className="grid gap-2.5 lg:grid-cols-[1fr_auto_1fr] py-8 px-5">
         <div className="flex items-center justify-center lg:justify-start lg:ml-[300px]">
           <img
@@ -30,7 +30,7 @@ export function Footer({ kontak }: FooterProps) {
         <div className="text-center lg:text-left">
           <div className="flex items-center justify-center lg:justify-start gap-2">
             <svg
-              className="h-5 w-5 text-stone-900"
+              className="h-5 w-5 text-stone-100"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -42,12 +42,12 @@ export function Footer({ kontak }: FooterProps) {
               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
               <circle cx="12" cy="10" r="3" />
             </svg>
-            <p className="text-sm font-semibold uppercase tracking-wide text-stone-500">
+            <p className="text-sm font-semibold uppercase tracking-wide text-stone-400">
               Lokasi
             </p>
           </div>
           {lokasiLines.map((line: string, i: number) => (
-            <p key={i} className="mt-3 max-w-[260px] text-sm leading-relaxed text-stone-600">
+            <p key={i} className="mt-3 max-w-[260px] text-sm leading-relaxed text-stone-300">
               {line}
             </p>
           ))}
@@ -57,7 +57,7 @@ export function Footer({ kontak }: FooterProps) {
           <div>
             <div className="flex items-center justify-center lg:justify-start gap-2">
               <svg
-                className="h-5 w-5 text-stone-900"
+                className="h-5 w-5 text-stone-100"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -69,18 +69,18 @@ export function Footer({ kontak }: FooterProps) {
                 <circle cx="12" cy="12" r="10" />
                 <path d="M12 6v6l4 2" />
               </svg>
-              <p className="text-sm font-semibold uppercase tracking-wide text-stone-500">
+              <p className="text-sm font-semibold uppercase tracking-wide text-stone-400">
                 Jam Operasional
               </p>
             </div>
-            <p className="mt-3 text-sm text-stone-600">{hariOperasional}</p>
-            <p className="mt-1 text-sm text-stone-600">
+            <p className="mt-3 text-sm text-stone-300">{hariOperasional}</p>
+            <p className="mt-1 text-sm text-stone-300">
               {jamBuka} - {jamTutup}
             </p>
           </div>
 
           <div>
-            <p className="text-sm font-semibold uppercase tracking-wide text-stone-500">
+            <p className="text-sm font-semibold uppercase tracking-wide text-stone-400">
               Sosial Media
             </p>
             <a
@@ -91,7 +91,7 @@ export function Footer({ kontak }: FooterProps) {
               className="mt-3 inline-block opacity-80 transition hover:opacity-100"
             >
               <svg
-                className="h-6 w-6 text-stone-900"
+                className="h-6 w-6 text-stone-100"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -108,7 +108,7 @@ export function Footer({ kontak }: FooterProps) {
         </div>
       </div>
 
-      <div className="border-t border-black/10 py-5 text-center text-xs text-stone-500">
+      <div className="border-t border-white/10 py-5 text-center text-xs text-stone-400">
         DIGFIN ©2026 UKSW. Seluruh hak cipta.
       </div>
     </footer>
