@@ -29,7 +29,7 @@ export function FloatingSocial() {
       aria-label="Instagram DID UKSW"
       aria-hidden={hidden ? true : undefined}
       tabIndex={hidden ? -1 : undefined}
-      className={`fixed right-4 top-1/2 z-40 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-gradient-to-tr from-[#feda75] via-[#d62976] to-[#4f5bd5] text-white shadow-lg shadow-black/25 ring-2 ring-white/60 transition-all duration-300 ease-out lg:hidden ${
+      className={`fixed right-4 top-1/2 z-40 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white text-stone-900 shadow-lg shadow-black/25 ring-1 ring-black/10 transition-all duration-300 ease-out lg:hidden ${
         hidden ? 'pointer-events-none translate-x-20 opacity-0' : 'translate-x-0 opacity-100'
       }`}
     >
