@@ -288,6 +288,87 @@ class ApiTest extends TestCase
             ->assertJsonPath('data.0.author.jabatan', 'Direktur Utama');
     }
 
+    public function test_link_project_tersimpan_dan_tampil_di_endpoint_publik(): void
+    {
+        $this->createAdmin();
+        $path = trim((string) config('security.admin_path'), '/');
+
+        $this->login();
+        $sessionId = $this->app['session']->getId();
+
+        $this->from(config('app.url'))
+            ->withCredentials()
+            ->withCookie(config('session.cookie'), $sessionId)
+            ->postJson("/api/{$path}/project", [
+                'nama_project' => 'Flearn Website',
+                'deskripsi' => 'Project dengan link.',
+                'status' => 'publish',
+                'link_project' => 'https://flearn.example.com',
+            ])
+            ->assertStatus(201)
+            ->assertJsonPath('data.link_project', 'https://flearn.example.com');
+
+        // Landing page membaca endpoint ini; link harus ikut terbawa.
+        $this->getJson('/api/project')
+            ->assertOk()
+            ->assertJsonPath('data.0.link_project', 'https://flearn.example.com');
+    }
+
+    public function test_link_project_tidak_valid_ditolak(): void
+    {
+        $this->createAdmin();
+        $path = trim((string) config('security.admin_path'), '/');
+
+        $this->login();
+        $sessionId = $this->app['session']->getId();
+
+        $this->from(config('app.url'))
+            ->withCredentials()
+            ->withCookie(config('session.cookie'), $sessionId)
+            ->postJson("/api/{$path}/project", [
+                'nama_project' => 'Link Salah',
+                'deskripsi' => 'Link bukan URL valid.',
+                'status' => 'publish',
+                'link_project' => 'bukan-url',
+            ])
+            ->assertStatus(422)
+            ->assertJsonValidationErrors('link_project');
+    }
+
+    public function test_link_project_dapat_dikosongkan_saat_update(): void
+    {
+        $this->createAdmin();
+        $path = trim((string) config('security.admin_path'), '/');
+
+        $project = Project::query()->create([
+            'nama_project' => 'Punya Link',
+            'deskripsi' => 'Awal punya link.',
+            'status' => 'publish',
+            'link_project' => 'https://awal.example.com',
+        ]);
+
+        $this->login();
+        $sessionId = $this->app['session']->getId();
+
+        // String kosong → middleware ConvertEmptyStringsToNull → tersimpan null.
+        $this->from(config('app.url'))
+            ->withCredentials()
+            ->withCookie(config('session.cookie'), $sessionId)
+            ->putJson("/api/{$path}/project/{$project->id}", [
+                'nama_project' => 'Punya Link',
+                'deskripsi' => 'Link dikosongkan.',
+                'status' => 'publish',
+                'link_project' => '',
+            ])
+            ->assertOk()
+            ->assertJsonPath('data.link_project', null);
+
+        $this->assertDatabaseHas('project', [
+            'id' => $project->id,
+            'link_project' => null,
+        ]);
+    }
+
     public function test_hapus_anggota_struktur_tidak_menghapus_projectnya(): void
     {
         // author_id memakai ON DELETE SET NULL, bukan CASCADE. Kalau salah

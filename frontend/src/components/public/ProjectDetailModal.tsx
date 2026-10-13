@@ -159,6 +159,33 @@ export function ProjectDetailModal({ project, onClose }: ProjectDetailModalProps
                 {project.deskripsi}
               </p>
             </div>
+
+            {project.link_project && (
+              <div className="mt-5 border-t border-stone-200 pt-5">
+                <a
+                  href={project.link_project}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[#C49A45] px-4 py-2.5 text-sm font-semibold text-[#101820] transition hover:bg-[#A87F35] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C49A45]/70"
+                >
+                  Kunjungi Website
+                  <svg
+                    className="h-4 w-4"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden
+                  >
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <path d="M15 3h6v6" />
+                    <path d="M10 14 21 3" />
+                  </svg>
+                </a>
+              </div>
+            )}
           </div>
         </div>
 

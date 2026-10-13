@@ -28,6 +28,7 @@ class ProjectRequest extends FormRequest
             // mengedit project tersebut, jadi author hanya divalidasi bila dikirim.
             'author_id' => ['nullable', 'integer', Rule::exists('struktur_organisasi', 'id')],
             'deskripsi' => ['required', 'string'],
+            'link_project' => ['nullable', 'url', 'max:2048'],
             'status' => ['required', 'in:publish,unpublish'],
             'tgl_dibuat' => ['nullable', 'date'],
             'dokumentasi' => ['nullable', 'array', 'max:'.$maxFiles],
@@ -39,6 +40,7 @@ class ProjectRequest extends FormRequest
     {
         return [
             'author_id' => 'author',
+            'link_project' => 'link project',
             'dokumentasi' => 'dokumentasi',
             'dokumentasi.*.file_gambar' => 'gambar sampul',
         ];

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 
 const links = [
   { href: '#hero', label: 'BERANDA' },
@@ -11,10 +12,20 @@ const links = [
 export function Navbar() {
   const [active, setActive] = useState('#hero')
   const [menuOpen, setMenuOpen] = useState(false)
+  const { pathname } = useLocation()
+  const isHome = pathname === '/'
+
+  // Di halaman selain beranda, tautan section kembali ke beranda (mis. "/#profil").
+  const to = (hash: string) => (isHome ? hash : `/${hash}`)
+
+  // Hanya sorot menu aktif saat berada di beranda (section-nya memang ada di sana).
+  const current = isHome ? active : ''
 
   useEffect(() => {
+    if (!isHome) return
+
     const onScroll = () => {
-      const current = links
+      const next = links
         .filter((link) => {
           const el = document.querySelector(link.href)
           return el instanceof HTMLElement && el.offsetTop - 100 <= window.scrollY
@@ -22,19 +33,19 @@ export function Navbar() {
         .map((link) => link.href)
         .pop()
 
-      if (current) setActive(current)
+      if (next) setActive(next)
     }
 
     window.addEventListener('scroll', onScroll, { passive: true })
 
     return () => window.removeEventListener('scroll', onScroll)
-  }, [])
+  }, [isHome])
 
   return (
     <header className="fixed inset-x-0 top-0 z-40 border border-white/10 bg-[#0D151C]">
       <nav className="flex h-[84px] items-center pl-2.5 pr-4 md:grid md:grid-cols-[1fr_auto_1fr]">
         <a
-          href="#hero"
+          href={to('#hero')}
           className="flex items-center gap-2.5 font-display text-xl font-semibold text-stone-100 md:ml-[150px] md:mr-[60px] md:justify-self-start"
         >
           <img
@@ -48,9 +59,9 @@ export function Navbar() {
           {links.map((link) => (
             <li key={link.href}>
               <a
-                href={link.href}
+                href={to(link.href)}
                 className={`text-sm font-medium transition ${
-                  active === link.href
+                  current === link.href
                     ? 'text-[#C49A45]'
                     : 'text-stone-300 hover:text-white'
                 }`}
@@ -102,10 +113,10 @@ export function Navbar() {
             {links.map((link) => (
               <li key={link.href}>
                 <a
-                  href={link.href}
+                  href={to(link.href)}
                   onClick={() => setMenuOpen(false)}
                   className={`block rounded-lg px-3 py-2 text-sm font-medium transition ${
-                    active === link.href
+                    current === link.href
                       ? 'bg-white/10 text-[#C49A45]'
                       : 'text-stone-300 hover:bg-white/10 hover:text-white'
                   }`}

@@ -10,6 +10,7 @@ import { StrukturPage } from './pages/admin/StrukturPage'
 import { KontakPage } from './pages/admin/KontakPage'
 import { ChangePasswordPage } from './pages/admin/ChangePasswordPage'
 import { DevicesPage } from './pages/admin/DevicesPage'
+import { AllProjectsPage } from './pages/public/AllProjectsPage'
 import { HomePage } from './pages/public/HomePage'
 import { NotFoundPage } from './pages/public/NotFoundPage'
 
@@ -19,6 +20,7 @@ function App() {
       <AuthProvider>
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/project" element={<AllProjectsPage />} />
           <Route path="/admin/login" element={<LoginPage />} />
 
           <Route

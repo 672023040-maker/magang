@@ -48,6 +48,7 @@ class ProjectController extends Controller
         $attributes = $request->only([
             'nama_project',
             'deskripsi',
+            'link_project',
             'status',
             'tgl_dibuat',
             'author_id',
@@ -91,6 +92,7 @@ class ProjectController extends Controller
         $attributes = $request->only([
             'nama_project',
             'deskripsi',
+            'link_project',
             'status',
             'tgl_dibuat',
             'author_id',

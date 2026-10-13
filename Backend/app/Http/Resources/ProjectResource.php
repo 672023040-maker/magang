@@ -13,6 +13,7 @@ class ProjectResource extends JsonResource
             'id' => $this->id,
             'nama_project' => $this->nama_project,
             'deskripsi' => $this->deskripsi,
+            'link_project' => $this->link_project,
             'status' => $this->status,
             'tgl_dibuat' => $this->tgl_dibuat?->toDateString(),
             'author' => new StrukturResource($this->whenLoaded('author')),

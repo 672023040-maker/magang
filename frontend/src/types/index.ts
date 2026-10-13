@@ -27,6 +27,7 @@ export interface Project {
   id: number
   nama_project: string
   deskripsi: string
+  link_project: string | null
   status: StatusProject
   tgl_dibuat: string | null
   author: Struktur | null

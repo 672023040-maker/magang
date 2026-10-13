@@ -13,6 +13,7 @@ class Project extends Model
     protected $fillable = [
         'nama_project',
         'deskripsi',
+        'link_project',
         'status',
         'tgl_dibuat',
         'author_id',

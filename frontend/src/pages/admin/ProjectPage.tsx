@@ -16,6 +16,7 @@ interface ProjectForm {
   nama_project: string
   author_id: string
   deskripsi: string
+  link_project: string
   status: StatusProject
   tgl_dibuat: string
   file_gambar: File | null
@@ -25,6 +26,7 @@ const emptyForm: ProjectForm = {
   nama_project: '',
   author_id: '',
   deskripsi: '',
+  link_project: '',
   status: 'unpublish',
   tgl_dibuat: '',
   file_gambar: null,
@@ -115,6 +117,7 @@ export function ProjectPage() {
       nama_project: item.nama_project,
       author_id: item.author ? String(item.author.id) : '',
       deskripsi: item.deskripsi,
+      link_project: item.link_project ?? '',
       status: item.status,
       tgl_dibuat: item.tgl_dibuat ?? '',
       file_gambar: null,
@@ -163,6 +166,8 @@ export function ProjectPage() {
     data.append('nama_project', form.nama_project)
     data.append('deskripsi', form.deskripsi)
     data.append('status', form.status)
+    // String kosong dikonversi middleware ConvertEmptyStringsToNull → null.
+    data.append('link_project', form.link_project.trim())
 
     if (form.author_id) data.append('author_id', form.author_id)
 
@@ -370,6 +375,15 @@ export function ProjectPage() {
             onChange={(e) => updateField('deskripsi', e.target.value)}
             error={fieldErrors.deskripsi?.[0]}
             required
+          />
+          <Input
+            id="link_project"
+            label="Link Project (opsional)"
+            type="url"
+            placeholder="https://contoh.com"
+            value={form.link_project}
+            onChange={(e) => updateField('link_project', e.target.value)}
+            error={fieldErrors.link_project?.[0]}
           />
           <Select
             id="status"

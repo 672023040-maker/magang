@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import type { Project } from '../../types'
 import { ProjectDetailModal } from './ProjectDetailModal'
 
@@ -271,6 +272,27 @@ export function ProjectSection({ project }: ProjectSectionProps) {
               </button>
             </div>
         )}
+
+        <div className="mt-12 flex justify-center md:mt-14">
+          <Link
+            to="/project"
+            className="inline-flex items-center gap-2 rounded-lg bg-[#C49A45] px-6 py-3 text-sm font-semibold text-[#101820] transition hover:bg-[#A87F35] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C49A45]/70"
+          >
+            LIHAT SEMUA PROJECT
+            <svg
+              className="h-4 w-4"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden
+            >
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </Link>
+        </div>
       </div>
 
       {selectedProject && (
