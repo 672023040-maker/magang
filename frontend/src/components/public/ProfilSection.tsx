@@ -31,7 +31,9 @@ function ProfilCard({ number, title, children, className = '' }: ProfilCardProps
 
 export function ProfilSection() {
   const headingRef = useRef<HTMLDivElement>(null)
+  const gridRef = useRef<HTMLDivElement>(null)
   const [visible, setVisible] = useState(false)
+  const [cardsVisible, setCardsVisible] = useState(false)
 
   useEffect(() => {
     const node = headingRef.current
@@ -42,6 +44,26 @@ export function ProfilSection() {
       (entries) => {
         if (entries[0].isIntersecting) {
           setVisible(true)
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.2 },
+    )
+
+    observer.observe(node)
+
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
+    const node = gridRef.current
+
+    if (!node) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setCardsVisible(true)
           observer.disconnect()
         }
       },
@@ -66,16 +88,24 @@ export function ProfilSection() {
         </h2>
         <div aria-hidden className="mt-4 h-px w-24 animate-fade-up bg-stone-400/60" />
 
-        <div className="profil-grid mt-12 w-full md:mt-16">
+        <div ref={gridRef} className="profil-grid mt-12 w-full md:mt-16">
           {/* VISI - Full width card on top */}
-          <ProfilCard number="1" title="Visi" className="profil-card-visi">
+          <ProfilCard
+            number="1"
+            title="Visi"
+            className={`profil-card-visi ${cardsVisible ? 'animate-fade-in-down' : 'opacity-0'}`}
+          >
             <p className="mx-auto mt-5 max-w-[520px] text-center text-[18px] leading-[1.7] text-[#4A423B]">
               Menjadi penggerak transformasi digital UKSW melalui pengembangan teknologi dan layanan digital yang inovatif, terintegrasi, efektif, dan berkelanjutan.
             </p>
           </ProfilCard>
 
           {/* MISI */}
-          <ProfilCard number="2" title="Misi">
+          <ProfilCard
+            number="2"
+            title="Misi"
+            className={`${cardsVisible ? 'animate-fade-in-down' : 'opacity-0'} [animation-delay:150ms]`}
+          >
             <ol className="profil-numbered mt-5 text-left text-[18px] leading-[1.6] text-[#4A423B] space-y-[11px]">
               <li>Mengembangkan dan mengelola layanan digital yang mendukung kebutuhan akademik, administrasi, dan operasional UKSW.</li>
               <li>Mendorong inovasi teknologi dan digitalisasi untuk meningkatkan kualitas dan efisiensi layanan universitas.</li>
@@ -84,7 +114,11 @@ export function ProfilSection() {
           </ProfilCard>
 
           {/* TUJUAN */}
-          <ProfilCard number="3" title="Tujuan">
+          <ProfilCard
+            number="3"
+            title="Tujuan"
+            className={`${cardsVisible ? 'animate-fade-in-down' : 'opacity-0'} [animation-delay:300ms]`}
+          >
             <ol className="profil-numbered mt-5 text-left text-[18px] leading-[1.6] text-[#4A423B] space-y-[11px]">
               <li>Meningkatkan efektivitas dan efisiensi layanan melalui pemanfaatan teknologi digital.</li>
               <li>Mewujudkan layanan digital yang terintegrasi dan mudah diakses oleh seluruh sivitas akademika.</li>
