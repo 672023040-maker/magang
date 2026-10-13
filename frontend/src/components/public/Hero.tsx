@@ -15,7 +15,7 @@ export function Hero() {
         src="/hero4dekstop.jpg"
         alt=""
         aria-hidden
-        className="absolute inset-0 hidden h-full w-full object-cover object-center md:block"
+        className="absolute inset-0 hidden h-full w-full object-cover object-top md:block"
       />
 
       {/* Overlay agar teks tetap terbaca dan gambar tidak "ramai" */}
