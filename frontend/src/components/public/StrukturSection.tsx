@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { Avatar } from '../ui/Avatar'
 import type { Struktur } from '../../types'
 
 interface StrukturSectionProps {
@@ -155,12 +156,12 @@ export function StrukturSection({ struktur }: StrukturSectionProps) {
                             className="h-[250px] w-[200px] shrink-0 rounded-none object-cover ring-2 ring-stone-400/70"
                           />
                         ) : (
-                          <div className="flex h-[250px] w-[200px] shrink-0 items-center justify-center rounded-none bg-stone-900 text-xl font-semibold text-white">
-                            {orang.nama
-                              .split(' ')
-                              .slice(0, 2)
-                              .map((part: string) => part.charAt(0))
-                              .join('')}
+                          <div className="h-[250px] w-[200px] shrink-0 overflow-hidden rounded-none bg-stone-900 ring-2 ring-stone-400/70">
+                            <Avatar
+                              name={orang.nama}
+                              variant="portrait"
+                              className="h-full w-full"
+                            />
                           </div>
                         )}
                         <div className="mt-4 min-w-0">

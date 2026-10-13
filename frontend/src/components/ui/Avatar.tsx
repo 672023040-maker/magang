@@ -4,7 +4,7 @@ interface AvatarProps extends Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> {
   src?: string | null
   name: string
   size?: 'sm' | 'md' | 'lg'
-  variant?: 'initials' | 'persona'
+  variant?: 'initials' | 'persona' | 'portrait'
   className?: string
 }
 
@@ -187,6 +187,123 @@ function PersonaAvatar({ name, size = 'md', className = '' }: { name: string; si
   )
 }
 
+function PortraitAvatar({ name, className = '' }: { name: string; className?: string }) {
+  const colors = getPersonaColors(name)
+  const hash = getHash(name)
+
+  // viewBox 200x250 (rasio kotak foto 200x250): kepala di atas, torso di bawah.
+  const cX = 100
+  const cY = 95
+  const headSize = 96
+  const half = headSize / 2
+  const eyeOffset = Math.round(headSize * 0.16)
+  const eyeY = Math.round(cY - headSize * 0.05)
+  const mouthY = Math.round(cY + headSize * 0.28)
+
+  const eyeType = hash % 3
+  const hasSmile = hash % 2 === 0
+  const strokeWidth = 2.5
+
+  return (
+    <svg
+      viewBox="0 0 200 250"
+      preserveAspectRatio="xMidYMid meet"
+      className={`h-full w-full ${className}`}
+      role="img"
+      aria-label={name}
+    >
+      <defs>
+        <clipPath id={`portrait-head-clip-${hash}`}>
+          <circle cx={cX} cy={cY} r={half} />
+        </clipPath>
+      </defs>
+
+      {/* Torso / Baju */}
+      <path
+        d="M26 250 L26 195 Q26 145 62 132 L70 138 Q100 154 130 138 L138 132 Q174 145 174 195 L174 250 Z"
+        fill={colors.shirt}
+      />
+
+      {/* Leher */}
+      <rect
+        x={cX - 14}
+        y={Math.round(cY + half * 0.45)}
+        width={28}
+        height={Math.round(half * 0.9)}
+        rx={6}
+        fill={colors.skin}
+      />
+
+      {/* Rambut (di belakang kepala) */}
+      <path
+        d={`M${cX - half} ${cY - half} Q${cX} ${Math.round(cY - headSize * 0.75)} ${cX + half} ${cY - half} Q${Math.round(cX + headSize * 0.5)} ${cY} ${cX} ${cY + half} Q${Math.round(cX - headSize * 0.5)} ${cY} ${cX - half} ${cY - half}`}
+        fill={colors.hair}
+      />
+
+      {/* Kepala */}
+      <circle cx={cX} cy={cY} r={half} fill={colors.skin} />
+
+      {/* Wajah */}
+      <g clipPath={`url(#portrait-head-clip-${hash})`}>
+        {eyeType === 0 && (
+          <>
+            <circle cx={cX - eyeOffset} cy={eyeY} r={4.5} fill="#2D2D2D" />
+            <circle cx={cX + eyeOffset} cy={eyeY} r={4.5} fill="#2D2D2D" />
+          </>
+        )}
+        {eyeType === 1 && (
+          <>
+            <ellipse
+              cx={cX - eyeOffset}
+              cy={eyeY}
+              rx={5.5}
+              ry={4}
+              fill="#2D2D2D"
+              transform={`rotate(-10 ${cX - eyeOffset} ${eyeY})`}
+            />
+            <ellipse
+              cx={cX + eyeOffset}
+              cy={eyeY}
+              rx={5.5}
+              ry={4}
+              fill="#2D2D2D"
+              transform={`rotate(10 ${cX + eyeOffset} ${eyeY})`}
+            />
+          </>
+        )}
+        {eyeType === 2 && (
+          <>
+            <circle cx={cX - eyeOffset} cy={eyeY} r={5.5} fill="#2D2D2D" />
+            <circle cx={cX + eyeOffset} cy={eyeY} r={5.5} fill="#2D2D2D" />
+            <circle cx={cX - eyeOffset} cy={eyeY} r={2} fill="white" />
+            <circle cx={cX + eyeOffset} cy={eyeY} r={2} fill="white" />
+          </>
+        )}
+
+        {hasSmile ? (
+          <path
+            d={`M${cX - eyeOffset} ${mouthY} Q${cX} ${mouthY + 5} ${cX + eyeOffset} ${mouthY}`}
+            stroke="#2D2D2D"
+            strokeWidth={strokeWidth}
+            fill="none"
+            strokeLinecap="round"
+          />
+        ) : (
+          <line
+            x1={Math.round(cX - eyeOffset * 0.7)}
+            y1={mouthY}
+            x2={Math.round(cX + eyeOffset * 0.7)}
+            y2={mouthY}
+            stroke="#2D2D2D"
+            strokeWidth={strokeWidth}
+            strokeLinecap="round"
+          />
+        )}
+      </g>
+    </svg>
+  )
+}
+
 export function Avatar({ src, name, size = 'md', variant = 'persona', className = '', alt, ...rest }: AvatarProps) {
   if (src) {
     return (
@@ -201,6 +318,10 @@ export function Avatar({ src, name, size = 'md', variant = 'persona', className 
 
   if (variant === 'initials') {
     return <InitialsAvatar name={name} size={size} className={className} />
+  }
+
+  if (variant === 'portrait') {
+    return <PortraitAvatar name={name} className={className} />
   }
 
   return <PersonaAvatar name={name} size={size} className={className} />
