@@ -5,17 +5,13 @@ export function Hero() {
     <>
       <section
         id="hero"
-        className="relative min-h-[600px] overflow-visible bg-white md:min-h-[740px]"
+        className="relative min-h-[600px] overflow-visible bg-[#101820] md:min-h-[740px]"
         style={{ '--hero-background': 'url(/hero4.jpg)' } as CSSProperties}
       >
         <div
           aria-hidden
-          className="absolute inset-0"
-          style={{
-            backgroundImage: 'var(--hero-background, none)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center top',
-          }}
+          className="absolute inset-0 bg-contain bg-center md:bg-cover md:bg-top"
+          style={{ backgroundImage: 'var(--hero-background, none)' }}
         />
         <div className="relative z-10 px-5 pb-20 pt-[165px] text-center">
           <p className="mb-3 font-inter text-[30px] font-semibold text-white">
