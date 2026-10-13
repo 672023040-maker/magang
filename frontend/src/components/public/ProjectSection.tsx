@@ -276,7 +276,7 @@ export function ProjectSection({ project }: ProjectSectionProps) {
         <div className="mt-12 flex justify-center md:mt-14">
           <Link
             to="/project"
-            className="inline-flex items-center gap-2 rounded-lg bg-[#C49A45] px-6 py-3 text-sm font-semibold text-[#101820] transition hover:bg-[#A87F35] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C49A45]/70"
+            className="inline-flex items-center gap-2 rounded-lg bg-[#168c8c] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#127373] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#168c8c]/70"
           >
             LIHAT SEMUA PROJECT
             <svg

@@ -4,17 +4,17 @@ export function NotFoundPage() {
   const navigate = useNavigate()
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#C49A45] px-5">
+    <div className="flex min-h-screen items-center justify-center bg-[#101820] px-5">
       <div className="w-full max-w-xl text-center">
-        <p className="font-display text-[clamp(5rem,20vw,9rem)] font-bold leading-none text-[#000000]">
+        <p className="font-display text-[clamp(5rem,20vw,9rem)] font-bold leading-none text-[#168c8c]">
           404
         </p>
 
-        <h1 className="mt-6 font-display text-lg font-bold uppercase tracking-wide text-stone-900 md:text-2xl">
+        <h1 className="mt-6 font-display text-lg font-bold uppercase tracking-wide text-white md:text-2xl">
           Halaman yang Anda cari tidak ditemukan
         </h1>
 
-        <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-stone-700">
+        <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-stone-300">
           Alamat halaman mungkin salah, sudah dipindah, atau tidak lagi tersedia.
           Silakan kembali ke beranda atau ke halaman sebelumnya untuk melanjutkan.
         </p>
@@ -23,13 +23,13 @@ export function NotFoundPage() {
           <button
             type="button"
             onClick={() => navigate(-1)}
-            className="rounded-full bg-[#000000] px-6 py-2.5 text-sm font-semibold text-white transition hover:opacity-85"
+            className="rounded-full bg-[#168c8c] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#127373]"
           >
             Kembali
           </button>
           <Link
             to="/"
-            className="rounded-full border border-stone-900 px-6 py-2.5 text-sm font-semibold text-stone-900 transition hover:bg-stone-900 hover:text-white"
+            className="rounded-full border border-white/30 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-white hover:text-[#101820]"
           >
             Ke Beranda
           </Link>

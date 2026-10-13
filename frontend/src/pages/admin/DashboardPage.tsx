@@ -55,7 +55,7 @@ export function DashboardPage() {
             {stats.struktur}
           </p>
         </div>
-        <div className="rounded-xl border border-stone-300 border-t-4 border-t-[#C49A45] bg-white p-5">
+        <div className="rounded-xl border border-stone-300 border-t-4 border-t-[#168c8c] bg-white p-5">
           <p className="text-sm font-medium text-stone-500">Project</p>
           <p className="mt-1 text-3xl font-bold text-stone-900">{stats.project}</p>
         </div>

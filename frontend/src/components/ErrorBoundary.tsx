@@ -22,17 +22,17 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   render() {
     if (this.state.hasError) {
       return (
-        <div className="flex min-h-screen items-center justify-center bg-[#C49A45] px-5">
+        <div className="flex min-h-screen items-center justify-center bg-[#101820] px-5">
           <div className="w-full max-w-xl text-center">
-            <p className="font-display text-[clamp(4rem,16vw,7rem)] font-bold leading-none text-black">
+            <p className="font-display text-[clamp(4rem,16vw,7rem)] font-bold leading-none text-[#168c8c]">
               Ups
             </p>
 
-            <h1 className="mt-6 font-display text-lg font-bold uppercase tracking-wide text-stone-900 md:text-2xl">
+            <h1 className="mt-6 font-display text-lg font-bold uppercase tracking-wide text-white md:text-2xl">
               Terjadi kesalahan pada halaman
             </h1>
 
-            <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-stone-700">
+            <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-stone-300">
               Sesuatu tidak berjalan seperti seharusnya. Silakan muat ulang halaman. Jika masalah
               berlanjut, hubungi administrator.
             </p>
@@ -41,13 +41,13 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
               <button
                 type="button"
                 onClick={() => window.location.reload()}
-                className="rounded-full bg-black px-6 py-2.5 text-sm font-semibold text-white transition hover:opacity-85"
+                className="rounded-full bg-[#168c8c] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#127373]"
               >
                 Muat Ulang
               </button>
               <a
                 href="/"
-                className="rounded-full border border-stone-900 px-6 py-2.5 text-sm font-semibold text-stone-900 transition hover:bg-stone-900 hover:text-white"
+                className="rounded-full border border-white/30 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-white hover:text-[#101820]"
               >
                 Ke Beranda
               </a>

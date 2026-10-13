@@ -168,7 +168,7 @@ export function ProjectDetailModal({ project, onClose }: ProjectDetailModalProps
                   href={websiteUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[#C49A45] px-4 py-2.5 text-sm font-semibold text-[#101820] transition hover:bg-[#A87F35] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C49A45]/70"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[#168c8c] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#127373] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#168c8c]/70"
                 >
                   Kunjungi Website
                   <svg

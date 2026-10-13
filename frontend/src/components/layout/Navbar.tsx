@@ -42,7 +42,7 @@ export function Navbar() {
   }, [isHome])
 
   return (
-    <header className="fixed inset-x-0 top-0 z-40 border border-white/10 bg-[#0D151C]">
+    <header className="fixed inset-x-0 top-0 z-40 border border-white/10 bg-[#101820]">
       <nav className="flex h-[84px] items-center pl-2.5 pr-4 md:grid md:grid-cols-[1fr_auto_1fr]">
         <a
           href={to('#hero')}
@@ -62,7 +62,7 @@ export function Navbar() {
                 href={to(link.href)}
                 className={`text-sm font-medium transition ${
                   current === link.href
-                    ? 'text-[#C49A45]'
+                    ? 'text-[#168c8c]'
                     : 'text-stone-300 hover:text-white'
                 }`}
               >
@@ -108,7 +108,7 @@ export function Navbar() {
       </nav>
 
       {menuOpen && (
-        <div className="border-t border-white/10 bg-[#0D151C] px-4 pb-6 pt-2 md:hidden">
+        <div className="border-t border-white/10 bg-[#101820] px-4 pb-6 pt-2 md:hidden">
           <ul className="space-y-1">
             {links.map((link) => (
               <li key={link.href}>
@@ -117,7 +117,7 @@ export function Navbar() {
                   onClick={() => setMenuOpen(false)}
                   className={`block rounded-lg px-3 py-2 text-sm font-medium transition ${
                     current === link.href
-                      ? 'bg-white/10 text-[#C49A45]'
+                      ? 'bg-white/10 text-[#168c8c]'
                       : 'text-stone-300 hover:bg-white/10 hover:text-white'
                   }`}
                 >

@@ -35,15 +35,15 @@ export function KontakSection({ kontak }: KontakSectionProps) {
   return (
     <section
       id="kontak"
-      className="relative w-full overflow-hidden bg-[#C49A45] py-20 md:py-24"
+      className="relative w-full overflow-hidden bg-white py-20 md:py-24"
     >
       <div ref={boxRef} className="relative z-10 mx-auto max-w-xl px-5 text-center">
-        <h2 className={`font-display text-4xl font-bold uppercase tracking-tight text-stone-900 md:text-5xl ${
+        <h2 className={`font-display text-4xl font-bold uppercase tracking-tight text-[#101820] md:text-5xl ${
             visible ? 'animate-fade-in-down' : 'opacity-0'
           }`}>
           Kontak Kami
         </h2>
-        <div aria-hidden className="mx-auto mt-4 h-px w-24 bg-stone-400/60" />
+        <div aria-hidden className="mx-auto mt-4 h-px w-24 bg-[#168c8c]" />
 
         <p className="mt-5 text-[18px] leading-relaxed text-stone-600">
           Ada yang ingin ditanyakan soal DIGFIN? Kirim email ke alamat di bawah
@@ -54,10 +54,10 @@ export function KontakSection({ kontak }: KontakSectionProps) {
           href={mailtoHref(email)}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-8 inline-flex items-center gap-3 rounded-xl border border-stone-400 bg-white px-6 py-4 text-sm font-medium text-stone-900 shadow-lg shadow-stone-400/30 transition-all duration-300 ease-out hover:-translate-y-1.5 hover:scale-[1.02] hover:border-stone-500 hover:bg-stone-100 hover:shadow-[0_14px_30px_rgba(0,0,0,0.15)]"
+          className="mt-8 inline-flex items-center gap-3 rounded-xl border border-[#168c8c]/40 bg-white px-6 py-4 text-sm font-medium text-[#101820] shadow-lg shadow-stone-400/30 transition-all duration-300 ease-out hover:-translate-y-1.5 hover:scale-[1.02] hover:border-[#168c8c] hover:bg-[#e8f5f5] hover:shadow-[0_14px_30px_rgba(0,0,0,0.15)]"
         >
           <svg
-            className="h-[19px] w-[19px] text-stone-900"
+            className="h-[19px] w-[19px] text-[#127373]"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"

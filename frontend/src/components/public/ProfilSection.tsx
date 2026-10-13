@@ -10,19 +10,19 @@ interface ProfilCardProps {
 function ProfilCard({ number, title, children, className = '' }: ProfilCardProps) {
   return (
     <article
-      className={`relative rounded-[14px] border-t-[3px] border-t-[#C9922B] bg-white p-[26px] pt-[30px] shadow-[0_2px_10px_rgba(80,60,30,0.10)] transition-[transform,box-shadow] duration-200 ease-out hover:-translate-y-1 hover:shadow-[0_10px_24px_rgba(80,60,30,0.18)] ${className}`}
+      className={`relative rounded-[14px] border-t-[3px] border-t-[#168c8c] bg-white p-[26px] pt-[30px] shadow-[0_2px_10px_rgba(16,24,32,0.10)] transition-[transform,box-shadow] duration-200 ease-out hover:-translate-y-1 hover:shadow-[0_10px_24px_rgba(16,24,32,0.18)] ${className}`}
     >
       <div
         aria-hidden
-        className="hexagon-badge absolute -top-[17px] left-1/2 flex h-[34px] w-[36px] -translate-x-1/2 items-center justify-center bg-[#1E1A17] font-medium text-[#F2C14E]"
+        className="hexagon-badge absolute -top-[17px] left-1/2 flex h-[34px] w-[36px] -translate-x-1/2 items-center justify-center bg-[#168c8c] font-medium text-white"
       >
         <span className="text-sm">{number}</span>
       </div>
 
-      <h3 className="text-center font-display text-lg font-bold uppercase tracking-[0.2em] text-[#1E1A17]">
+      <h3 className="text-center font-display text-lg font-bold uppercase tracking-[0.2em] text-[#101820]">
         {title}
       </h3>
-      <span aria-hidden className="mx-auto mt-2 block h-[2px] w-[36px] bg-[#C9922B]" />
+      <span aria-hidden className="mx-auto mt-2 block h-[2px] w-[36px] bg-[#168c8c]" />
 
       {children}
     </article>
@@ -78,7 +78,7 @@ export function ProfilSection() {
   return (
     <section
       id="profil"
-      className="relative flex min-h-screen w-full flex-col items-center overflow-hidden bg-[#141E28] pt-[30px] pb-20 md:pb-28"
+      className="relative flex min-h-screen w-full flex-col items-center overflow-hidden bg-[#101820] pt-[30px] pb-20 md:pb-28"
     >
       <div ref={headingRef} className="relative z-10 mx-auto flex w-full max-w-6xl flex-col items-center px-5 md:px-10">
         <h2 className={`text-center font-display text-[clamp(2rem,6vw,4rem)] font-bold uppercase leading-none tracking-tight text-stone-50 ${
@@ -86,7 +86,7 @@ export function ProfilSection() {
           }`}>
           PROFIL
         </h2>
-        <div aria-hidden className="mt-4 h-px w-24 animate-fade-up bg-stone-400/60" />
+        <div aria-hidden className="mt-4 h-px w-24 animate-fade-up bg-[#168c8c]" />
 
         <div ref={gridRef} className="profil-grid mt-12 w-full md:mt-16">
           {/* VISI - Full width card on top */}
@@ -95,7 +95,7 @@ export function ProfilSection() {
             title="Visi"
             className={`profil-card-visi ${cardsVisible ? 'animate-fade-in-down' : 'opacity-0'}`}
           >
-            <p className="mx-auto mt-5 max-w-[520px] text-center text-[18px] leading-[1.7] text-[#4A423B]">
+            <p className="mx-auto mt-5 max-w-[520px] text-center text-[18px] leading-[1.7] text-stone-600">
               Menjadi penggerak transformasi digital UKSW melalui pengembangan teknologi dan layanan digital yang inovatif, terintegrasi, efektif, dan berkelanjutan.
             </p>
           </ProfilCard>
@@ -106,7 +106,7 @@ export function ProfilSection() {
             title="Misi"
             className={`${cardsVisible ? 'animate-fade-in-down' : 'opacity-0'} [animation-delay:150ms]`}
           >
-            <ol className="profil-numbered mt-5 text-left text-[18px] leading-[1.6] text-[#4A423B] space-y-[11px]">
+            <ol className="profil-numbered mt-5 text-left text-[18px] leading-[1.6] text-stone-600 space-y-[11px]">
               <li>Mengembangkan dan mengelola layanan digital yang mendukung kebutuhan akademik, administrasi, dan operasional UKSW.</li>
               <li>Mendorong inovasi teknologi dan digitalisasi untuk meningkatkan kualitas dan efisiensi layanan universitas.</li>
               <li>Mengintegrasikan sistem dan layanan digital agar dapat memberikan pengalaman pengguna yang mudah, cepat, dan optimal.</li>
@@ -119,7 +119,7 @@ export function ProfilSection() {
             title="Tujuan"
             className={`${cardsVisible ? 'animate-fade-in-down' : 'opacity-0'} [animation-delay:300ms]`}
           >
-            <ol className="profil-numbered mt-5 text-left text-[18px] leading-[1.6] text-[#4A423B] space-y-[11px]">
+            <ol className="profil-numbered mt-5 text-left text-[18px] leading-[1.6] text-stone-600 space-y-[11px]">
               <li>Meningkatkan efektivitas dan efisiensi layanan melalui pemanfaatan teknologi digital.</li>
               <li>Mewujudkan layanan digital yang terintegrasi dan mudah diakses oleh seluruh sivitas akademika.</li>
               <li>Mendukung terciptanya inovasi digital yang sesuai dengan kebutuhan perkembangan UKSW.</li>

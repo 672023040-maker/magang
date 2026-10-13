@@ -1,23 +1,22 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-brand-50: #f3f9ea;
-  --color-brand-100: #e2f0cf;
-  --color-brand-500: #70b52a;
-  --color-brand-600: #5c9a20;
-  --color-brand-700: #4d8000;
+  /* Palet inti DIGFIN: #101820 (gelap), #168C8C (teal), #FFFFFF (putih).
+     Ditambah turunan (tint/shade) untuk hover, border, dan focus ring. */
+  --color-brand-50: #e8f5f5;
+  --color-brand-100: #c9e8e8;
+  --color-brand-500: #168c8c;
+  --color-brand-600: #127373;
+  --color-brand-700: #0e5e5e;
 
-  --color-accent-50: #fff7ed;
-  --color-accent-100: #ffedd5;
-  --color-accent-200: #fed7aa;
-  --color-accent-300: #fdba74;
-  --color-accent-400: #fb923c;
-  --color-accent-500: #f97316;
-  --color-accent-600: #ea580c;
-  --color-accent-700: #c2410c;
-
-  --color-ink-900: #1c1917;
-  --color-ink-600: #57534e;
+  --color-accent-50: #f0fbfb;
+  --color-accent-100: #d8f0f0;
+  --color-accent-200: #b2e2e2;
+  --color-accent-300: #7fd0d0;
+  --color-accent-400: #3fb0b0;
+  --color-accent-500: #168c8c;
+  --color-accent-600: #127373;
+  --color-accent-700: #0e5e5e;
 
   --font-sans: 'Roboto', system-ui, 'Segoe UI', Arial, sans-serif;
   --font-display: 'Montserrat', system-ui, 'Segoe UI', Arial, sans-serif;
@@ -55,7 +54,7 @@ html {
 }
 
 body {
-  @apply bg-[#C49A45] text-stone-700 antialiased;
+  @apply bg-[#101820] text-stone-200 antialiased;
   font-family: var(--font-sans);
 }
 
@@ -115,8 +114,8 @@ section {
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: #f5e6c4;
-  color: #7a5410;
+  background: #e8f5f5;
+  color: #0e5e5e;
   font-size: 11px;
   font-weight: 500;
   line-height: 1;

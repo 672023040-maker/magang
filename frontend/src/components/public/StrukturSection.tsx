@@ -152,20 +152,20 @@ export function StrukturSection({ struktur }: StrukturSectionProps) {
     <section
       id="struktur"
       onClick={() => setActiveId(null)}
-      className="relative flex min-h-screen w-full overflow-hidden bg-[#C49A45] pt-20 md:pt-[50px]"
+      className="relative flex min-h-screen w-full overflow-hidden bg-white pt-20 md:pt-[50px]"
     >
       <div className="relative z-10 mx-auto w-full max-w-[1400px] px-5 pb-16 md:px-10 md:pb-20">
         <div className="text-center">
-          <h2 className={`font-display text-4xl font-bold uppercase tracking-tight text-stone-900 md:text-6xl ${
+          <h2 className={`font-display text-4xl font-bold uppercase tracking-tight text-[#101820] md:text-6xl ${
             visible ? 'animate-fade-in-down' : 'opacity-0'
           }`}>
             TIM DIGFIN
           </h2>
-          <div aria-hidden className="mx-auto mt-4 h-px w-24 bg-stone-400" />
+          <div aria-hidden className="mx-auto mt-4 h-px w-24 bg-[#168c8c]" />
         </div>
 
         {struktur.length === 0 ? (
-          <p className="mt-16 text-center text-[18px] text-stone-500">
+          <p className="mt-16 text-center text-[18px] text-stone-600">
             Belum ada data struktur organisasi.
           </p>
         ) : (
@@ -240,7 +240,7 @@ export function StrukturSection({ struktur }: StrukturSectionProps) {
                         onMouseLeave={isClone ? undefined : () => setActiveId(null)}
                         className={`group flex min-w-0 flex-1 flex-col items-center overflow-hidden rounded-2xl border p-6 text-center transition-[border-color,background-color,box-shadow] duration-300 ease-out ${
                           isActive
-                            ? 'border-stone-900 bg-white shadow-[0_20px_50px_-12px_rgba(0,0,0,0.35)]'
+                            ? 'border-[#168c8c] bg-white shadow-[0_20px_50px_-12px_rgba(22,140,140,0.35)]'
                             : 'border-stone-300 bg-white/70 hover:bg-white'
                         }`}
                       >

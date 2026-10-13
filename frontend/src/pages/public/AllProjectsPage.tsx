@@ -102,7 +102,7 @@ function AllProjectCard({
               href={link}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[#C49A45] px-4 py-2.5 text-sm font-semibold text-[#101820] transition hover:bg-[#A87F35] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C49A45]/70"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[#168c8c] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#127373] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#168c8c]/70"
             >
               KUNJUNGI WEBSITE
               <svg
@@ -165,7 +165,7 @@ export function AllProjectsPage() {
             type="button"
             onClick={goBack}
             aria-label="Kembali"
-            className="mb-6 inline-flex items-center gap-2 rounded-lg border border-white/20 px-4 py-2 text-sm font-semibold text-stone-200 transition hover:border-[#C49A45] hover:text-[#C49A45] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C49A45]/70"
+            className="mb-6 inline-flex items-center gap-2 rounded-lg border border-white/20 px-4 py-2 text-sm font-semibold text-stone-200 transition hover:border-[#168c8c] hover:text-[#168c8c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#168c8c]/70"
           >
             <svg
               className="h-4 w-4"

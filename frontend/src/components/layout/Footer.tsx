@@ -17,7 +17,7 @@ export function Footer({ kontak }: FooterProps) {
       ]
 
   return (
-    <footer className="bg-[#0D151C] text-stone-200">
+    <footer className="bg-[#101820] text-stone-200">
       <div className="grid grid-cols-1 gap-10 px-5 py-10 md:grid-cols-2 lg:grid-cols-[1fr_auto_1fr] lg:gap-2.5 lg:py-8">
         <div className="flex items-center justify-center md:col-span-2 lg:col-span-1 lg:justify-start lg:ml-[300px]">
           <img
