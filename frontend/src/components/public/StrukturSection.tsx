@@ -238,29 +238,31 @@ export function StrukturSection({ struktur }: StrukturSectionProps) {
                         }
                         onMouseEnter={isClone ? undefined : () => setActiveId(orang.id)}
                         onMouseLeave={isClone ? undefined : () => setActiveId(null)}
-                        className={`group flex min-w-0 flex-1 flex-col items-center overflow-hidden rounded-2xl border p-6 text-center transition-[border-color,background-color,box-shadow] duration-300 ease-out ${
+                        className={`group flex min-w-0 flex-1 flex-col items-center overflow-hidden rounded-2xl border p-6 text-center transition-[transform,border-color,background-color,box-shadow] duration-300 ease-out hover:-translate-y-2 motion-reduce:transition-none motion-reduce:transform-none ${
                           isActive
-                            ? 'border-[#168c8c] bg-white shadow-[0_20px_50px_-12px_rgba(22,140,140,0.35)]'
-                            : 'border-stone-300 bg-white/70 hover:bg-white'
+                            ? 'border-[#168c8c] bg-white shadow-[0_24px_55px_-12px_rgba(22,140,140,0.45)]'
+                            : 'border-[#168c8c]/25 bg-brand-50 shadow-[0_8px_20px_-14px_rgba(16,24,32,0.35)]'
                         }`}
                       >
-                        {orang.foto_url ? (
-                          <img
-                            src={orang.foto_url}
-                            alt={orang.nama}
-                            className="h-[250px] w-[200px] shrink-0 rounded-none object-cover ring-2 ring-stone-400/70"
-                          />
-                        ) : (
-                          <div className="h-[250px] w-[200px] shrink-0 overflow-hidden rounded-none bg-stone-900 ring-2 ring-stone-400/70">
-                            <Avatar
-                              name={orang.nama}
-                              variant="silhouette"
-                              className="h-full w-full"
+                        <div className="h-[250px] w-[200px] shrink-0 overflow-hidden ring-2 ring-[#168c8c]/30 transition-[box-shadow] duration-300 ease-out group-hover:ring-[#168c8c]/60 motion-reduce:transition-none">
+                          {orang.foto_url ? (
+                            <img
+                              src={orang.foto_url}
+                              alt={orang.nama}
+                              className="h-full w-full rounded-none object-cover transition-transform duration-300 ease-out group-hover:scale-105 motion-reduce:transition-none motion-reduce:transform-none"
                             />
-                          </div>
-                        )}
+                          ) : (
+                            <div className="h-full w-full overflow-hidden bg-[#101820]">
+                              <Avatar
+                                name={orang.nama}
+                                variant="silhouette"
+                                className="h-full w-full"
+                              />
+                            </div>
+                          )}
+                        </div>
                         <div className="mt-4 min-w-0">
-                          <p className="font-semibold text-stone-900">{orang.nama}</p>
+                          <p className="font-semibold text-[#101820]">{orang.nama}</p>
                           <p className="mt-0.5 text-[18px] text-stone-600">{orang.jabatan}</p>
                         </div>
                       </div>
