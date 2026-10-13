@@ -159,7 +159,7 @@ export function StrukturSection({ struktur }: StrukturSectionProps) {
                           <div className="h-[250px] w-[200px] shrink-0 overflow-hidden rounded-none bg-stone-900 ring-2 ring-stone-400/70">
                             <Avatar
                               name={orang.nama}
-                              variant="portrait"
+                              variant="silhouette"
                               className="h-full w-full"
                             />
                           </div>

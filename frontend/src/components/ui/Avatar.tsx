@@ -4,7 +4,7 @@ interface AvatarProps extends Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> {
   src?: string | null
   name: string
   size?: 'sm' | 'md' | 'lg'
-  variant?: 'initials' | 'persona' | 'portrait'
+  variant?: 'initials' | 'persona' | 'portrait' | 'silhouette'
   className?: string
 }
 
@@ -304,6 +304,26 @@ function PortraitAvatar({ name, className = '' }: { name: string; className?: st
   )
 }
 
+function SilhouetteAvatar({ name, className = '' }: { name: string; className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 200 250"
+      preserveAspectRatio="xMidYMid meet"
+      className={`h-full w-full ${className}`}
+      role="img"
+      aria-label={name}
+    >
+      {/* Kepala */}
+      <circle cx="100" cy="88" r="42" fill="#F3F4F6" />
+      {/* Badan/bahu */}
+      <path
+        d="M36 250 L40 190 Q40 140 100 128 Q160 140 160 190 L164 250 Z"
+        fill="#F3F4F6"
+      />
+    </svg>
+  )
+}
+
 export function Avatar({ src, name, size = 'md', variant = 'persona', className = '', alt, ...rest }: AvatarProps) {
   if (src) {
     return (
@@ -322,6 +342,10 @@ export function Avatar({ src, name, size = 'md', variant = 'persona', className 
 
   if (variant === 'portrait') {
     return <PortraitAvatar name={name} className={className} />
+  }
+
+  if (variant === 'silhouette') {
+    return <SilhouetteAvatar name={name} className={className} />
   }
 
   return <PersonaAvatar name={name} size={size} className={className} />
