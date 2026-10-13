@@ -10,11 +10,23 @@ export function StrukturSection({ struktur }: StrukturSectionProps) {
   const [activeId, setActiveId] = useState<number | null>(null)
   const gridRef = useRef<HTMLDivElement>(null)
   const [visible, setVisible] = useState(false)
+  const [inView, setInView] = useState(false)
 
   const [currentIndex, setCurrentIndex] = useState(0)
   const [visibleCount, setVisibleCount] = useState(1)
   const [viewportWidth, setViewportWidth] = useState(0)
+  const [isDesktop, setIsDesktop] = useState(false)
+  const [reduceMotion, setReduceMotion] = useState(false)
+  const [pageVisible, setPageVisible] = useState(true)
+  const [hoverPaused, setHoverPaused] = useState(false)
+  const [animate, setAnimate] = useState(true)
   const viewportRef = useRef<HTMLDivElement>(null)
+
+  const total = struktur.length
+  const maxIndex = Math.max(0, total - visibleCount)
+  const loopable = maxIndex > 0
+  const slideWidth = viewportWidth > 0 ? viewportWidth / visibleCount : 0
+  const effectiveIndex = isDesktop ? Math.min(currentIndex, maxIndex) : currentIndex
 
   useEffect(() => {
     const node = gridRef.current
@@ -23,10 +35,10 @@ export function StrukturSection({ struktur }: StrukturSectionProps) {
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting) {
-          setVisible(true)
-          observer.disconnect()
-        }
+        const entry = entries[0]
+
+        setInView(entry.isIntersecting)
+        if (entry.isIntersecting) setVisible(true)
       },
       { threshold: 0.2 },
     )
@@ -36,15 +48,12 @@ export function StrukturSection({ struktur }: StrukturSectionProps) {
     return () => observer.disconnect()
   }, [])
 
-  const maxIndex = Math.max(0, struktur.length - visibleCount)
-  const slideWidth = viewportWidth > 0 ? viewportWidth / visibleCount : 0
-  const effectiveIndex = Math.min(currentIndex, maxIndex)
-
   useEffect(() => {
     const lg = window.matchMedia('(min-width: 1024px)')
     const sm = window.matchMedia('(min-width: 640px)')
 
     const update = () => {
+      setIsDesktop(lg.matches)
       if (lg.matches) setVisibleCount(4)
       else if (sm.matches) setVisibleCount(2)
       else setVisibleCount(1)
@@ -61,6 +70,25 @@ export function StrukturSection({ struktur }: StrukturSectionProps) {
   }, [])
 
   useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const update = () => setReduceMotion(mq.matches)
+
+    update()
+    mq.addEventListener('change', update)
+
+    return () => mq.removeEventListener('change', update)
+  }, [])
+
+  useEffect(() => {
+    const update = () => setPageVisible(!document.hidden)
+
+    update()
+    document.addEventListener('visibilitychange', update)
+
+    return () => document.removeEventListener('visibilitychange', update)
+  }, [])
+
+  useEffect(() => {
     const node = viewportRef.current
 
     if (!node) return
@@ -73,6 +101,52 @@ export function StrukturSection({ struktur }: StrukturSectionProps) {
 
     return () => observer.disconnect()
   }, [])
+
+  // Auto-slide kartu — hanya mobile & tablet, pause pada beberapa kondisi
+  useEffect(() => {
+    if (
+      isDesktop ||
+      reduceMotion ||
+      !inView ||
+      !pageVisible ||
+      hoverPaused ||
+      activeId !== null ||
+      !loopable
+    ) {
+      return
+    }
+
+    const id = window.setTimeout(() => {
+      if (currentIndex >= total) {
+        setAnimate(false)
+        setCurrentIndex(0)
+      } else {
+        setCurrentIndex((prev) => prev + 1)
+      }
+    }, 3000)
+
+    return () => window.clearTimeout(id)
+  }, [
+    isDesktop,
+    reduceMotion,
+    inView,
+    pageVisible,
+    hoverPaused,
+    activeId,
+    loopable,
+    currentIndex,
+    total,
+  ])
+
+  // Setelah sampai di klon, snap tanpa transisi kembali ke kartu pertama (loop mulus)
+  useEffect(() => {
+    if (animate) return
+
+    const id = requestAnimationFrame(() => setAnimate(true))
+    return () => cancelAnimationFrame(id)
+  }, [animate])
+
+  const items = loopable ? [...struktur, ...struktur.slice(0, visibleCount)] : struktur
 
   return (
     <section
@@ -95,7 +169,12 @@ export function StrukturSection({ struktur }: StrukturSectionProps) {
             Belum ada data struktur organisasi.
           </p>
         ) : (
-          <div ref={gridRef} className="mt-14 flex items-center gap-3 sm:gap-4 lg:gap-5">
+          <div
+            ref={gridRef}
+            onMouseEnter={() => setHoverPaused(true)}
+            onMouseLeave={() => setHoverPaused(false)}
+            className="mt-14 flex items-center gap-3 sm:gap-4 lg:gap-5"
+          >
             <button
               type="button"
               onClick={() => setCurrentIndex((prev) => Math.max(prev - 1, 0))}
@@ -122,27 +201,43 @@ export function StrukturSection({ struktur }: StrukturSectionProps) {
               className="min-w-0 flex-1 overflow-x-clip"
             >
               <div
-                className="flex items-start transition-transform duration-[400ms] ease-in-out"
+                className={`flex items-start ${
+                  animate ? 'transition-transform duration-[400ms] ease-in-out' : 'transition-none'
+                }`}
                 style={{ transform: `translateX(-${effectiveIndex * slideWidth}px)` }}
+                onTransitionEnd={(e) => {
+                  if (e.target !== e.currentTarget || e.propertyName !== 'transform') return
+
+                  if (!isDesktop && total > 0 && currentIndex >= total) {
+                    setAnimate(false)
+                    setCurrentIndex(0)
+                  }
+                }}
               >
-{struktur.map((orang, index) => {
-                    const isActive = activeId === orang.id
+{items.map((orang, i) => {
+                    const isClone = i >= total
+                    const isActive = !isClone && activeId === orang.id
 
                     return (
                       <div
-                        key={orang.id}
+                        key={isClone ? `clone-${orang.id}` : orang.id}
+                        aria-hidden={isClone ? true : undefined}
                         className={`w-full shrink-0 basis-full px-3 sm:basis-1/2 lg:basis-1/4 lg:px-2 ${
-                          visible ? 'animate-fade-in-down' : 'opacity-0'
-                        }`}
-                        style={{ animationDelay: `${index * 150}ms` }}
+                          isClone ? 'pointer-events-none' : ''
+                        } ${visible ? 'animate-fade-in-down' : 'opacity-0'}`}
+                        style={{ animationDelay: `${(isClone ? 0 : i) * 150}ms` }}
                       >
                       <div
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          setActiveId((prev) => (prev === orang.id ? null : orang.id))
-                        }}
-                        onMouseEnter={() => setActiveId(orang.id)}
-                        onMouseLeave={() => setActiveId(null)}
+                        onClick={
+                          isClone
+                            ? undefined
+                            : (e) => {
+                                e.stopPropagation()
+                                setActiveId((prev) => (prev === orang.id ? null : orang.id))
+                              }
+                        }
+                        onMouseEnter={isClone ? undefined : () => setActiveId(orang.id)}
+                        onMouseLeave={isClone ? undefined : () => setActiveId(null)}
                         className={`group flex min-w-0 flex-1 flex-col items-center overflow-hidden rounded-2xl border p-6 text-center transition-[border-color,background-color,box-shadow] duration-300 ease-out ${
                           isActive
                             ? 'border-stone-900 bg-white shadow-[0_20px_50px_-12px_rgba(0,0,0,0.35)]'
