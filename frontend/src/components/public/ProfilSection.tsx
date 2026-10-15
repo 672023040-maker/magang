@@ -10,7 +10,7 @@ interface ProfilCardProps {
 function ProfilCard({ number, title, children, className = '' }: ProfilCardProps) {
   return (
     <article
-      className={`relative rounded-[14px] border-t-[3px] border-t-[#168c8c] bg-white p-[26px] pt-[30px] shadow-[0_2px_10px_rgba(16,24,32,0.10)] transition-[transform,box-shadow] duration-200 ease-out hover:-translate-y-1 hover:shadow-[0_10px_24px_rgba(16,24,32,0.18)] ${className}`}
+      className={`relative rounded-[14px] border border-stone-300 border-t-[3px] border-t-[#168c8c] bg-white p-[26px] pt-[30px] shadow-[0_2px_10px_rgba(16,24,32,0.10)] transition-[transform,box-shadow] duration-200 ease-out hover:-translate-y-1 hover:shadow-[0_10px_24px_rgba(16,24,32,0.18)] ${className}`}
     >
       <div
         aria-hidden
@@ -78,10 +78,10 @@ export function ProfilSection() {
   return (
     <section
       id="profil"
-      className="relative flex min-h-screen w-full flex-col items-center overflow-hidden bg-[#101820] pt-[30px] pb-20 md:pb-28"
+      className="relative flex min-h-screen w-full flex-col items-center overflow-hidden bg-[#F3F4F6] pt-[30px] pb-20 md:pb-28"
     >
       <div ref={headingRef} className="relative z-10 mx-auto flex w-full max-w-6xl flex-col items-center px-5 md:px-10">
-        <h2 className={`text-center font-display text-[clamp(2rem,6vw,4rem)] font-bold uppercase leading-none tracking-tight text-stone-50 ${
+        <h2 className={`text-center font-display text-[clamp(2rem,6vw,4rem)] font-bold uppercase leading-none tracking-tight text-[#101820] ${
             visible ? 'animate-fade-in-down' : 'opacity-0'
           }`}>
           PROFIL

@@ -159,13 +159,13 @@ export function AllProjectsPage() {
 
   return (
     <PublicLayout kontak={data.kontak}>
-      <section className="min-h-screen w-full bg-[#101820] px-5 pb-20 pt-[110px] md:px-10 md:pt-[130px]">
+      <section className="min-h-screen w-full bg-[#F3F4F6] px-5 pb-20 pt-[110px] md:px-10 md:pt-[130px]">
         <div className="mx-auto w-full max-w-7xl">
           <button
             type="button"
             onClick={goBack}
             aria-label="Kembali"
-            className="mb-6 inline-flex items-center gap-2 rounded-lg border border-white/20 px-4 py-2 text-sm font-semibold text-stone-200 transition hover:border-[#168c8c] hover:text-[#168c8c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#168c8c]/70"
+            className="mb-6 inline-flex items-center gap-2 rounded-lg border border-stone-300 px-4 py-2 text-sm font-semibold text-stone-700 transition hover:border-[#168c8c] hover:text-[#168c8c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#168c8c]/70"
           >
             <svg
               className="h-4 w-4"
@@ -183,13 +183,13 @@ export function AllProjectsPage() {
           </button>
 
           <div className="text-center">
-            <h1 className="font-display text-[clamp(2rem,6vw,4rem)] font-bold uppercase leading-tight tracking-tight text-stone-50">
+            <h1 className="font-display text-[clamp(2rem,6vw,4rem)] font-bold uppercase leading-tight tracking-tight text-[#101820]">
               Semua Project
             </h1>
 
-            <div aria-hidden className="mx-auto mt-4 h-px w-24 bg-stone-400" />
+            <div aria-hidden className="mx-auto mt-4 h-px w-24 bg-[#168c8c]" />
 
-            <p className="mx-auto mt-5 max-w-2xl text-[18px] leading-relaxed text-stone-400">
+            <p className="mx-auto mt-5 max-w-2xl text-[18px] leading-relaxed text-stone-600">
               Telusuri seluruh inovasi DIGFIN. Gunakan pencarian untuk menemukan
               project tertentu.
             </p>
@@ -226,7 +226,7 @@ export function AllProjectsPage() {
               <Spinner size="lg" />
             </div>
           ) : filtered.length === 0 ? (
-            <p className="mt-16 text-center text-[18px] text-stone-400">
+            <p className="mt-16 text-center text-[18px] text-stone-600">
               {data.project.length === 0
                 ? 'Belum ada project.'
                 : 'Project tidak ditemukan.'}
@@ -244,7 +244,7 @@ export function AllProjectsPage() {
           )}
 
           {hasError && !loading && (
-            <p className="mt-10 text-center text-sm text-red-300">
+            <p className="mt-10 text-center text-sm text-red-600">
               Sebagian data gagal dimuat. Muat ulang halaman untuk mencoba kembali.
             </p>
           )}
