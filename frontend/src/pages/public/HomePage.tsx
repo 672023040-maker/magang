@@ -30,13 +30,13 @@ export function HomePage() {
         </div>
       )}
       <Hero />
-      <div className="h-px bg-[#101820]/10 shadow-none" />
+      <div className="h-[0.7px] bg-[#101820]/10 shadow-none" />
       <ProfilSection />
-      <div className="h-px bg-[#101820]/10 shadow-none" />
+      <div className="h-[0.7px] bg-[#101820]/10 shadow-none" />
       <StrukturSection struktur={data.struktur} />
-      <div className="h-px bg-[#101820]/10 shadow-none" />
+      <div className="h-[0.7px] bg-[#101820]/10 shadow-none" />
       <ProjectSection project={data.project} />
-      <div className="h-px bg-[#101820]/10 shadow-none" />
+      <div className="h-[0.7px] bg-[#101820]/10 shadow-none" />
       <KontakSection kontak={data.kontak} />
     </PublicLayout>
   )
