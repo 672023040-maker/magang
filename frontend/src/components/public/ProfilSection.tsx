@@ -78,7 +78,7 @@ export function ProfilSection() {
   return (
     <section
       id="profil"
-      className="relative flex min-h-screen w-full flex-col items-center overflow-hidden bg-[#F3F4F6] pt-[30px] pb-20 md:pb-28"
+      className="relative flex min-h-screen w-full flex-col items-center overflow-hidden border-t border-[#101820]/10 bg-[#F3F4F6] pt-[30px] pb-20 md:pb-28"
     >
       <div ref={headingRef} className="relative z-10 mx-auto flex w-full max-w-6xl flex-col items-center px-5 md:px-10">
         <h2 className={`text-center font-display text-[clamp(2rem,6vw,4rem)] font-bold uppercase leading-none tracking-tight text-[#101820] ${

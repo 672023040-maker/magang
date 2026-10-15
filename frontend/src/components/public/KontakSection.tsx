@@ -35,7 +35,7 @@ export function KontakSection({ kontak }: KontakSectionProps) {
   return (
     <section
       id="kontak"
-      className="relative w-full overflow-hidden bg-white py-20 md:py-24"
+      className="relative w-full overflow-hidden border-t border-[#101820]/10 bg-white py-20 md:py-24"
     >
       <div ref={boxRef} className="relative z-10 mx-auto max-w-xl px-5 text-center">
         <h2 className={`font-display text-4xl font-bold uppercase tracking-tight text-[#101820] md:text-5xl ${
