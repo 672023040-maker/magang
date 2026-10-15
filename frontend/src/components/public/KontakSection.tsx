@@ -43,7 +43,7 @@ export function KontakSection({ kontak }: KontakSectionProps) {
           }`}>
           Kontak Kami
         </h2>
-        <div aria-hidden className="mx-auto mt-4 h-[0.7px] w-24 bg-[#168c8c]" />
+        <div aria-hidden className="mx-auto mt-4 h-px w-24 bg-[#168c8c]" />
 
         <p className="mt-5 text-[18px] leading-relaxed text-stone-600">
           Ada yang ingin ditanyakan soal DIGFIN? Kirim email ke alamat di bawah

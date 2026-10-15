@@ -187,7 +187,7 @@ export function ProjectSection({ project }: ProjectSectionProps) {
             Website UKSW
           </h2>
 
-          <div aria-hidden className="mx-auto mt-4 h-[0.7px] w-24 bg-[#168c8c]" />
+          <div aria-hidden className="mx-auto mt-4 h-px w-24 bg-[#168c8c]" />
         </div>
 
         {project.length === 0 ? (

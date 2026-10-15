@@ -86,7 +86,7 @@ export function ProfilSection() {
           }`}>
           PROFIL
         </h2>
-        <div aria-hidden className="mt-4 h-[0.7px] w-24 animate-fade-up bg-[#168c8c]" />
+        <div aria-hidden className="mt-4 h-px w-24 animate-fade-up bg-[#168c8c]" />
 
         <div ref={gridRef} className="profil-grid mt-12 w-full md:mt-16">
           {/* VISI - Full width card on top */}
