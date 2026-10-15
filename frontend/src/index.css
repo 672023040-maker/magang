@@ -1,8 +1,12 @@
 @import 'tailwindcss';
 
 @theme {
-  /* Palet inti DIGFIN: #101820 (gelap), #168C8C (teal), #FFFFFF (putih).
+  /* Palet inti DIGFIN: #101820 (gelap), #168C8C (teal), #F3F4F6 (putih).
      Ditambah turunan (tint/shade) untuk hover, border, dan focus ring. */
+  /* Override token putih bawaan Tailwind: semua utility `white`
+     (bg/text/border/ring + varian transparan) memakai abu sangat muda ini. */
+  --color-white: #f3f4f6;
+
   --color-brand-50: #e8f5f5;
   --color-brand-100: #c9e8e8;
   --color-brand-500: #168c8c;
