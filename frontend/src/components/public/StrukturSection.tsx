@@ -240,11 +240,11 @@ export function StrukturSection({ struktur }: StrukturSectionProps) {
                         onMouseLeave={isClone ? undefined : () => setActiveId(null)}
                         className={`group flex min-w-0 flex-1 flex-col items-center overflow-hidden rounded-2xl border p-6 text-center transition-[transform,border-color,background-color,box-shadow] duration-300 ease-out hover:-translate-y-2 motion-reduce:transition-none motion-reduce:transform-none ${
                           isActive
-                            ? 'border-[#168c8c] bg-white shadow-[0_24px_55px_-12px_rgba(22,140,140,0.45)]'
-                            : 'border-[#168c8c]/25 bg-brand-50 shadow-[0_8px_20px_-14px_rgba(16,24,32,0.35)]'
+                            ? 'border-stone-400 bg-white shadow-[0_24px_50px_-16px_rgba(0,0,0,0.25)]'
+                            : 'border-stone-300 bg-white shadow-lg shadow-stone-400/30'
                         }`}
                       >
-                        <div className="h-[250px] w-[200px] shrink-0 overflow-hidden ring-2 ring-[#168c8c]/30 transition-[box-shadow] duration-300 ease-out group-hover:ring-[#168c8c]/60 motion-reduce:transition-none">
+                        <div className="h-[250px] w-[200px] shrink-0 overflow-hidden ring-2 ring-stone-200 transition-[box-shadow] duration-300 ease-out group-hover:ring-stone-300 motion-reduce:transition-none">
                           {orang.foto_url ? (
                             <img
                               src={orang.foto_url}
